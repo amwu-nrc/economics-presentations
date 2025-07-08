@@ -1,0 +1,157 @@
+---
+title: "Economics, Political Economy, Industrial Policy"
+author: "Hamish Gamble"
+execute: 
+  echo: false
+  warning: false
+  message: false
+format: revealjs
+editor: visual
+---
+
+```{r}
+#| label: setup
+library(reportabs)
+library(tidyverse)
+library(geomtextpath)
+library(readabs)
+library(strayr)
+cpi <- read_abs_local("6484.0", filenames = "648401.xlsx", path = "data") |> 
+  separate_series(column_names = c("data_type", "cpi_category", "capital_city"))
+
+national_accounts <- read_abs_local(cat_no = "5204.0", path = "data")
+
+  
+```
+
+# Hot Topics
+
+## Inflation
+
+- What happens to prices when inflation goes up?
+- What happens to prices when inflation goes down?
+
+## Inflation
+
+```{r}
+#| out-width: 100%
+cpi |> 
+  filter(data_type == "Percentage Change from Corresponding Month of Previous Year",
+         capital_city == "Australia",
+         cpi_category == "All groups CPI",
+         date >= "2020-01-01") |> 
+  ggplot(aes(x = date, y = value, col = "inflation")) +
+  geom_line() +
+  theme_nrc() +
+  scale_y_continuous(labels = scales::label_percent(scale = 1)) + 
+  labs(y = "percentage change from same time last month",
+       x = NULL) +
+  annotate(geom = "textsegment", 
+           arrow = arrow(), 
+           label = "increasing inflation",
+           x = as_date("2020-06-01"), 
+           y = 2,
+           xend = as_date("2022-12-01"), 
+           yend = 10) +
+  annotate(geom = "textsegment", 
+           arrow = arrow(),
+           label = "decreasing inflation",
+           x = as_date("2022-12-01"),
+           y = 10,
+           xend = as_date("2025-03-01"),
+           yend = 3)
+```
+
+## Inflation
+
+```{r}
+cpi |> 
+  filter(data_type == "Index Numbers",
+         capital_city == "Australia",
+         cpi_category == "All groups CPI",
+         date >= "2020-01-01") |> 
+  ggplot(aes(x = date, y = value, col = "inflation")) +
+  geom_line() +
+  theme_nrc() +
+  labs(y = "price",
+       x = NULL) +
+  annotate(geom = "textsegment", 
+           arrow = arrow(), 
+           label = "increasing prices",
+           x = as_date("2020-06-01"), 
+           y = 110,
+           xend = as_date("2022-12-01"), 
+           yend = 120) +
+  annotate(geom = "textsegment", 
+           arrow = arrow(),
+           label = "increasing prices???",
+           x = as_date("2022-12-01"),
+           y = 120,
+           xend = as_date("2025-03-01"),
+           yend = 130)
+```
+
+## Tariffs
+- 
+
+## Productivity
+- How is productivity measured?
+
+```{r}
+national_accounts |> 
+ filter(series == "GDP per hour worked: Index ;",
+        !is.na(value)) |> 
+  ggplot(aes(x = date, y = value, col = "labour_productivity")) +
+  theme_nrc() +
+  labs(y = "GDP per hour worked: index",
+       x = NULL)
+```
+
+## Productivity
+- GDP
+```{r}
+national_accounts |> 
+  filter(table_no == "5204015_Labour_Productivity_Input",
+         str_detect(series, "GVA"),
+         !is.na(value)) |>
+  mutate(industry = str_extract(series, "^(.*?);"),
+         industry = trimws(str_remove_all(industry, ";"))) |> 
+  group_by(industry) |> 
+  mutate(index = value/value[date == "1998-06-01"]) |> 
+  ungroup() |> 
+  ggplot(aes(x = date, y = index, col = industry)) + 
+  geom_line() +
+  gghighlight(industry %in% c("ALL INDUSTRIES", "Manufacturing", "Mining")) +
+  theme_nrc() +
+  labs(y = "gross value added per hour worked",
+       x = NULL)
+```
+
+## Productivity
+- Per hour worked
+```{r}
+national_accounts |> 
+  filter(series == "Hours worked: Index ;",
+         !is.na(value)) |> 
+  ggplot(aes(x = date, y = value, col = 'hours')) + 
+  geom_line() + 
+  theme_nrc() + 
+  labs(x = NULL, y = "hours worked: index")
+```
+
+## Sovereign Capability
+
+# Political Economy
+
+## What is The Economy?
+- Is the economy how much we produce in total?
+- Is the economy how much we produce per person?
+- Is the economy how well we meet the needs of society?
+- Is the economy the stock market?
+
+## Everyone Hates Economists
+- Paid too much 
+- Don't care enough about material conditions
+- Let them eat headline inflation
+
+
