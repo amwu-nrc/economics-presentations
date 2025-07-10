@@ -15,6 +15,7 @@ library(reportabs)
 library(tidyverse)
 library(geomtextpath)
 library(readabs)
+library(gghighlight)
 library(strayr)
 cpi <- read_abs_local("6484.0", filenames = "648401.xlsx", path = "data") |> 
   separate_series(column_names = c("data_type", "cpi_category", "capital_city"))
@@ -24,14 +25,59 @@ national_accounts <- read_abs_local(cat_no = "5204.0", path = "data")
   
 ```
 
-# Hot Topics
+# Hot Topics - End of Day 1
 
 ## Inflation
 
-- What happens to prices when inflation goes up?
-- What happens to prices when inflation goes down?
+{{< video https://youtu.be/mt2bVFkkMmQ width="100%" height="85%">}}
+
+## Productivity
+
+{{< video https://www.youtube.com/watch?v=cdRCDaQrHJ0 width="100%" height="85%" >}}
+
+## Tariffs
+
+# Questions on Notice
 
 ## Inflation
+
+-   How is inflation measured?
+-   What happens to prices when inflation goes down?
+-   Is there a contradiction between how inflation is felt, compared to how it is reported?
+
+## Tariffs
+
+-   What is a tariff?
+-   Tariffs throughout history
+-   Are tariffs inherently bad?
+-   Protectionism, reindustrialisation
+
+## Productivity
+
+-   What is productivity?
+-   How is productivity measured?
+-   What drives changes in productivity?
+
+# Talking about Economic Concepts - Start of Day 2
+-   What is inflation, productivity, a tariff
+-   Why does it feel bad even when number good
+-   Common arguments (lies) "economists" use
+
+## Inflation (or, the Consumer Price Index)
+- The CPI is a measure of changes in the price of a "basket" of goods and services.
+- The basket includes (among other things):
+    -   Food and non-alcoholic beverages
+    -   Alcohol and tobacco
+    -   Housing
+- CPI data is reported as an index, or as a % change since last month, last quarter, or last year.
+
+## Reporting Inflation 
+
+::: {.notes}
+This is the % change way of measuring inflation.
+Inflation goes up when the % change in one period is higher than the last period
+All the numbers (except for one in 2020) are positive.
+:::
 
 ```{r}
 #| out-width: 100%
@@ -44,7 +90,8 @@ cpi |>
   geom_line() +
   theme_nrc() +
   scale_y_continuous(labels = scales::label_percent(scale = 1)) + 
-  labs(y = "percentage change from same time last month",
+  labs(title = "Percentage Change in the CPI from Corresponding Month of Previous Year",
+       y = "percentage change",
        x = NULL) +
   annotate(geom = "textsegment", 
            arrow = arrow(), 
@@ -62,7 +109,7 @@ cpi |>
            yend = 3)
 ```
 
-## Inflation
+## Reporting Inflation
 
 ```{r}
 cpi |> 
@@ -92,43 +139,30 @@ cpi |>
 ```
 
 ## Tariffs
-- 
 
 ## Productivity
-- How is productivity measured?
 
 ```{r}
 national_accounts |> 
  filter(series == "GDP per hour worked: Index ;",
         !is.na(value)) |> 
-  ggplot(aes(x = date, y = value, col = "labour_productivity")) +
-  theme_nrc() +
-  labs(y = "GDP per hour worked: index",
-       x = NULL)
-```
-
-## Productivity
-- GDP
-```{r}
-national_accounts |> 
-  filter(table_no == "5204015_Labour_Productivity_Input",
-         str_detect(series, "GVA"),
-         !is.na(value)) |>
-  mutate(industry = str_extract(series, "^(.*?);"),
-         industry = trimws(str_remove_all(industry, ";"))) |> 
-  group_by(industry) |> 
-  mutate(index = value/value[date == "1998-06-01"]) |> 
-  ungroup() |> 
-  ggplot(aes(x = date, y = index, col = industry)) + 
+  mutate(index = 100*value/value[date == "1991-06-01"]) |> 
+  ggplot(aes(x = date, y = index, col = "labour_productivity")) +
   geom_line() +
-  gghighlight(industry %in% c("ALL INDUSTRIES", "Manufacturing", "Mining")) +
+  labs(title = "GDP per Hour Worked (June 1991 = 100)") +
   theme_nrc() +
-  labs(y = "gross value added per hour worked",
+  labs(y = "index",
        x = NULL)
 ```
 
-## Productivity
-- Per hour worked
+## Drivers of Productivity
+
+-   Productivity can decrease if:
+    -   hours worked increases faster than output
+    -   output decreases
+
+## Hours Worked
+
 ```{r}
 national_accounts |> 
   filter(series == "Hours worked: Index ;",
@@ -139,19 +173,118 @@ national_accounts |>
   labs(x = NULL, y = "hours worked: index")
 ```
 
-## Sovereign Capability
+## GDP
 
-# Political Economy
+## Sector
+
+```{r}
+national_accounts |> 
+  filter(table_no == "5204015_Labour_Productivity_Input",
+         str_detect(series, "GVA"),
+         !is.na(value)) |>
+  mutate(industry = str_extract(series, "^(.*?);"),
+         industry = trimws(str_remove_all(industry, ";"))) |>
+group_by(industry) |> 
+  mutate(index = 100*value/value[date == "1998-06-01"]) |> 
+  ungroup() |> 
+  ggplot(aes(x = date, y = index, col = industry)) + 
+  geom_line() +
+  gghighlight(industry %in% c("ALL INDUSTRIES")) +
+  theme_nrc() +
+  labs(y = "gross value added per hour worked",
+       x = NULL)
+```
+
+## Productivity
+
+-   Per hour worked
+
+## Industrial Capabilities
+
+-   Core concepts:
+    -   a country makes (or does) what it knows
+    -   products (or activities) represent combinations of knowledge
+- Capabilities are like letters in Scrabble
+    -   The more you have, the more words you can make
+    -   Rare letters create words worth more points
+
+## Industrial Capabilities
+
+::::: {.columns}
+::: {.column width="50%"}
+![](img/Granny Smith.webp)
+:::
+
+::: {.column width="50%"}
+An apple in the supermarket represents:
+
+-   Horticulture
+
+-   Pest control
+
+-   Refrigeration
+
+-   Logistics
+:::
+:::::
+
+## Industrial Capabilities
+::::: {.columns}
+::: {.column width="50%"}
+![](img/Apple.png)
+:::
+
+::: {.column width="50%"}
+An iPhone represents:
+
+- Semiconductors
+- Software/Hardware Engineering
+- Materials science
+- Lenses
+- Marketing
+- Packaging
+:::
+:::::
+## Measuring Industrial Capabilities
+
+-   Export data reveals what a country makes
+-   Comparison between countries reveals which capabilities are common, and which are rare
+-   The presence of different capabilities in different countries allows a ranking called the Economic Complexity Index
+
+## Why does it matter?
+-   The Economic Complexity Index is predictive of the direction of future economic growth. 
+    -   Countries with higher complexity are predicted to grow faster
+-   Useful tool to identify productive capabilities of a country
+-   Can be used to identify future opportunities
+
+## Why does it matter to Australia?
+:::: {.columns}
+::: {.column width="50%"}
+![](img/aus complexity rank.svg)
+:::
+:::{.column width = "50%"}
+-   Australia's ranking in 2023 was 105th
+    -   Sandwiched between Botswana and Côte d'Ivoire
+-   Australia's exports are concentrated in only a few products
+-   Australia's exports are lower in average complexity
+-   Australia does not have the industrial capabilities of other developed countries. 
+:::
+::::
+
+
+# More Discussion about Capital E Economics
+
+## Political Economy
 
 ## What is The Economy?
-- Is the economy how much we produce in total?
-- Is the economy how much we produce per person?
-- Is the economy how well we meet the needs of society?
-- Is the economy the stock market?
+
+-   Is the economy how much we produce in total?
+-   Is the economy how much we produce per person?
+-   Is the economy how well we meet the needs of society?
+-   Is the economy the stock market?
 
 ## Everyone Hates Economists
-- Paid too much 
-- Don't care enough about material conditions
-- Let them eat headline inflation
 
-
+-   Paid too much
+-   Don't care enough about material conditions
+-   Let them eat headline inflation ::: ::::
