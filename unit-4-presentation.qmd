@@ -5,7 +5,10 @@ execute:
   echo: false
   warning: false
   message: false
-format: revealjs
+format: 
+  revealjs:
+      incremental: false
+      fig-format: svg
 editor: visual
 ---
 
@@ -13,6 +16,7 @@ editor: visual
 #| label: setup
 library(reportabs)
 library(tidyverse)
+library(directlabels)
 library(geomtextpath)
 library(readabs)
 library(gghighlight)
@@ -20,65 +24,79 @@ library(strayr)
 cpi <- read_abs_local("6484.0", filenames = "648401.xlsx", path = "data") |> 
   separate_series(column_names = c("data_type", "cpi_category", "capital_city"))
 
+cpi_quarterly <- read_absdata("cpi_quarterly", export_dir = "data")
+wpi_quarterly <- read_absdata("wpi_quarterly", export_dir = "data")
 national_accounts <- read_abs_local(cat_no = "5204.0", path = "data")
 
   
 ```
 
-# Hot Topics - End of Day 1
+# Hot Topics
 
 ## Inflation
 
 {{< video https://youtu.be/mt2bVFkkMmQ width="100%" height="85%">}}
 
+## Inflation
+
+1.  How is inflation measured?
+2.  What happens to prices when inflation goes down?
+3.  Does the reporting match your experience?
+
 ## Productivity
 
 {{< video https://www.youtube.com/watch?v=cdRCDaQrHJ0 width="100%" height="85%" >}}
 
-## Tariffs
-
-# Questions on Notice
-
-## Inflation
-
--   How is inflation measured?
--   What happens to prices when inflation goes down?
--   Is there a contradiction between how inflation is felt, compared to how it is reported?
-
-## Tariffs
-
--   What is a tariff?
--   Tariffs throughout history
--   Are tariffs inherently bad?
--   Protectionism, reindustrialisation
-
 ## Productivity
 
--   What is productivity?
--   How is productivity measured?
--   What drives changes in productivity?
+1.  What is productivity?
+2.  How is productivity measured?
+3.  What drives changes in productivity?
 
-# Talking about Economic Concepts - Start of Day 2
--   What is inflation, productivity, a tariff
--   Why does it feel bad even when number good
--   Common arguments (lies) "economists" use
+# Talking about Economic Concepts
+
+## Run Sheet
+
+-   Definitions of commonly used terms
+-   Inflation, Productivity, Unemployment rate, Tariffs
+-   Relationship between numbers and material conditions
 
 ## Inflation (or, the Consumer Price Index)
-- The CPI is a measure of changes in the price of a "basket" of goods and services.
-- The basket includes (among other things):
+
+-   The CPI is a measure of changes in the price of a "basket" of goods and services.
+-   The basket includes (among other things):
     -   Food and non-alcoholic beverages
     -   Alcohol and tobacco
     -   Housing
-- CPI data is reported as an index, or as a % change since last month, last quarter, or last year.
+-   It represents the average inflation experience - and is **not** reflective of changes in cost of living.
 
-## Reporting Inflation 
+## Reporting Inflation - Index
 
-::: {.notes}
-This is the % change way of measuring inflation.
-Inflation goes up when the % change in one period is higher than the last period
-All the numbers (except for one in 2020) are positive.
+-   CPI data is reported as an **index**, or as a % change compared to the previous quarter, or previous year.
+    -   an *index* shows how prices have changed relative to a value of 100 in the reference period.
+    -   The CPI is indexed so that the 2011/12 financial year is considered 100.
+    -   An index of 110 in March 2020 would mean that prices have increased by 10% since the reference period.
+
+## Reporting Inflation - Percentage Change
+-   CPI data is reported as an index, or as a **% change in since last month, last quarter, or last year.**
+    -   A percentage change measures the relative change in prices compared to another period.
+    -   The *annual change* is a measure of the price now compared to the price one year ago.
+    -   The *change from previous quarter* is a measure of the price now compared to the price 3 months ago.
+
+::: notes
+Example 1: An annual change of 7.8% in December 2022 means prices in December 2022 were 7.8% higher than they were in December 2021.
+Example 2: A change from previous quarter of -1.9% in June 2020 means that prices in June 2020 were 1.9% lower than they were in March 2020. 
 :::
 
+## Reporting Inflation
+::: notes
+Column 1: This is the % change way of measuring inflation. Inflation goes up when the % change in one period is higher than the last period All the numbers (except for one in 2020) are positive.
+
+Column 2: Now looking at the index number approach. 
+:::
+
+::: {.panel-tabset}
+### Inflation - Percentage Change
 ```{r}
 #| out-width: 100%
 cpi |> 
@@ -109,9 +127,11 @@ cpi |>
            yend = 3)
 ```
 
-## Reporting Inflation
+### Inflation - Index
 
 ```{r}
+#| out-width: 100%
+
 cpi |> 
   filter(data_type == "Index Numbers",
          capital_city == "Australia",
@@ -120,7 +140,8 @@ cpi |>
   ggplot(aes(x = date, y = value, col = "inflation")) +
   geom_line() +
   theme_nrc() +
-  labs(y = "price",
+  labs(title = "Consumer Price Index, All groups CPI",
+       y = "consumer price index (100 = 2011/12)",
        x = NULL) +
   annotate(geom = "textsegment", 
            arrow = arrow(), 
@@ -137,10 +158,155 @@ cpi |>
            xend = as_date("2025-03-01"),
            yend = 130)
 ```
+:::
+
+## Inflation - By Type
+::: notes
+Reported inflation tends to focus on the overall average - but it's collected at a highly disaggregated level.
+
+Things that have increased faster than the average since March 2020 include: housing, food, alcohol and tobacco, health, transport, education, and insurance
+
+Compared to things which have gone down? Clothing and footwear, and furnishings... 
+
+Other weird things about inflation - it hasn't included mortgage repayments (since 1998). 
+:::
+```{r}
+cpi |> 
+  filter(cpi_category %in% c("All groups CPI",
+                             "Food and non-alcoholic beverages",
+                             "Alcohol and tobacco",
+                             "Clothing and footwear",
+                             "Housing",
+                             "Furnishings, household equipment and services",
+                             "Health", 
+                             "Transport",
+                             "Communications",
+                             "Recreation and Culture",
+                             "Education",
+                             "Insurance and financial services"),
+         series_type == "Original",
+         data_type == "Index Numbers",
+         capital_city == "Australia") |> 
+  group_by(cpi_category) |> 
+  mutate(reindex = 100*value/value[date=="2020-03-01"],
+         alpha = ifelse(cpi_category %in% c("All groups CPI",
+                                            "Food and non-alcoholic beverages", 
+                                            "Housing",
+                                            "Furnishings, household equipment and services",
+                                            "Clothing and Footwear"),
+                        1,
+                        0),
+         label = ifelse(cpi_category %in% c("All groups CPI",
+                                            "Food and non-alcoholic beverages", 
+                                            "Housing",
+                                            "Furnishings, household equipment and services",
+                                            "Clothing and Footwear"),
+                        cpi_category,
+                        NA_character_),
+         color = case_when(cpi_category == "All groups CPI" ~ "Colour 1",
+                           cpi_category %in% c("Food and non-alcoholic beverages",
+                                               "Housing",
+                                               "Furnishings, household equipment and services",
+                                               "Clothing and Footwear") ~ "Colour 2",
+                           TRUE ~ "Colour 3")) |> 
+  filter(date >= as_date("2020-03-01")) |> 
+  ungroup() |> 
+  ggplot(aes(x = date, y = reindex, group = cpi_category, label = label, col = color, alpha = alpha)) + 
+  geom_line() +
+  geom_dl(method = list("last.qp", cex = 0.75)) +
+  theme_nrc() +
+  labs(y = "consumer price index (100 = March 2020)",
+       x = NULL,
+       title = "Consumer Price Index, by Category") +
+  scale_colour_nrc() +
+  scale_x_continuous(expand = c(0, 0.05))
+```
+
+## Inflation - Cost of Living
+::: notes
+as mentioned previously, the cpi is not a measure of the cost of living. 
+in fact there is no definitive cost of living measure collected by the ABS
+but the ABS does collect a living cost index
+:::
+```{r}
+lci <- read_abs_local("6467.0", filenames = "646702.xlsx", path = "data") |> 
+  separate_series(c("data_type", "household_type", "cpi_category")) 
+
+lci |> 
+  filter(data_type == "Index Numbers",
+         cpi_category %in% c("All groups", "Alcohol and tobacco", "Food and non-alcoholic beverages")) |> 
+  ggplot(aes(x = date, y = value, col = cpi_category)) + 
+  geom_line() +
+  facet_wrap(~household_type)
+```
+
+## Inflation - Wages
+::: notes
+probably some kind of discussion about whether wages are keeping up with inflation
+:::
+```{r}
+
+cpi_pc <- read_abs_local("6401.0", filenames = "640101.xlsx", path = "data") |> 
+  filter(series == "Percentage Change from Corresponding Quarter of Previous Year ;  All groups CPI ;  Australia ;",
+         series_type == "Original") |> 
+  select(date, cpi_pc = value)
+
+wpi_pc <-  wpi_quarterly |> 
+  filter(indicator == "Total hourly rates of pay excluding bonuses",
+         data_type == "Quarterly Index",
+         state == "Australia",
+         sector == "Private and Public",
+         industry == "All industries") |> 
+  distinct() |> 
+  select(date, wpi = value) |> 
+  mutate(wpi_pc = 100*(wpi-lag(wpi, 4))/lag(wpi, 4))
+
+wage_price <- wpi_pc |> 
+  inner_join(cpi_pc) |> 
+  mutate(real_wage_growth = wpi_pc - cpi_pc) |> 
+  filter(!is.na(wpi_pc)) |> 
+  mutate(real_wage = 45000+(45000*cumsum(real_wage_growth)/100))
+
+wage_price |> 
+  ggplot(aes(x = date, y = real_wage, col = "real_wage")) + 
+  geom_line() +
+  theme_nrc() + 
+  labs(x = NULL,
+       y = NULL,
+       title = "Value of real wages that were equal to $45,000 in September 1998") +
+  geom_hline(aes(yintercept = last(real_wage)), linetype = 1) +
+  scale_y_continuous(labels = scales::label_currency())
+```
 
 ## Tariffs
 
-## Productivity
+-   What is a tariff?
+-   Tariffs throughout history
+-   Are tariffs inherently bad?
+-   Protectionism, reindustrialisation
+-   Institutions, (neo)liberalism
+
+## Productivity (or, output per hour worked)
+- **Labour** Productivity is a measure of Gross Domestic Product per hour worked. 
+  -   How many workers does it take to produce 1 widget?
+- But there are other inputs into production besides labour, including capital
+- Changes in output can occur even without changes to input
+
+::: notes
+For example, you could lose output in Agriculture from bad weather destroying a crop.
+Similarly, you could gain output in Mining because high prices make some difficult deposits worth mining.
+
+Labour productivity is the most commonly reported productivity. It is relatively simple to measure and describe.
+:::
+
+## Productivity - Measurement Issues
+- It is relatively easy to measure and describe output per worker.
+- Measuring output per unit of labour **and** capital is much more complicated, and questionable. 
+  -   What is a unit of labour-capital?
+- Measuring productivity in the public sector basically shouldn't be done.
+  -   You would increase productivity in Education by reducing the number of teachers per student.
+
+## Productivity Trends 
 
 ```{r}
 national_accounts |> 
@@ -157,11 +323,19 @@ national_accounts |>
 
 ## Drivers of Productivity
 
--   Productivity can decrease if:
+-   Productivity can decrease (numerically) if:
     -   hours worked increases faster than output
     -   output decreases
+    
+::: notes
+As explained before, output can decrease independent of changes to inputs.
+Additionally, hours worked can be strongly influenced by seasonal trends. 
+:::
 
 ## Hours Worked
+::: notes
+I don't know about you but the increase in 
+:::
 
 ```{r}
 national_accounts |> 
@@ -174,6 +348,15 @@ national_accounts |>
 ```
 
 ## GDP
+```{r}
+national_accounts |> 
+  filter(series == "GROSS DOMESTIC PRODUCT: Chain volume measures ;",
+         !is.na(value)) |> 
+  ggplot(aes(x = date, y = value, col = 'hours')) + 
+  geom_line() + 
+  theme_nrc() + 
+  labs(x = NULL, y = "GDP")
+```
 
 ## Sector
 
@@ -195,24 +378,22 @@ group_by(industry) |>
        x = NULL)
 ```
 
-## Productivity
 
--   Per hour worked
 
-## Industrial Capabilities
+# Industrial Capabilities
 
 -   Core concepts:
     -   a country makes (or does) what it knows
     -   products (or activities) represent combinations of knowledge
-- Capabilities are like letters in Scrabble
+-   Capabilities are like letters in Scrabble
     -   The more you have, the more words you can make
     -   Rare letters create words worth more points
 
 ## Industrial Capabilities
 
-::::: {.columns}
+:::: columns
 ::: {.column width="50%"}
-![](img/Granny Smith.webp)
+![](img/Granny%20Smith.webp)
 :::
 
 ::: {.column width="50%"}
@@ -226,10 +407,11 @@ An apple in the supermarket represents:
 
 -   Logistics
 :::
-:::::
+::::
 
 ## Industrial Capabilities
-::::: {.columns}
+
+:::: columns
 ::: {.column width="50%"}
 ![](img/Apple.png)
 :::
@@ -237,14 +419,15 @@ An apple in the supermarket represents:
 ::: {.column width="50%"}
 An iPhone represents:
 
-- Semiconductors
-- Software/Hardware Engineering
-- Materials science
-- Lenses
-- Marketing
-- Packaging
+-   Semiconductors
+-   Software/Hardware Engineering
+-   Materials science
+-   Lenses
+-   Marketing
+-   Packaging
 :::
-:::::
+::::
+
 ## Measuring Industrial Capabilities
 
 -   Export data reveals what a country makes
@@ -252,25 +435,24 @@ An iPhone represents:
 -   The presence of different capabilities in different countries allows a ranking called the Economic Complexity Index
 
 ## Why does it matter?
--   The Economic Complexity Index is predictive of the direction of future economic growth. 
+
+-   The Economic Complexity Index is predictive of the direction of future economic growth.
     -   Countries with higher complexity are predicted to grow faster
 -   Useful tool to identify productive capabilities of a country
 -   Can be used to identify future opportunities
 
 ## Why does it matter to Australia?
-:::: {.columns}
-::: {.column width="50%"}
-![](img/aus complexity rank.svg)
-:::
-:::{.column width = "50%"}
--   Australia's ranking in 2023 was 105th
-    -   Sandwiched between Botswana and Côte d'Ivoire
--   Australia's exports are concentrated in only a few products
--   Australia's exports are lower in average complexity
--   Australia does not have the industrial capabilities of other developed countries. 
-:::
-::::
 
+:::: columns
+::: {.column width="50%"}
+![](img/aus%20complexity%20rank.svg)
+:::
+
+:::{.column width="50%"}
+- Australia's ranking in 2023 was 105th - Sandwiched between Botswana and Côte d'Ivoire - Australia's exports are concentrated in only a few products - Australia's exports are lower in average complexity - Australia does not have the industrial capabilities of other developed countries.
+:::
+
+::::
 
 # More Discussion about Capital E Economics
 
@@ -287,4 +469,4 @@ An iPhone represents:
 
 -   Paid too much
 -   Don't care enough about material conditions
--   Let them eat headline inflation ::: ::::
+-   Let them eat headline inflation 
