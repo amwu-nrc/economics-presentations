@@ -321,6 +321,28 @@ national_accounts |>
        x = NULL)
 ```
 
+## Productivity Trends - 20 year average
+:::: columns
+::: {.column width='50%'}
+```{r}
+national_accounts |> 
+  filter(series == "GDP per hour worked: Index ;") |> 
+  mutate(cagr = (value/lag(value, n = 20))^(1/20) - 1) |> 
+  filter(!is.na(cagr)) |>  
+  ggplot(aes(x = date, y = cagr)) +
+  geom_line() + 
+  scale_y_continuous(labels = scales::label_percent()) +
+  labs(y = "average productivity growth",
+      x = NULL) + 
+  theme_nrc()
+```
+:::
+::: {.column width='50%'}
+- Clearly not a new problem
+- 20-year average productivity growth was pretty stable up until about 2013
+- Significant declines since then. Covid rebound probably an illusion
+:::
+::::
 ## Drivers of Productivity
 
 -   Productivity can decrease (numerically) if:
@@ -334,7 +356,10 @@ Additionally, hours worked can be strongly influenced by seasonal trends.
 
 ## Hours Worked
 ::: notes
-I don't know about you but the increase in 
+I don't know about you but the increase in hours worked looks like it's pretty steep.
+What do we think could have caused that?
+Could it be people working more hours because they're struggling to make ends meet because of inflation?
+Even the Productivity Commission recognise that high hours worked is pulling productivity down
 :::
 
 ```{r}
@@ -361,7 +386,7 @@ national_accounts |>
 ## Sector
 
 ```{r}
-national_accounts |> 
+p <- national_accounts |> 
   filter(table_no == "5204015_Labour_Productivity_Input",
          str_detect(series, "GVA"),
          !is.na(value)) |>
@@ -375,7 +400,8 @@ group_by(industry) |>
   gghighlight(industry %in% c("ALL INDUSTRIES")) +
   theme_nrc() +
   labs(y = "gross value added per hour worked",
-       x = NULL)
+       x = NULL) 
+  plotly::ggplotly(p)
 ```
 
 
