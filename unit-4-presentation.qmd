@@ -1,6 +1,8 @@
 ---
-title: "Economics, Political Economy, Industrial Policy"
+title: "Understanding Economic Concepts"
+subtitle: ""
 author: "Hamish Gamble"
+affiliation: "National Research Centre"
 execute: 
   echo: false
   warning: false
@@ -8,7 +10,11 @@ execute:
 format: 
   revealjs:
       incremental: false
+      slide-number: true
+      logo: img/amwu.png
       fig-format: svg
+      footer: 'https://amwu-nrc.github.io/delegates-4-2025/unit-4-presentation.html'
+      theme: custom.css
 editor: visual
 ---
 
@@ -59,10 +65,6 @@ national_accounts <- read_abs_local(cat_no = "5204.0", path = "data")
 We're going to talk about: - inflation, productivity, unemployment rate, and tariffs - why "economic good news" doesn't necessarily translate to how you feel
 :::
 
-## Economic Concepts
-
-## Inflation {.center background-image="https://i0.wp.com/pearlyarts.com/wp-content/uploads/2023/05/FREE-Blue-Balloon-Clipart-WM.png"}
-
 ## Inflation (or, the Consumer Price Index)
 
 -   The CPI is a measure of changes in the price of a "basket" of goods and services.
@@ -83,11 +85,14 @@ We're going to talk about: - inflation, productivity, unemployment rate, and tar
 
 -   CPI data is reported as an index, or as a **% change in since last month, last quarter, or last year.**
     -   A percentage change measures the relative change in prices compared to another period.
-    -   The *annual change* is a measure of the price now compared to the price one year ago.
-    -   The *change from previous quarter* is a measure of the price now compared to the price 3 months ago.
-
+    
 ::: notes
-Example 1: An annual change of 7.8% in December 2022 means prices in December 2022 were 7.8% higher than they were in December 2021. Example 2: A change from previous quarter of -1.9% in June 2020 means that prices in June 2020 were 1.9% lower than they were in March 2020.
+Annual Change:     
+    -   The *annual change* is a measure of the price now compared to the price one year ago.
+Change from Previous Quarter:
+    -   The *change from previous quarter* is a measure of the price now compared to the price 3 months ago.
+Example 1:
+An annual change of 7.8% in December 2022 means prices in December 2022 were 7.8% higher than they were in December 2021. Example 2: A change from previous quarter of -1.9% in June 2020 means that prices in June 2020 were 1.9% lower than they were in March 2020.
 :::
 
 ## Reporting Inflation
@@ -362,7 +367,9 @@ wage_price |>
 -   weaponised since at least the 80s
 -   the value of solidarity
 
-##  {background-video="vid/productivity.webm"}
+## Productivity
+{{< video https://www.youtube.com/watch?v=00npeUY_1Vg width="100%" height="85%">}}
+
 
 ## Productivity (or, output per hour worked)
 
@@ -425,7 +432,7 @@ national_accounts |>
 :::
 :::::
 
-## Productivity Trends - Hours worked and GDP
+## Productivity Trends
 
 ::: notes
 I don't know about you but the increase in hours worked looks like it's pretty steep. What do we think could have caused that? Could it be people working more hours because they're struggling to make ends meet because of inflation? Even the Productivity Commission recognise that high hours worked is pulling productivity down
@@ -531,7 +538,7 @@ wage_share <- read_abs_local("5206.0", "5206007_Income_from_GDP.xlsx", path = "d
 -   Protectionism, reindustrialisation
 -   Institutions, (neo)liberalism
 
-# Industrial Capabilities
+# Section 3: Industrial Capabilities
 
 -   Core concepts:
     -   a country makes (or does) what it knows
@@ -609,7 +616,10 @@ An iPhone represents:
 
 ## What can we do?
 
-# Economics and Economists
+# Section 4: Economics and Economists
+
+## Economics
+{{< video https://www.youtube.com/watch?v=pQPv5oUfsbg width="100%" height="85%">}}
 
 ## Economists
 
@@ -644,8 +654,11 @@ Economics used to be the realm of the philosopher. In about the 1950s or 1960s, 
 -   Is the economy how well we meet the needs of society?
 -   Is the economy how well the stock market is performing?
 
-## \## Creating Value
-
+##  Value
+-   Everything in the economy comes from some combination of work and the natural environment
+-   Only work can "add value" 
+-   However you want to define value - productive labour is the only source of it. 
+-   Capital is not inherently 'productive' - which means profit must represent the capture of the surplus that workers produce. 
 ## The capitalist class / the working class
 
 -   Capital realism/hypernormalisation
@@ -657,5 +670,4 @@ Economics used to be the realm of the philosopher. In about the 1950s or 1960s, 
 # What is to be done?
 
 -   industry policy
--   gulag
 -   collective power and class solidarity

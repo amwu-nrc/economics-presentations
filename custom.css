@@ -1,0 +1,21 @@
+/*-- scss:defaults --*/
+
+// colour scheme
+
+$theme-light-back: #fdddb6;
+$theme-light-link: #9a3416;
+$theme-light-text: #222222;
+
+// colours
+$body-bg: $theme-light-back;
+$body-color: $theme-light-text;
+$link-color: $theme-light-link;
+
+// fonts
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+$font-family-sans-serif: "Roboto", sans-serif;
+$presentation-heading-font: "Roboto", serif;
+$presentation-font-size-root: 40px;
+$presentation-line-height: 1.6;
