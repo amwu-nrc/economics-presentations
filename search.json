@@ -1,38 +1,31 @@
 [
   {
+    "objectID": "unit-4-presentation.html#inflation-tumbles",
+    "href": "unit-4-presentation.html#inflation-tumbles",
+    "title": "Economics, Political Economy, Industrial Policy",
+    "section": "Inflation Tumbles!",
+    "text": "Inflation Tumbles!"
+  },
+  {
+    "objectID": "unit-4-presentation.html#productivity-disaster",
+    "href": "unit-4-presentation.html#productivity-disaster",
+    "title": "Economics, Political Economy, Industrial Policy",
+    "section": "Productivity Disaster!",
+    "text": "Productivity Disaster!"
+  },
+  {
+    "objectID": "unit-4-presentation.html#economic-concepts",
+    "href": "unit-4-presentation.html#economic-concepts",
+    "title": "Economics, Political Economy, Industrial Policy",
+    "section": "Economic Concepts",
+    "text": "Economic Concepts"
+  },
+  {
     "objectID": "unit-4-presentation.html#inflation",
     "href": "unit-4-presentation.html#inflation",
     "title": "Economics, Political Economy, Industrial Policy",
     "section": "Inflation",
     "text": "Inflation"
-  },
-  {
-    "objectID": "unit-4-presentation.html#inflation-1",
-    "href": "unit-4-presentation.html#inflation-1",
-    "title": "Economics, Political Economy, Industrial Policy",
-    "section": "Inflation",
-    "text": "Inflation\n\nHow is inflation measured?\nWhat happens to prices when inflation goes down?\nDoes the reporting match your experience?"
-  },
-  {
-    "objectID": "unit-4-presentation.html#productivity",
-    "href": "unit-4-presentation.html#productivity",
-    "title": "Economics, Political Economy, Industrial Policy",
-    "section": "Productivity",
-    "text": "Productivity"
-  },
-  {
-    "objectID": "unit-4-presentation.html#productivity-1",
-    "href": "unit-4-presentation.html#productivity-1",
-    "title": "Economics, Political Economy, Industrial Policy",
-    "section": "Productivity",
-    "text": "Productivity\n\nWhat is productivity?\nHow is productivity measured?\nWhat drives changes in productivity?"
-  },
-  {
-    "objectID": "unit-4-presentation.html#run-sheet",
-    "href": "unit-4-presentation.html#run-sheet",
-    "title": "Economics, Political Economy, Industrial Policy",
-    "section": "Run Sheet",
-    "text": "Run Sheet\n\nDefinitions of commonly used terms\nInflation, Productivity, Unemployment rate, Tariffs\nRelationship between numbers and material conditions"
   },
   {
     "objectID": "unit-4-presentation.html#inflation-or-the-consumer-price-index",
@@ -60,7 +53,7 @@
     "href": "unit-4-presentation.html#reporting-inflation",
     "title": "Economics, Political Economy, Industrial Policy",
     "section": "Reporting Inflation",
-    "text": "Reporting Inflation\n\nColumn 1: This is the % change way of measuring inflation. Inflation goes up when the % change in one period is higher than the last period All the numbers (except for one in 2020) are positive.\nColumn 2: Now looking at the index number approach.\n\n\nInflation - Percentage ChangeInflation - Index"
+    "text": "Reporting Inflation\n\nTab 1: This is the % change way of measuring inflation. Inflation goes up when the % change in one period is higher than the last period All the numbers (except for one in 2020) are positive.\nTab 2: Now looking at the index number approach.\nDecreasing inflation is usually presented in the media as good news. But because inflation measures the rate of change of a rate, decreasing inflation just means that prices didn’t increase as fast. The index measure shows you the effect of ‘cumulative’ inflation on prices.\n\n\nInflation - Percentage ChangeInflation - Index\n\n\n\n\n\n\n\n\n\n\nFigure 1\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigure 2"
   },
   {
     "objectID": "unit-4-presentation.html#inflation---by-type",
@@ -74,7 +67,7 @@
     "href": "unit-4-presentation.html#inflation---cost-of-living",
     "title": "Economics, Political Economy, Industrial Policy",
     "section": "Inflation - Cost of Living",
-    "text": "Inflation - Cost of Living\n\nas mentioned previously, the cpi is not a measure of the cost of living. in fact there is no definitive cost of living measure collected by the ABS but the ABS does collect a living cost index"
+    "text": "Inflation - Cost of Living\n\nas mentioned previously, the cpi is not a measure of the cost of living. in fact there is no definitive cost of living measure collected by the ABS but the ABS does collect a living cost index “By how much would after tax money incomes need to change to allow households to purchase the same quantity of consumer goods and services that they purchased in the base period?”\n\n\n\n\n\n\n\n\n\n\n\nChange in living costs by product category\n\n\n% change between March 2025 and March 2024\n\n\nPrice Category\n% change\n\n\n\n\nInsurance and financial services\n8.2\n\n\nAlcohol and tobacco\n6.4\n\n\nEducation\n6.0\n\n\nHealth\n4.2\n\n\nAll groups\n3.4\n\n\nWages\n3.4\n\n\nFood and non-alcoholic beverages\n3.2\n\n\nHousing\n2.4\n\n\nRecreation and culture\n1.7\n\n\nClothing and footwear\n1.6\n\n\nFurnishings, household equipment and services\n0.7\n\n\nCommunication\n0.0\n\n\nTransport\n-1.3\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nChange in living costs by product category\n\n\n% change between March 2025 and March 2015\n\n\nPrice Category\n% change\n\n\n\n\nAlcohol and tobacco\n77.2%\n\n\nInsurance and financial services\n69.9%\n\n\nHealth\n46.2%\n\n\nEducation\n42.1%\n\n\nAll groups\n34.3%\n\n\nTransport\n32.6%\n\n\nFood and non-alcoholic beverages\n31.3%\n\n\nWages\n28.7%\n\n\nHousing\n26.4%\n\n\nFurnishings, household equipment and services\n19.6%\n\n\nRecreation and culture\n18.5%\n\n\nClothing and footwear\n1.4%\n\n\nCommunication\n−20.9%"
   },
   {
     "objectID": "unit-4-presentation.html#inflation---wages",
@@ -84,11 +77,11 @@
     "text": "Inflation - Wages\n\nprobably some kind of discussion about whether wages are keeping up with inflation"
   },
   {
-    "objectID": "unit-4-presentation.html#tariffs",
-    "href": "unit-4-presentation.html#tariffs",
+    "objectID": "unit-4-presentation.html#economic-anxiety",
+    "href": "unit-4-presentation.html#economic-anxiety",
     "title": "Economics, Political Economy, Industrial Policy",
-    "section": "Tariffs",
-    "text": "Tariffs\n\nWhat is a tariff?\nTariffs throughout history\nAre tariffs inherently bad?\nProtectionism, reindustrialisation\nInstitutions, (neo)liberalism"
+    "section": "Economic anxiety",
+    "text": "Economic anxiety\n\nfeel stressed?\ncapitalism got you down?\nyou are right to feel anxious\nyou are forced to pursue your personal (monetary) interest because you need to to survive\n\nemployers use this to divide\nhard to build solidarity\n\nweaponised since at least the 80s\nthe value of solidarity"
   },
   {
     "objectID": "unit-4-presentation.html#productivity-or-output-per-hour-worked",
@@ -119,25 +112,18 @@
     "text": "Productivity Trends - 20 year average\n\n\n\n\n\n\n\n\n\n\n\n\n\nClearly not a new problem\n20-year average productivity growth was pretty stable up until about 2013\nSignificant declines since then. Covid rebound probably an illusion"
   },
   {
-    "objectID": "unit-4-presentation.html#drivers-of-productivity",
-    "href": "unit-4-presentation.html#drivers-of-productivity",
+    "objectID": "unit-4-presentation.html#productivity-trends---hours-worked-and-gdp",
+    "href": "unit-4-presentation.html#productivity-trends---hours-worked-and-gdp",
     "title": "Economics, Political Economy, Industrial Policy",
-    "section": "Drivers of Productivity",
-    "text": "Drivers of Productivity\n\nProductivity can decrease (numerically) if:\n\nhours worked increases faster than output\noutput decreases\n\n\n\nAs explained before, output can decrease independent of changes to inputs. Additionally, hours worked can be strongly influenced by seasonal trends."
+    "section": "Productivity Trends - Hours worked and GDP",
+    "text": "Productivity Trends - Hours worked and GDP\n\nI don’t know about you but the increase in hours worked looks like it’s pretty steep. What do we think could have caused that? Could it be people working more hours because they’re struggling to make ends meet because of inflation? Even the Productivity Commission recognise that high hours worked is pulling productivity down\n\n\nHours WorkedGDP\n\n\n\n\n\n\n\n\n\n\nFigure 3\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigure 4"
   },
   {
-    "objectID": "unit-4-presentation.html#hours-worked",
-    "href": "unit-4-presentation.html#hours-worked",
+    "objectID": "unit-4-presentation.html#productivity-trends---workers-share",
+    "href": "unit-4-presentation.html#productivity-trends---workers-share",
     "title": "Economics, Political Economy, Industrial Policy",
-    "section": "Hours Worked",
-    "text": "Hours Worked\n\nI don’t know about you but the increase in hours worked looks like it’s pretty steep. What do we think could have caused that? Could it be people working more hours because they’re struggling to make ends meet because of inflation? Even the Productivity Commission recognise that high hours worked is pulling productivity down"
-  },
-  {
-    "objectID": "unit-4-presentation.html#gdp",
-    "href": "unit-4-presentation.html#gdp",
-    "title": "Economics, Political Economy, Industrial Policy",
-    "section": "GDP",
-    "text": "GDP"
+    "section": "Productivity Trends - Workers Share",
+    "text": "Productivity Trends - Workers Share\n\n\n\nIf productivity is a measure of output per hour, it would only be fair to compare that with how much compensation (in real terms) workers are getting per hour."
   },
   {
     "objectID": "unit-4-presentation.html#sector",
@@ -145,6 +131,27 @@
     "title": "Economics, Political Economy, Industrial Policy",
     "section": "Sector",
     "text": "Sector"
+  },
+  {
+    "objectID": "unit-4-presentation.html#productivity---wage-share",
+    "href": "unit-4-presentation.html#productivity---wage-share",
+    "title": "Economics, Political Economy, Industrial Policy",
+    "section": "Productivity - Wage Share",
+    "text": "Productivity - Wage Share"
+  },
+  {
+    "objectID": "unit-4-presentation.html#tariffs",
+    "href": "unit-4-presentation.html#tariffs",
+    "title": "Economics, Political Economy, Industrial Policy",
+    "section": "Tariffs",
+    "text": "Tariffs"
+  },
+  {
+    "objectID": "unit-4-presentation.html#tariffs-1",
+    "href": "unit-4-presentation.html#tariffs-1",
+    "title": "Economics, Political Economy, Industrial Policy",
+    "section": "Tariffs",
+    "text": "Tariffs\n\nWhat is a tariff?\nTariffs throughout history\nAre tariffs inherently bad?\nProtectionism, reindustrialisation\nInstitutions, (neo)liberalism"
   },
   {
     "objectID": "unit-4-presentation.html#industrial-capabilities-1",
@@ -179,27 +186,62 @@
     "href": "unit-4-presentation.html#why-does-it-matter-to-australia",
     "title": "Economics, Political Economy, Industrial Policy",
     "section": "Why does it matter to Australia?",
-    "text": "Why does it matter to Australia?\n\n\n\n\n\nAustralia’s ranking in 2023 was 105th - Sandwiched between Botswana and Côte d’Ivoire - Australia’s exports are concentrated in only a few products - Australia’s exports are lower in average complexity - Australia does not have the industrial capabilities of other developed countries."
+    "text": "Why does it matter to Australia?\n\n\n\n\n\nAustralia’s ranking in 2023 was 105th - Sandwiched between Botswana and Côte d’Ivoire\nAustralia’s exports are concentrated in only a few products\nAustralia’s exports are lower in average complexity\nAustralia does not have the industrial capabilities of other developed countries."
+  },
+  {
+    "objectID": "unit-4-presentation.html#what-can-we-do",
+    "href": "unit-4-presentation.html#what-can-we-do",
+    "title": "Economics, Political Economy, Industrial Policy",
+    "section": "What can we do?",
+    "text": "What can we do?"
+  },
+  {
+    "objectID": "unit-4-presentation.html#economists",
+    "href": "unit-4-presentation.html#economists",
+    "title": "Economics, Political Economy, Industrial Policy",
+    "section": "Economists",
+    "text": "Economists\n\nEconomics used to be the realm of the philosopher. In about the 1950s or 1960s, a new school of economists decided that adding maths equations to economics made it more rigorous, and more scientific.\n\n\n\n\nKnow it all\nWork in finance\nKinda annoying\nThink that adding maths equations make their work more “real”"
   },
   {
     "objectID": "unit-4-presentation.html#political-economy",
     "href": "unit-4-presentation.html#political-economy",
     "title": "Economics, Political Economy, Industrial Policy",
     "section": "Political Economy",
-    "text": "Political Economy"
+    "text": "Political Economy\n\nDespite what economists would have you believe:\nEconomics is not an independent, neutral, or technical system\nEconomics is inseparable from politics\nYou can’t eat “headline inflation fell to 2.4%”"
   },
   {
     "objectID": "unit-4-presentation.html#what-is-the-economy",
     "href": "unit-4-presentation.html#what-is-the-economy",
     "title": "Economics, Political Economy, Industrial Policy",
     "section": "What is The Economy?",
-    "text": "What is The Economy?\n\nIs the economy how much we produce in total?\nIs the economy how much we produce per person?\nIs the economy how well we meet the needs of society?\nIs the economy the stock market?"
+    "text": "What is The Economy?\n\nIs the economy how much we produce in total?\nIs the economy how much we produce per person?\nIs the economy how well we meet the needs of society?\nIs the economy how well the stock market is performing?"
   },
   {
-    "objectID": "unit-4-presentation.html#everyone-hates-economists",
-    "href": "unit-4-presentation.html#everyone-hates-economists",
+    "objectID": "unit-4-presentation.html#creating-value",
+    "href": "unit-4-presentation.html#creating-value",
     "title": "Economics, Political Economy, Industrial Policy",
-    "section": "Everyone Hates Economists",
-    "text": "Everyone Hates Economists\n\nPaid too much\nDon’t care enough about material conditions\nLet them eat headline inflation"
+    "section": "## Creating Value",
+    "text": "## Creating Value"
+  },
+  {
+    "objectID": "unit-4-presentation.html#the-capitalist-class-the-working-class",
+    "href": "unit-4-presentation.html#the-capitalist-class-the-working-class",
+    "title": "Economics, Political Economy, Industrial Policy",
+    "section": "The capitalist class / the working class",
+    "text": "The capitalist class / the working class\n\nCapital realism/hypernormalisation"
+  },
+  {
+    "objectID": "unit-4-presentation.html#the-role-of-the-state-in-preserving-the-status-quo",
+    "href": "unit-4-presentation.html#the-role-of-the-state-in-preserving-the-status-quo",
+    "title": "Economics, Political Economy, Industrial Policy",
+    "section": "The role of the State in preserving the status quo",
+    "text": "The role of the State in preserving the status quo"
+  },
+  {
+    "objectID": "unit-4-presentation.html#solidarity-among-the-working-class",
+    "href": "unit-4-presentation.html#solidarity-among-the-working-class",
+    "title": "Economics, Political Economy, Industrial Policy",
+    "section": "Solidarity among the working class",
+    "text": "Solidarity among the working class"
   }
 ]
