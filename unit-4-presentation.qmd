@@ -562,11 +562,20 @@ national_accounts |>
        x = NULL)
 ```
 
-## Productivity Trends - 20 year average
+## Productivity Trends - 20 Years
 
-::::: columns
-::: {.column width="50%"}
+::: notes
+Productivity is a volatile measure. It is better to measure it across a long time period.
+
+The ABS uses a 20 year average "compound average growth rate" formula.
+
+-   Clearly not a new problem
+-   20-year average productivity growth was pretty stable up until about 2013
+-   Significant declines since then. Covid rebound probably an illusion
+:::
+
 ```{r}
+#| label: productivity-20
 national_accounts |> 
   filter(series == "GDP per hour worked: Index ;") |> 
   mutate(cagr = (value/lag(value, n = 20))^(1/20) - 1) |> 
@@ -578,19 +587,17 @@ national_accounts |>
       x = NULL) + 
   theme_nrc()
 ```
-:::
-
-::: {.column width="50%"}
--   Clearly not a new problem
--   20-year average productivity growth was pretty stable up until about 2013
--   Significant declines since then. Covid rebound probably an illusion
-:::
-:::::
 
 ## Productivity Trends
 
 ::: notes
-I don't know about you but the increase in hours worked looks like it's pretty steep. What do we think could have caused that? Could it be people working more hours because they're struggling to make ends meet because of inflation? Even the Productivity Commission recognise that high hours worked is pulling productivity down
+I don't know about you but the increase in hours worked looks like it's pretty steep.
+
+What do we think could have caused that? Are you working more hours? Do you know people who are working more hours? Why?
+
+Could it be people working more hours because they're struggling to make ends meet because of inflation?
+
+Even the Productivity Commission recognise that high hours worked is pulling productivity down
 :::
 
 ::: panel-tabset
@@ -628,12 +635,14 @@ national_accounts |>
 
 ## Productivity Trends - Workers Share
 
-::::: r-stack
-::: {.fragment .fade-out}
 -   If productivity is a measure of output per hour, it would only be fair to compare that with how much compensation (in real terms) workers are getting per hour.
+
+## Productivity Trends - Workers Share
+
+::: notes
+Damn.
 :::
 
-::: {.fragment .fade-in}
 ```{r}
 #| label: productivity-decouple
 #| out-width: 100%
@@ -654,10 +663,12 @@ productivity |>
   scale_colour_nrc()
 
 ```
-:::
-:::::
 
-## Sector
+## Productivity Trends - Sector
+
+::: notes
+Some sectors have experienced productivity growth, and others productivity declines.
+:::
 
 ```{r}
 national_accounts |> 
@@ -671,27 +682,24 @@ group_by(industry) |>
   ungroup() |> 
   ggplot(aes(x = date, y = index, col = industry)) + 
   geom_line() +
-  gghighlight(industry %in% c("ALL INDUSTRIES")) +
+  scale_colour_nrc() +
+  gghighlight(industry %in% c("ALL INDUSTRIES", "Manufacturing", "Electricity, gas, water and waste services", "Mining")) +
   theme_nrc() +
   labs(y = "gross value added per hour worked",
        x = NULL) 
 ```
 
-## Productivity - Wage Share
-
-```{r}
-wage_share <- read_abs_local("5206.0", "5206007_Income_from_GDP.xlsx", path = "data")
-```
-
 ## Tariffs {.center background-image="img/trump.webp" background-color="black"}
 
-## What is a tariff?
+## Definition
 
+::: incremental
 -   A tariff is essentially a tax charged on imported goods.
 -   The tariff is paid by the *importer*, not the exporter.
 -   Increased costs for the importer will be passed on to the final consumer.
+:::
 
-## The case for tariffs in the US
+## Tariffs in the US
 
 ::: notes
 Trade surplus countries take advantage by using subsidies on domestic production, manipulate currency to keep their exchange rate low, and have their own tariffs on US imports. The impact on domestic industry resonates a lot I think. The impact of deindustrialisation on the US (and other western economies) is real, and has caused significant community disruption, and destruction. Former (and current) industrial towns in the Midwest have suffered real impacts.
@@ -703,6 +711,7 @@ So even if it's successful, even if the argument is believable, there is no room
 
 The argument goes something like this:
 
+::: incremental
 -   The US is 'taken advantage of' by countries who export more to the US than the import.
 
 -   Dependence on foreign goods undermines domestic industry.
@@ -710,58 +719,68 @@ The argument goes something like this:
 -   Putting up tariffs reduces demand for imports and increases demand for domestic production (through price changes)
 
 -   Increase demand restores America's manufacturing base.
+:::
 
-## Tariffs - Protectionism and Industrialisation
+## Tariffs to Protect Industry
+
+::: incremental
+Tariffs are not new.
 
 -   Protecting local industry has long played a role in capitalist development.
+
+<!-- -->
+
 -   Tariffs have been used to protect new industries in developing/industrialising countries.
 -   Britain relied on high tariffs to develop their industry. Once developed, tariffs were disavowed in favour of "free markets" and global trade.
+:::
 
-## Tariffs - Reindustrialisation
+## Tariffs to Reindustrialise
 
 ::: notes
 US manufacturing moved off-shore as capitalists sought higher profit through lower labour costs during a period where the US dollar was very high. The US dollar was very high because Paul Volcker increased interest rates to 19% to curb inflation (through demand destruction, i.e. make everyone unemployed and poor)
 
 The question is - can tariffs work for a country trying to reindustrialise?
 
-America is a special case. They maintain economic, political, and military power over much of the rest of the world - especially across the west.
+America is a special case. If it could work for anyone, it would be them.
 
-Even if it works for them, it is not going to be a viable strategy for the less powerful countries.
+They maintain economic, political, and military power over much of the rest of the world - especially across the west.
+
+But the strategy still faces significant head winds, including:
+
+-   Final product manufacturing in the US still requires intermediate inputs which are sourced from all over the world. So the price increase still gets passed on to domestic production!
+
+-   There's not sufficient domestic capabilities to meet consumers demand. But the price increases are already coming.
+
+-   With no comprehensive industrial strategy, investment and onshoring just means that manufacturing firms would have to accept lower profits out of the kindness of their hearts. Do we think the capitalist would do that?
+
+Even if it works for them, it is not going to be a viable strategy for the rest of us.
 :::
 
--   America can probably extract concessions from the vassal states like South Korea and Japan
+-   America can probably extract concessions from the vassal states like South Korea and Japan.
 
     -   If you're cynical, that might include Australia and the UK too.
 
-    -   These concessions won't be big enough to restore US manufacturing.
+-   But, the stated strategy is relying on automation, AI, and robotics to do the work - not people.
 
--   Western de-industrialisation is mostly related to employment, rather than output.
-
--   Labour costs were reduced by off-shoring, but profit (and output) of western firms remained high.
-
--   Globalisation means value chains are now spread across the world.
-
-    -   Final product manufacturing in the US still requires intermediate inputs which are sourced from all over the world. So the price increase still gets passed on to domestic production!
+-   Globalisation means value chains are now spread across the world, so domestic prices will increase.
 
 -   Without significant investment into domestic manufacturing, demand can't actually be met by local industry.
 
-    -   Investment and onshoring would require manufacturing firms to accept lower profits. Will they?
-
-## Tariffs - Response to Declining Profit
+## Tariffs to Protect Capital
 
 ::: notes
 In response to declining profit, capitalists try to discipline labour, move production somewhere cheaper, inflates asset bubbles, and retreat behind protective barriers.\
 \
-Increased precarity
+You have probably felt and noticed this over the course of your working lives.
+
+Most likely what is going on is that the capital class is using tariffs to try and protect their profits because they are no longer competitive.
 :::
 
 -   The rate of profit has a tendency to fall over time.
 
--   Seeking constant productivity growth, capitalist investment focuses on machinery and technology at the expense of labour.
+-   Seeking constant productivity growth, capitalist investment focuses on machinery and technology at the expense of labour - reducing profit.
 
--   Because only labour can produce value, profitability is reduced.
-
--   US tariffs are thus a response to declining profit, intended to protect US capital from more productive/lower cost competitors, and to shift the burden of declining profitability off shore.
+-   US tariffs are intended to protect US capital from more productive or lower cost competitors, and to shift the burden of declining profitability off shore.
 
 -   This is a temporary solution. The time could be used to develop comprehensive industry policy to revitalise production, or it could be used to keep the plates spinning a bit longer.
 
@@ -847,7 +866,7 @@ An iPhone represents:
 
 ## What can we do?
 
-# Section 4: Economics and Economists
+# **Section 4**: Economics and Economists
 
 ## Economics
 
@@ -894,7 +913,9 @@ Economics used to be the realm of the philosopher. In about the 1950s or 1960s, 
 
 -   However you want to define value - productive labour is the only source of it.
 
--   Capital is not inherently 'productive' - which means profit must represent the capture of the surplus that workers produce. \## The capitalist class / the working class
+-   Capital is not inherently 'productive' - which means profit must represent the capture of the surplus that workers produce.
+
+## The capitalist class / the working class
 
 -   Capital realism/hypernormalisation
 
