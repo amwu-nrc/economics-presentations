@@ -989,13 +989,35 @@ Focus on the individual, and equilibrium in markets. Bring in mathematics and mo
 -   Everyone is born with a set of preferences which determine what they like to consume.
 
 -   Technology converts endowments into usable goods and services.
+
+-   Trading through markets makes sure that everything is optimal.
+
+Which leads to the conclusion that:
+
+-   the market fixes everything and;
+
+-   profit represents the productivity of owned capital - and it is morally justifiable - just explain away the exploitation.
+
+Brief interlude with Keynesianism (explicitly a response to the great depression)- the situation won't resolve itself, and government can stop unemployment by boosting demand (govt spending, taxation, interest rates)
+
+But the return in the 1970s of neoclassical economics (explicitly a response to the stagflation of the 1970s), consolidated today as neoliberalism returns us back to the market solving everyone's problems.
+
+The most important message is:
+
+-   Economics *reflects* the the political ideology, not the other way around!
+
+-   Economists (as social scientists) have ideas about ways that the economy *should* function
 :::
 
 -   "Classical" economics is associated with the development of capitalism and the industrial revolution in the late 1700 and early 1800s.
 
 -   Marxism was a response to the horrible working conditions under which labour was subjected during the industrial revolution - and the associated disparity between capital class and working class.
 
--   Class analysis was neglected in the late 1800s and early 1900s in favour of analysis of individuals. This is the economics that is taught at University.
+-   Class analysis was neglected in the late 1800s and early 1900s in favour of analysis of individuals. This is "Neo Classical" economics, and is what they teach at University.
+
+-   When thinking of economics, it is fundamental to consider:
+
+    -   
 
 ## Value
 
