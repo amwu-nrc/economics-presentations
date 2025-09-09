@@ -1,0 +1,274 @@
+```{r}
+#| label: setup-productivity
+library(reportabs)
+library(tidyverse)
+library(directlabels)
+library(geomtextpath)
+library(readabs)
+library(gghighlight)
+library(strayr)
+library(gt)
+
+national_accounts <- read_abs_local(cat_no = "5206.0", path = "data")
+
+productivity_decouple <- read_absdata("productivity", export_dir = "data") |> 
+  pivot_longer(cols = c(gdp_per_hour_index, real_compensation_per_hour_index)) |> 
+  mutate(name = case_when(
+    name == "gdp_per_hour_index" ~ "Productivity (GDP per Hour Worked)",
+    name == "real_compensation_per_hour_index" ~ "Real Compensation per Hour Worked"
+  )) 
+
+productivity_sector <- read_abs_local("5204.0", 
+                                      filenames = "5204015_Labour_Productivity_Input.xlsx",
+                                      path = "data") |> 
+  filter(table_no == "5204015_Labour_Productivity_Input",
+         str_detect(series, "GVA"),
+         !is.na(value)) |>
+  mutate(industry = str_extract(series, "^(.*?);"),
+         industry = trimws(str_remove_all(industry, ";"))) |>
+  group_by(industry) |> 
+  mutate(index = 100*value/value[date == "1998-06-01"]) |> 
+  ungroup() 
+
+plot_date_range <- function(plot_data) {
+
+ date_min <- as.Date(min(plot_data$date))
+  date_max <- as.Date(max(plot_data$date))
+
+  pre <- scales::breaks_pretty(n = 5)(c(date_min, date_max))
+  date_adj <- as.numeric(pre[length(pre)] - date_max)
+  adj <- pre - date_adj
+  names(adj) <- NULL
+  date_breaks <- adj[adj >= date_min & adj <= date_max]
+  return(date_breaks)
+
+}
+
+```
+
+# Productivity
+
+
+## Productivity (or, output per hour worked)
+
+-   **Labour** Productivity is a measure of Gross Domestic Product per hour worked.
+-   But there are other inputs into production besides labour, including capital
+-   Changes in output can occur even without changes to input
+
+::: notes
+For example, you could lose output in Agriculture from bad weather destroying a crop. Similarly, you could gain output in Mining because high prices make some difficult deposits worth mining.
+
+Labour productivity is the most commonly reported productivity. It is relatively simple to measure and describe.
+:::
+
+## Measuring Productivity
+
+-   It is relatively easy to measure and describe output per worker.
+-   Measuring output per unit of labour **and** capital is much more complicated, and questionable.
+    -   What is a unit of labour-capital?
+-   You should be sceptical of people (especially economists) who talk about productivity in the non-market sector.
+
+::: notes
+The non-market sector includes the Education and Health Care sectors. How is output measured in these sectors? Students graduating? Patients discharged? What would productivity look like? Students graduating per teacher? A measure like that would mean that productivity in the Education sector could be improved by fewer teachers and bigger classes. Anyone who works in Education would say that is not realistic. 
+:::
+
+## Productivity Trends
+
+::: notes
+GDP per hour worked, with June 1991 set as the base or reference year.
+
+-   Growth was slowing prior to 2020 anyway, with the increases seen during then probably due to the pandemic.
+
+-   This has been called a productivity 'bubble' which I think I agree with.
+
+-   Periods of slow growth have been occurring since the 2000s really.
+
+-   The market sector includes industries like manufacturing, mining, construction, and some services. Things that are produced and sold in the market.
+
+-   The non-market sector
+:::
+
+```{r}
+national_accounts_productivity <- national_accounts |> 
+ filter(series %in% c("GDP per hour worked: Index ;",
+                       "Gross value added per hour worked market sector: Index ;",
+                       "Gross value added per hour worked non-market sector: Index ;"),
+        series_type == "Seasonally Adjusted",
+        !is.na(value)) |> 
+  mutate(index = 100*value/value[date == "1991-06-01"],
+         series = case_when(
+           series == "GDP per hour worked: Index ;" ~ "Labour Productivity",
+           series == "Gross value added per hour worked market sector: Index ;" ~ "Labour Productivity (Market)",
+           series == "Gross value added per hour worked non-market sector: Index ;" ~ "Labour Productivity (Non-Market)"
+         )) 
+
+national_accounts_productivity |> 
+  ggplot(aes(x = date, y = index, col = series)) +
+  geom_line() +
+  scale_colour_nrc() +
+  scale_x_date(breaks = plot_date_range(national_accounts_productivity),
+               date_labels = "%e %b\n%Y") +
+  labs(title = "GDP per Hour Worked (June 1991 = 100)",
+       subtitle = "Seasonally Adjusted; Quarterly") +
+  theme_nrc(legend = 'bottom') +
+  labs(y = NULL,
+       x = NULL)
+```
+
+## Productivity Trends
+
+::: notes
+Productivity is a volatile measure. It is better to measure it across a long time period.
+
+The ABS uses a 20 year average "compound average growth rate" formula.
+
+-   Clearly not a new problem
+-   20-year average productivity growth was pretty stable up until about 2013
+-   Significant declines since then. Covid rebound probably an illusion
+:::
+
+```{r}
+#| label: productivity-20
+national_accounts_20 <- national_accounts|> 
+  filter(series %in% c("GDP per hour worked: Index ;"),
+         series_type == "Seasonally Adjusted") |> 
+  mutate(cagr = (value/lag(value, n = 80))^(1/80) - 1) |> 
+  filter(!is.na(cagr)) 
+
+national_accounts_20 |> 
+  ggplot(aes(x = date, y = cagr, col = series)) +
+  geom_line() + 
+  scale_y_continuous(labels = scales::label_percent()) +
+  scale_x_date(breaks = plot_date_range(national_accounts_20),
+               date_labels = "%e %b\n%Y") +
+  labs(title = "20-year average productivity growth",
+       y = "quarterly productivity growth",
+      x = NULL) + 
+  theme_nrc()
+```
+
+## Hours Worked
+
+::: notes
+Productivity is measured as GDP per hour worked. So we need to look at what is happening with hours worked, and with GDP.
+
+I don't know about you but the increase in hours worked looks like it's pretty steep.
+
+What do we think could have caused that? Are you working more hours? Do you know people who are working more hours? Why?
+
+Could it be people working more hours because they're struggling to make ends meet because of inflation?
+
+Even the Productivity Commission recognise that high hours worked is pulling productivity down
+:::
+
+```{r}
+national_accounts_hw <- national_accounts |> 
+  filter(series %in% c("Hours worked: Index ;",
+                       "Hours worked market sector: Index ;",
+                       "Hours worked non-market sector: Index ;"),
+         series_type == "Seasonally Adjusted",
+         !is.na(value)) |> 
+  mutate(series = case_when(
+    series == "Hours worked: Index ;" ~ "Hours Worked",
+    series == "Hours worked market sector; Index ;" ~ "Hours Worked (Market)",
+    series == "Hours worked non-market sector: Index ;" ~ "Hours Worked (Non-Market)"
+  ))
+
+national_accounts_hw |> 
+  ggplot(aes(x = date, y = value, col = series)) + 
+  scale_x_date(date_labels = "%e %b\n %Y",
+               breaks = plot_date_range(national_accounts_hw)) +
+  scale_colour_nrc() +
+  geom_line() + 
+  theme_nrc(legend = "bottom") + 
+  labs(x = NULL, 
+       y = NULL,
+       title = "Hours Worked: Index (June 2022 = 100)",
+       subtitle = "Seasonally Adjusted; Quarterly")
+```
+
+## GDP
+
+```{r}
+#| label: fig-gdp-chain-volume
+#| out-width: 100%
+national_accounts_gdp <- national_accounts |> 
+  filter(series == "Gross domestic product: Chain volume measures ;",
+         series_type == "Seasonally Adjusted",
+         !is.na(value)) 
+
+national_accounts_gdp |> 
+  ggplot(aes(x = date, y = value, col = 'hours')) + 
+  geom_line() + 
+  scale_x_date(date_labels = "%e %b\n %Y",
+               breaks = plot_date_range(national_accounts_gdp)) +
+  theme_nrc() + 
+  labs(x = NULL,
+       y = NULL, 
+       title = "Gross Domestic Product",
+       subtitle = "Seasonally Adjusted; Quarterly") + 
+  scale_y_continuous(labels = scales::label_currency(scale = 1e-3, suffix = "bn"))
+```
+
+##  Workers Share
+
+-   If productivity is a measure of output per hour, it would only be fair to compare that with how much compensation (in real terms) workers are getting per hour.
+
+## Workers Share
+
+::: notes
+Damn.
+:::
+
+```{r}
+#| label: productivity-decouple
+#| out-width: 100%
+
+
+productivity_decouple |> 
+  ggplot(aes(x = date, y = value, col = name)) +
+  geom_line() +
+  scale_x_date(date_labels = "%e %b\n %Y",
+               breaks = plot_date_range(productivity_decouple)) +
+  labs(x = NULL,
+       y = NULL,
+       title = "The Benefits of Increased Productivity Are Not Passed On To Workers",
+       subtitle = "Productivity and Real Compensation per Hour Worked (March 1991 = 100)") +
+  theme_nrc(legend = "bottom") +
+  scale_colour_nrc()
+
+```
+
+## Industry Productivity
+
+::: notes
+Some sectors have experienced productivity growth, and others productivity declines.
+
+The Mining sector tends to be a real drag on productivity.
+
+Manufacturing outperforms the average.
+
+Big productivity improvements in Information media and telecommunications, and Agriculture.
+
+Productivity laggards? Non-market sector, like Health Care, Education, Real estate services.
+:::
+
+```{r}
+
+
+productivity_sector |> 
+  ggplot(aes(x = date, y = index, col = industry)) + 
+  scale_x_date(date_labels = "%e %b\n %Y",
+               breaks = plot_date_range(productivity_sector)) +
+  geom_line() +
+  scale_colour_nrc() +
+  gghighlight(industry %in% c("ALL INDUSTRIES", "Manufacturing", "Mining"), ) +
+  theme_nrc() +
+  labs(title = "Industry Productivity (June 1998 = 100)",
+       subtitle = "Original; Annual",
+       y = "gross value added per hour worked",
+       x = NULL) 
+
+```
+
+## What Productivity is Not
