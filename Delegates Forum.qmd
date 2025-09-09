@@ -1,6 +1,6 @@
 ---
-title: "Delegates Forum"
-subtitle: ""
+title: "Economics"
+subtitle: "Delegates Forum"
 author: "Hamish Gamble"
 affiliation: "National Research Centre"
 execute: 
@@ -9,6 +9,7 @@ execute:
   message: false
 format: 
   revealjs:
+      auto-play-media: true
       embed-resources: true
       incremental: false
       slide-number: true
@@ -16,4 +17,32 @@ format:
       fig-format: svg
 ---
 
-{{< include sections/_section-02-chatting-economics.qmd >}}
+## Who Am I?
+
+-   Economist, National Research Centre
+
+-   Research focus on industrial capabilities and economic complexity
+
+## Agenda
+
+::: notes
+-   Talk about inflation and productivity. What they are, how they are measured, and importantly - what they are not.
+
+-   Equip you with the confidence to advocate for wage increases.
+
+-   Talk about economic complexity. What it means, why it is important, and how we're advocating for industry policy.
+:::
+
+-   Inflation
+
+-   Productivity
+
+-   Economic Complexity
+
+{{< include sections/_section-02a-inflation.qmd >}}
+
+{{< include sections/_section-02b-productivity.qmd >}}
+
+{{< include sections/_section-04-industrial-capabilities.qmd >}}
+
+## Questions
