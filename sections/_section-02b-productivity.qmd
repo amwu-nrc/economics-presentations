@@ -48,6 +48,13 @@ plot_date_range <- function(plot_data) {
 
 # Productivity
 
+::: notes
+Productivity is possibly the most misunderstood economic indicator, but simultaneously one of the most spoken about. The newly elected government has set its focus on productivity, and productivity growth, and has got the Productivity Commission in on the action.
+
+The Productivity Commission by the way, should be seen as a complete joke. It was created by the Howard government in the 1990s, and sits within the Treasury department.
+
+In a FWC hearing in 2025, the chief economist of the Australian Chamber of Commerce and Industry (also a joke) was asked "what factors drove productivity". He answered that "the Productivity Commission was currently examining those factors". 35 years since their establishment, and the Productivity Commission is still examining what productivity even is!!!
+:::
 
 ## Productivity (or, output per hour worked)
 
@@ -128,7 +135,6 @@ The ABS uses a 20 year average "compound average growth rate" formula.
 :::
 
 ```{r}
-#| label: productivity-20
 national_accounts_20 <- national_accounts|> 
   filter(series %in% c("GDP per hour worked: Index ;"),
          series_type == "Seasonally Adjusted") |> 
@@ -190,8 +196,6 @@ national_accounts_hw |>
 ## GDP
 
 ```{r}
-#| label: fig-gdp-chain-volume
-#| out-width: 100%
 national_accounts_gdp <- national_accounts |> 
   filter(series == "Gross domestic product: Chain volume measures ;",
          series_type == "Seasonally Adjusted",
@@ -221,10 +225,6 @@ Damn.
 :::
 
 ```{r}
-#| label: productivity-decouple
-#| out-width: 100%
-
-
 productivity_decouple |> 
   ggplot(aes(x = date, y = value, col = name)) +
   geom_line() +
@@ -254,8 +254,6 @@ Productivity laggards? Non-market sector, like Health Care, Education, Real esta
 :::
 
 ```{r}
-
-
 productivity_sector |> 
   ggplot(aes(x = date, y = index, col = industry)) + 
   scale_x_date(date_labels = "%e %b\n %Y",
@@ -272,3 +270,8 @@ productivity_sector |>
 ```
 
 ## What Productivity is Not
+::: incremental
+- The amount it costs to produce one unit of output
+- Consistent across market and non-market sectors
+- Tied to real wages
+:::
