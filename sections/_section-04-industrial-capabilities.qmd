@@ -1,0 +1,91 @@
+# Industrial Capabilities
+
+> What you make is what you know
+
+## Industrial Capabilities
+
+-   Core concepts:
+    -   a country makes (or does) what it knows
+    -   products (or activities) represent combinations of knowledge
+-   Capabilities are like letters in Scrabble
+    -   The more you have, the more words you can make
+    -   Rare letters create words worth more points
+
+## Products Embody Knowledge
+
+::::: columns
+::: {.column width="50%"}
+![](img/red-apple.png)
+:::
+
+::: {.column width="50%"}
+An apple in the supermarket represents:
+
+-   Horticulture
+
+-   Pest control
+
+-   Refrigeration
+
+-   Logistics
+:::
+:::::
+
+## Products Embody Knowledge
+
+::::: columns
+::: {.column width="50%"}
+![](img/Apple.png)
+:::
+
+::: {.column width="50%"}
+An iPhone represents:
+
+-   Semiconductors
+-   Software/Hardware Engineering
+-   Materials science
+-   Lenses
+-   Marketing
+-   Packaging
+:::
+:::::
+
+## Measuring Industrial Capabilities
+
+-   Export data reveals what a country makes
+-   Comparison between countries reveals which capabilities are common, and which are rare
+-   The presence of different capabilities in different countries allows a ranking called the Economic Complexity Index
+
+## Why Does It Matter?
+
+-   The Economic Complexity Index is predictive of the direction of future economic growth.
+    -   Countries with higher complexity are predicted to grow faster
+-   Useful tool to identify productive capabilities of a country.
+-   Can be used to identify future opportunities and direct strategy.
+
+## Why Does It Matter to Australia?
+
+::: notes
+-   Australia's ranking in 2023 was 105th - Sandwiched between Botswana and Côte d'Ivoire
+-   Australia's exports are concentrated in only a few products
+-   Australia's exports are lower in average complexity
+-   Australia does not have the industrial capabilities of other developed countries.
+:::
+
+![](img/aus%20complexity%20rank.svg)
+
+## What Can Be Done?
+
+::: notes
+The problem:
+
+-   is real, will not be solved by the market and will not be solved with small tweaks and adjustments.
+:::
+
+-   Recognise that there is a problem.
+
+-   The lack of sufficient existing capabilities requires explicit and direct industrial policy.
+
+-   Understand the connection between just transition, decarbonisation, and reindustrialisation.
+
+-   Develop a policy agenda which explicitly outlines existing and future opportunities, and how to get there.

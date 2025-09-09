@@ -1,0 +1,19 @@
+---
+title: "Delegates Forum"
+subtitle: ""
+author: "Hamish Gamble"
+affiliation: "National Research Centre"
+execute: 
+  echo: false
+  warning: false
+  message: false
+format: 
+  revealjs:
+      embed-resources: true
+      incremental: false
+      slide-number: true
+      logo: img/amwu.png
+      fig-format: svg
+---
+
+{{< include sections/_section-02-chatting-economics.qmd >}}

@@ -1,0 +1,90 @@
+# Hot Topics
+
+> BREAKING NEWS
+
+## Inflation Tumbles!
+
+{{< video https://youtu.be/mt2bVFkkMmQ width="100%" height="85%">}}
+
+## Inflation: Discussion
+
+::: notes
+**Context**
+
+Inflation, under neo-liberalism has become the single most important economic priority.
+
+This coincides with the increased dominance and 'importance' of the financial industry and the decline in productive industry like manufacturing.
+
+Controlling inflation is More Important than:
+
+-   full employment
+
+-   reducing inequality
+
+-   housing affordability
+
+-   alleviating poverty
+
+Instead of full employment, government and institutions now push the "non-accelerating inflation rate of unemployment" which suggests there is a minimum level of unemployment necessary in order to stop wages growth and rising inflation. Of course, we can't measure the NAIRU, only show that it might exist, if a bunch of assumptions are made about how the economy works. Estimates from data suggest that it falls somewhere between 4 and 5%.
+
+This means that it is explicit government policy to keep up-to 5% of the labour force out of work, in order to keep wages and inflation down.
+
+Such policy MIGHT be palatable if there was a strong social safety net to support workers who lose their job and are looking for another one. Of course, we don't even get that, with only the below poverty JobSeeker payment available.
+
+But it is still a very inefficient use of the labour power that our economy has access to. Why shouldn't someone who wants to work not have access to a job? It also means that policy is designed to discipline labour.
+
+Which by the way, is why the budget in 2024, by the nominative party of labour, forecast that the plan was to tackle inflation by driving the unemployment rate UP to at least 4.5 percent by June 2025. Last weeks unemployment figures showed that unemployment unexpectedly had increased to 4.2%. It would be cold comfort for those who find themselves recently unemployed that they're doing their part to combat inflation and keep wages down!
+:::
+
+::: incremental
+-   Why do economists care about inflation?
+
+-   What is inflation measuring?
+
+-   What does a decrease in inflation mean?
+
+-   How does the video match your experience?
+:::
+
+## Productivity Disaster!
+
+{{< video https://www.youtube.com/watch?v=cdRCDaQrHJ0 width="100%" height="85%" >}}
+
+## Productivity: Discussion
+
+::: notes
+Productivity is possibly the most misunderstood economic indicator, but simultaneously one of the most spoken about. The newly elected government has set its focus on productivity, and productivity growth, and has got the Productivity Commission in on the action.
+
+The Productivity Commission by the way, should be seen as a complete joke. It was created by the Howard government in the 1990s, and sits within the Treasury department.
+
+In a FWC hearing in 2025, the chief economist of the Australian Chamber of Commerce and Industry (also a joke) was asked "what factors drove productivity". He answered that "the Productivity Commission was currently examining those factors". 35 years since their establishment, and the Productivity Commission is still examining what productivity even is!!!
+
+As an example of how productivity is misunderstood, here's a quote from the Australian Constructors Association (an industry group):
+
+> If we stay stuck on the current course, our living standards will go backward, with Australians working longer hours for less money.
+
+Productivity has nothing to do with wages - and working longer hours **contributes** to decreasing productivity, not the other way around!!
+
+As an aside, one of the ways to increase productivity in the construction industry would be to reform the apprentice system, pay higher wages, and encourage more people to become skilled tradespeople.
+
+Open the room to discussion on the dot points
+
+Productivity is about quantities, and not about costs. Its the rate at which we produce goods or services per unit of input. How many workers does it take to make a widget?
+
+Productivity is also about technological progress. If a new technology enables the production of the same number of goods in fewer man-hours, that increases productivity. But these are the decisions of management, not the decisions of workers.
+
+Measuring productivity is really hard. Output per worker-hour in industries which make a single output (like a car) is straightforward. But what about the interaction between capital and worker? How can you measure the output per capital-worker-hour? What does that even mean?
+
+Speaking of the Productivity Commission, their report into productivity identified that estimates of productivity are constantly being revised - sometimes by 0.5 percentage points or more. The June quarter estimate of productivity growth was 0.5%. There is a huge potential for error - there's a big difference between 0%, 0.5%, and 1.0%.
+
+Estimates of productivity in non-market sectors like education, or health care, are even more ridiculous. What is the output you're measuring? Number of students graduating? Number of patients discharged? If that's the case, productivity would go up by reducing the number of teachers or the number of nurses.
+
+Finally, real wages and productivity decoupled long ago. Increased productivity no longer translates with increases in real wages. That means that private business is getting more output per unit of input, but they are not passing that on to the workers who actually supply their labour. Instead, productivity growth contributes to increasing worker exploitation through increased profit margins. How that profit is spent is then up to the capitalist, not the worker.
+:::
+
+::: incremental
+-   Why do economists care about productivity?
+-   What is productivity measuring?
+-   Who benefits from increased productivity?
+-   What factors influence how productive you feel at work?
+:::

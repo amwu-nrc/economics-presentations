@@ -1,0 +1,647 @@
+```{r}
+#| label: setup
+library(reportabs)
+library(tidyverse)
+library(directlabels)
+library(geomtextpath)
+library(readabs)
+library(gghighlight)
+library(strayr)
+library(gt)
+cpi <- read_abs_local("6484.0", filenames = "648401.xlsx", path = "data") |> 
+  separate_series(column_names = c("data_type", "cpi_category", "capital_city"))
+
+cpi_quarterly <- read_absdata("cpi_quarterly", export_dir = "data")
+wpi_quarterly <- read_absdata("wpi_quarterly", export_dir = "data")
+national_accounts <- read_abs_local(cat_no = "5206.0", path = "data")
+
+plot_date_range <- function(plot_data) {
+
+ date_min <- as.Date(min(plot_data$date))
+  date_max <- as.Date(max(plot_data$date))
+
+  pre <- scales::breaks_pretty(n = 5)(c(date_min, date_max))
+  date_adj <- as.numeric(pre[length(pre)] - date_max)
+  adj <- pre - date_adj
+  names(adj) <- NULL
+  date_breaks <- adj[adj >= date_min & adj <= date_max]
+  return(date_breaks)
+
+}
+
+  
+```
+
+# Chatting Economics
+
+> The purpose of studying economics is not to acquire a set of ready-made answers to economic questions, but to learn how to avoid being deceived by economists.
+
+::: notes
+We're going to talk about:
+
+\- inflation, productivity, unemployment rate, and tariffs
+
+\- why "economic good news" doesn't necessarily translate to how you feel
+
+Hopefully give you confidence to talk about economic indicators, by letting you know the tricks that "economists" use.
+:::
+
+## Inflation (or, the Consumer Price Index)
+
+::: notes
+By their nature, averages are not representative of individuals. Statistical agencies have to make a lot of decisions when calculating price indices, including:
+
+-   What goes into the basket?
+
+-   How should like items be grouped?
+
+-   How should each group be weighted into the overall?
+
+-   How often should the weighting change?
+
+Ultimately, the basket of goods and services does not represent the spending or expenditure patterns of any one individual. There will be a disconnect between how the CPI is reported, and how you feel it as an individual. That doesn't mean your feelings are wrong, or that you're spending money 'incorrectly'. It also means that we should not accept pay rises equal to changes in the CPI.
+
+Note that I specified housing as a good/service that is included in the consumer price index. What would you expect that to measure? The cost of housing is measured as the price of a new home (excluding land). Mortgage payments are excluded.
+:::
+
+-   The CPI is a measure of changes in the price of a "basket" of goods and services.
+-   The basket includes (among other things):
+    -   Food and non-alcoholic beverages, alcohol and tobacco and housing
+-   It represents the average inflation experience - and is **not** reflective of changes in cost of living.
+
+## Reporting Inflation - Index
+
+-   CPI data is reported as an ***index***, or as a % change compared to the previous quarter, or previous year.
+    -   an *index* shows how prices have changed relative to a value of 100 in a reference period.
+
+::: notes
+The ABS indexes the CPI such that the 2011/12 financial year = 100. All index numbers are reported relative to this period. That means that an index of 110 in March 2020 would mean that prices have increased by 10% since the 2011/12 financial year.
+:::
+
+## Reporting Inflation - Percentage Change
+
+-   CPI data is reported as an index, or as a **% change in since last month, last quarter, or last year.**
+    -   A percentage change measures the relative change in prices compared to another period.
+
+::: notes
+Annual Change
+
+-   The *annual change* is a measure of the price now compared to the price one year ago.
+
+Change from Previous Quarter:
+
+-   The *change from previous quarter* is a measure of the price now compared to the price 3 months ago.
+
+Example 1
+
+-   An annual change of 7.8% in December 2022 means prices in December 2022 were 7.8% higher than they were in December 2021.
+
+Example 2
+
+-   A change from previous quarter of -1.9% in June 2020 means that prices in June 2020 were 1.9% lower than they were in March 2020.
+:::
+
+## Reporting Inflation
+
+::: notes
+Tab 1
+
+-   This is the % change way of measuring inflation.
+
+-   Inflation goes up when the % change in one period is higher than the last period
+
+-   All the numbers (except for one in 2020) are positive. In fact, since the September quarter of 1948, inflation has only been negative 5 times.
+
+Tab 2:
+
+-   Now looking at the index number approach.
+
+-   Decreasing inflation is usually presented in the media as good news. But because inflation measures the rate of change of a rate of change (i.e. how much the change in prices changed), decreasing inflation just means that prices didn't increase as fast.
+
+-   The index measure shows you the effect of 'cumulative' inflation on prices.
+:::
+
+::: panel-tabset
+### Inflation - Percentage Change
+
+```{r}
+#| label: inflation-pc
+#| out-width: 100%
+cpi_pc <- cpi |> 
+  filter(data_type == "Percentage Change from Corresponding Month of Previous Year",
+         capital_city == "Australia",
+         cpi_category == "All groups CPI",
+         date >= "2020-01-01") 
+
+cpi_pc |> 
+  ggplot(aes(x = date, y = value, col = "inflation")) +
+  geom_line() +
+  theme_nrc() +
+  scale_x_date(date_labels = "%e %b\n%Y",
+               breaks = plot_date_range(cpi_pc)) +
+  scale_y_continuous(labels = scales::label_percent(scale = 1)) + 
+  labs(title = "Percentage Change in the CPI from Corresponding Month of Previous Year",
+       y = "percentage change",
+       x = NULL) +
+  annotate(geom = "textsegment", 
+           arrow = arrow(), 
+           label = "increasing inflation",
+           x = as_date("2020-06-01"), 
+           y = 2,
+           xend = as_date("2022-12-01"), 
+           yend = 10) +
+  annotate(geom = "textsegment", 
+           arrow = arrow(),
+           label = "decreasing inflation",
+           x = as_date("2022-12-01"),
+           y = 10,
+           xend = as_date(max(cpi_pc$date)),
+           yend = 3)
+```
+
+### Inflation - Index
+
+```{r}
+#| label: inflation-index
+#| out-width: 100%
+
+cpi_index <- cpi |> 
+  filter(data_type == "Index Numbers",
+         capital_city == "Australia",
+         cpi_category == "All groups CPI",
+         date >= "2020-01-01")
+
+cpi_index |> 
+  ggplot(aes(x = date, y = value, col = "inflation")) +
+  geom_line() +
+  theme_nrc() +
+  scale_x_date(date_labels = "%e %b\n%Y",
+               breaks = plot_date_range(cpi_index)) +
+  labs(title = "Consumer Price Index, All groups CPI",
+       y = "consumer price index (100 = 2011/12)",
+       x = NULL) +
+  annotate(geom = "textsegment", 
+           arrow = arrow(), 
+           label = "increasing prices",
+           x = as_date("2020-06-01"), 
+           y = 110,
+           xend = as_date("2022-12-01"), 
+           yend = 120) +
+  annotate(geom = "textsegment", 
+           arrow = arrow(),
+           label = "increasing prices???",
+           x = as_date("2022-12-01"),
+           y = 120,
+           xend = as_date(max(cpi_index$date)),
+           yend = 130)
+```
+:::
+
+## Inflation - By Type
+
+::: notes
+Reported inflation tends to focus on the overall average - but it's collected at a highly disaggregated level, of 87 different groups.
+
+Things that have increased faster than the average since March 2020 include: housing, food, alcohol and tobacco, health, transport, education, and insurance
+
+Compared to things which have gone down? Clothing and footwear, and furnishings...
+
+Other weird things about inflation - it hasn't included mortgage repayments (since 1998).
+:::
+
+```{r}
+cpi |> 
+  filter(cpi_category %in% c("All groups CPI",
+                             "Food and non-alcoholic beverages",
+                             "Alcohol and tobacco",
+                             "Clothing and footwear",
+                             "Housing",
+                             "Furnishings, household equipment and services",
+                             "Health", 
+                             "Transport",
+                             "Communications",
+                             "Recreation and Culture",
+                             "Education",
+                             "Insurance and financial services"),
+         series_type == "Original",
+         data_type == "Index Numbers",
+         capital_city == "Australia") |> 
+  group_by(cpi_category) |> 
+  mutate(reindex = 100*value/value[date=="2020-03-01"],
+         alpha = ifelse(cpi_category %in% c("All groups CPI",
+                                            "Food and non-alcoholic beverages", 
+                                            "Housing",
+                                            "Furnishings, household equipment and services",
+                                            "Clothing and Footwear"),
+                        1,
+                        0),
+         label = ifelse(cpi_category %in% c("All groups CPI",
+                                            "Food and non-alcoholic beverages", 
+                                            "Housing",
+                                            "Furnishings, household equipment and services",
+                                            "Clothing and Footwear"),
+                        cpi_category,
+                        NA_character_),
+         color = case_when(cpi_category == "All groups CPI" ~ "Colour 1",
+                           cpi_category %in% c("Food and non-alcoholic beverages",
+                                               "Housing",
+                                               "Furnishings, household equipment and services",
+                                               "Clothing and Footwear") ~ "Colour 2",
+                           TRUE ~ "Colour 3")) |> 
+  filter(date >= as_date("2020-03-01")) |> 
+  ungroup() |> 
+  ggplot(aes(x = date, y = reindex, group = cpi_category, label = label, col = color, alpha = alpha)) + 
+  geom_line() +
+  geom_dl(method = list("last.qp", cex = 0.75)) +
+  theme_nrc() +
+  labs(y = "consumer price index (100 = March 2020)",
+       x = NULL,
+       title = "Consumer Price Index, by Category") +
+  expand_limits(x = ymd(c("2020-03-01", "2026-12-01"))) +
+  scale_colour_nrc() 
+```
+
+## Inflation - Cost of Living
+
+::: notes
+As mentioned previously, the CPI is not a measure of the cost of living. In fact there is no definitive cost of living measure collected by the ABS but the ABS does collect a living cost index, which looks at different household types expenditure patterns.
+
+The living cost index asks "By how much would after tax money incomes need to change to allow households to purchase the same quantity of consumer goods and services that they purchased in the base period?"
+:::
+
+::::: columns
+::: {.column width="50%"}
+```{r}
+#| label: tab-cost-of-living
+lci <- read_abs_local("6467.0", filenames = "646702.xlsx", path = "data") |> 
+  separate_series(c("data_type", "household_type", "cpi_category")) 
+
+lci |> 
+  filter(data_type == "Percentage Change from Corresponding Quarter of Previous Year", 
+         !is.na(value), 
+         date == max(date),
+         household_type == "Employee households") |> 
+  select(cpi_category, value) |> 
+  add_row(cpi_category = "Wages",
+          value = 3.4) |> 
+  arrange(-value) |> 
+  gt(rowname_col = "cpi_category") |> 
+  tab_header(title = md("**Change in living costs by product category**"),
+             subtitle = "% change between June 2025 and June 2024") |> 
+  tab_stubhead(label = "Price Category") |> 
+  tab_style(style = cell_text(weight = "bold"),
+            locations = cells_body(
+              rows = cpi_category %in% c("All groups", "Wages")
+            )) |> 
+  fmt_percent(columns = value, scale = F, decimal = 1) |> 
+  cols_label(value = "% change")
+  
+```
+:::
+
+::: {.column width="50%"}
+```{r}
+lci |> 
+  filter(data_type == "Index Numbers", 
+         !is.na(value), 
+         date %in% c(max(date), max(date)-years(10)),
+         household_type == "Employee households") |> 
+   group_by(cpi_category) |> 
+  mutate(percentage = 100*(value-lag(value))/lag(value)) |>
+  ungroup() |> 
+  filter(date == max(date)) |> 
+  select(cpi_category, percentage) |> 
+  add_row(cpi_category = "Wages",
+          percentage = 28.7) |> 
+  arrange(-percentage) |> 
+  gt(rowname_col = "cpi_category") |> 
+  tab_header(title = md("**Change in living costs by product category**"),
+             subtitle = "% change between June 2025 and June 2015") |> 
+  tab_stubhead(label = "Price Category") |> 
+  tab_style(style = cell_text(weight = "bold"),
+            locations = cells_body(
+              rows = cpi_category %in% c("All groups", "Wages")
+            )) |> 
+  fmt_percent(columns = percentage, scale = F, decimal = 1) |> 
+  cols_label(percentage = "% change")
+```
+:::
+:::::
+
+## Inflation - Wages
+
+::: notes
+What is relevant to everyone is how well wages are keeping up with increased costs. It isn't particularly worrisome if the price of everything doubles but your income also doubles.
+
+Unfortunately it's not really that easy to tell if this is happening or not.
+
+Does it feel to you that things are more expensive relative to how much your earning?
+
+Because the CPI is measured using a basket of goods, which is supposed to represent the 'average' consumer, it is guaranteed that your experience is different - because you buy different things in different proportions than the "representative" consumer.
+
+But we can look at the "real" value of wages - how far their purchasing power goes. And here we have another trick of the economist. How do you convert "nominal" dollars - how much you earn today (or yesterday) into "real" dollars - how much does that dollar buy you?
+
+Different economists will use different "deflators" to convert nominal dollars into real dollars. The one they choose will often be the one that tells the story they want to tell. They can trick by setting the index at a different point in time.
+
+Whether we compare wage increases with increases in the CPI, or increases in the cost of living, it is clear that wages today are worth only about as much as they were in 2010/11.
+:::
+
+```{r}
+
+cpi_pc <- read_abs_local("6401.0", filenames = "640101.xlsx", path = "data") |> 
+  filter(series == "Percentage Change from Corresponding Quarter of Previous Year ;  All groups CPI ;  Australia ;",
+         series_type == "Original") |> 
+  select(date, cpi_pc = value)
+
+lci_pc <- lci |> 
+  filter(data_type == "Percentage Change from Corresponding Quarter of Previous Year",
+         cpi_category == "All groups",
+         household_type == "Employee households") |> 
+  select(date, lci_pc = value)
+
+wpi_pc <-  wpi_quarterly |> 
+  filter(indicator == "Total hourly rates of pay excluding bonuses",
+         data_type == "Quarterly Index",
+         state == "Australia",
+         sector == "Private and Public",
+         industry == "All industries") |> 
+  distinct() |> 
+  select(date, wpi = value) |> 
+  mutate(wpi_pc = 100*(wpi-lag(wpi, 4))/lag(wpi, 4))
+
+wage_price <- wpi_pc |> 
+  inner_join(cpi_pc) |>
+  inner_join(lci_pc) |> 
+  filter(!is.na(lci_pc)) |> 
+  mutate(real_wage_growth = wpi_pc - cpi_pc,
+         real_wage_growth_cost_of_living = wpi_pc - lci_pc,
+         real_wage_constant = 3/4) |> 
+  filter(!is.na(wpi_pc)) |> 
+  mutate(real_wage = 45000+(45000*cumsum(real_wage_growth)/100),
+         real_wage_3 = 45000+(45000*cumsum(real_wage_constant/100)),
+         real_wage_lci = 45000+(45000*cumsum(real_wage_growth_cost_of_living)/100)) |> 
+  add_row(.before = 1, 
+          date = as_date("1999-03-01"),
+          real_wage = 45000,
+          real_wage_3 = 45000,
+          real_wage_lci = 45000)
+
+wage_price |> 
+  pivot_longer(cols = c(real_wage, real_wage_lci, real_wage_3)) |> 
+  mutate(name = case_when(
+    name == "real_wage" ~ "Real Wage (CPI)",
+    name == "real_wage_lci" ~ "Real Wage (Cost of Living)",
+    name == "real_wage_3" ~ "Constant 3% Real Wage Growth",
+  )) |> 
+  ggplot(aes(x = date, y = value, col = name)) + 
+  geom_line() +
+  theme_nrc(legend = 'bottom') +
+  scale_colour_nrc() + 
+  labs(x = NULL,
+       y = NULL,
+       title = "Value of real wages that were equal to $45,000 in March 1999") +
+  scale_y_continuous(labels = scales::label_currency())
+```
+
+## What Inflation Is Not
+
+::: incremental
+-   Inflation is not a measure of the cost of living.
+
+-   Decreasing inflation does not mean prices have gone down.
+
+-   Inflation is not more important than any other economic indicator.
+:::
+
+## Productivity
+
+{{< video https://www.youtube.com/watch?v=00npeUY_1Vg width="100%" height="85%">}}
+
+## Productivity (or, output per hour worked)
+
+-   **Labour** Productivity is a measure of Gross Domestic Product per hour worked.
+-   But there are other inputs into production besides labour, including capital
+-   Changes in output can occur even without changes to input
+
+::: notes
+For example, you could lose output in Agriculture from bad weather destroying a crop. Similarly, you could gain output in Mining because high prices make some difficult deposits worth mining.
+
+Labour productivity is the most commonly reported productivity. It is relatively simple to measure and describe.
+:::
+
+## Productivity - Measurement Issues
+
+-   It is relatively easy to measure and describe output per worker.
+-   Measuring output per unit of labour **and** capital is much more complicated, and questionable.
+    -   What is a unit of labour-capital?
+-   Measuring productivity in the public sector basically shouldn't be done.
+    -   You would increase productivity in Education by reducing the number of teachers per student.
+
+## Productivity Trends
+
+::: notes
+GDP per hour worked, with June 1991 set as the base or reference year.
+
+-   Growth was slowing prior to 2020 anyway, with the increases seen during then probably due to the pandemic.
+
+-   This has been called a productivity 'bubble' which I think I agree with.
+
+-   Periods of slow growth have been occurring since the 2000s really.
+:::
+
+```{r}
+national_accounts_productivity <- national_accounts |> 
+ filter(series %in% c("GDP per hour worked: Index ;",
+                       "Gross value added per hour worked market sector: Index ;",
+                       "Gross value added per hour worked non-market sector: Index ;"),
+        series_type == "Seasonally Adjusted",
+        !is.na(value)) |> 
+  mutate(index = 100*value/value[date == "1991-06-01"],
+         series = case_when(
+           series == "GDP per hour worked: Index ;" ~ "Labour Productivity",
+           series == "Gross value added per hour worked market sector: Index ;" ~ "Labour Productivity (Market)",
+           series == "Gross value added per hour worked non-market sector: Index ;" ~ "Labour Productivity (Non-Market)"
+         )) 
+
+national_accounts_productivity |> 
+  ggplot(aes(x = date, y = index, col = series)) +
+  geom_line() +
+  scale_colour_nrc() +
+  scale_x_date(breaks = plot_date_range(national_accounts_productivity),
+               date_labels = "%e %b\n%Y") +
+  labs(title = "GDP per Hour Worked (June 1991 = 100)",
+       subtitle = "Seasonally Adjusted; Quarterly") +
+  theme_nrc(legend = 'bottom') +
+  labs(y = NULL,
+       x = NULL)
+```
+
+## Productivity Trends - 20 Years
+
+::: notes
+Productivity is a volatile measure. It is better to measure it across a long time period.
+
+The ABS uses a 20 year average "compound average growth rate" formula.
+
+-   Clearly not a new problem
+-   20-year average productivity growth was pretty stable up until about 2013
+-   Significant declines since then. Covid rebound probably an illusion
+:::
+
+```{r}
+#| label: productivity-20
+national_accounts_20 <- national_accounts|> 
+  filter(series %in% c("GDP per hour worked: Index ;"),
+         series_type == "Seasonally Adjusted") |> 
+  mutate(cagr = (value/lag(value, n = 80))^(1/80) - 1) |> 
+  filter(!is.na(cagr)) 
+
+national_accounts_20 |> 
+  ggplot(aes(x = date, y = cagr, col = series)) +
+  geom_line() + 
+  scale_y_continuous(labels = scales::label_percent()) +
+  scale_x_date(breaks = plot_date_range(national_accounts_20),
+               date_labels = "%e %b\n%Y") +
+  labs(title = "20-year average productivity growth",
+       y = "quarterly productivity growth",
+      x = NULL) + 
+  theme_nrc()
+```
+
+## Productivity Trends
+
+::: notes
+Productivity is measured as GDP per hour worked. So we need to look at what is happening with hours worked, and with GDP.
+
+I don't know about you but the increase in hours worked looks like it's pretty steep.
+
+What do we think could have caused that? Are you working more hours? Do you know people who are working more hours? Why?
+
+Could it be people working more hours because they're struggling to make ends meet because of inflation?
+
+Even the Productivity Commission recognise that high hours worked is pulling productivity down
+:::
+
+::: panel-tabset
+### Hours Worked
+
+```{r}
+#| label: fig-hours-worked-index
+#| out-width: 100%
+national_accounts_hw <- national_accounts |> 
+  filter(series %in% c("Hours worked: Index ;",
+                       "Hours worked market sector: Index ;",
+                       "Hours worked non-market sector: Index ;"),
+         series_type == "Seasonally Adjusted",
+         !is.na(value)) 
+
+national_accounts_hw |> 
+  ggplot(aes(x = date, y = value, col = series)) + 
+  scale_x_date(date_labels = "%e %b\n %Y",
+               breaks = plot_date_range(national_accounts_hw)) +
+  geom_line() + 
+  theme_nrc(legend = "bottom") + 
+  labs(x = NULL, 
+       y = NULL,
+       title = "Hours Worked: Index (June 2022 = 100)",
+       subtitle = "Seasonally Adjusted; Quarterly")
+```
+
+### GDP
+
+```{r}
+#| label: fig-gdp-chain-volume
+#| out-width: 100%
+national_accounts_gdp <- national_accounts |> 
+  filter(series == "Gross domestic product: Chain volume measures ;",
+         series_type == "Seasonally Adjusted",
+         !is.na(value)) 
+
+national_accounts_gdp |> 
+  ggplot(aes(x = date, y = value, col = 'hours')) + 
+  geom_line() + 
+  scale_x_date(date_labels = "%e %b\n %Y",
+               breaks = plot_date_range(national_accounts_gdp)) +
+  theme_nrc() + 
+  labs(x = NULL,
+       y = NULL, 
+       title = "Gross Domestic Product",
+       subtitle = "Seasonally Adjusted; Quarterly") + 
+  scale_y_continuous(labels = scales::label_currency(scale = 1e-3, suffix = "bn"))
+```
+:::
+
+## Productivity Trends - Workers Share
+
+-   If productivity is a measure of output per hour, it would only be fair to compare that with how much compensation (in real terms) workers are getting per hour.
+
+## Productivity Trends - Workers Share
+
+::: notes
+Damn.
+:::
+
+```{r}
+#| label: productivity-decouple
+#| out-width: 100%
+productivity_decouple <- read_absdata("productivity", export_dir = "data") |> 
+  pivot_longer(cols = c(gdp_per_hour_index, real_compensation_per_hour_index)) |> 
+  mutate(name = case_when(
+    name == "gdp_per_hour_index" ~ "Productivity (GDP per Hour Worked)",
+    name == "real_compensation_per_hour_index" ~ "Real Compensation per Hour Worked"
+  )) 
+
+productivity_decouple |> 
+  ggplot(aes(x = date, y = value, col = name)) +
+  geom_line() +
+  scale_x_date(date_labels = "%e %b\n %Y",
+               breaks = plot_date_range(productivity_decouple)) +
+  labs(x = NULL,
+       y = "index (March 1991 = 100)",
+       title = "Output per hour is no longer associated with real wages per hour") +
+  theme_nrc(legend = "bottom") +
+  scale_colour_nrc()
+
+```
+
+## Productivity Trends - Sector
+
+::: notes
+Some sectors have experienced productivity growth, and others productivity declines.
+
+The Mining sector tends to be a real drag on productivity.
+
+Manufacturing outperforms the average.
+
+Big productivity improvements in Information media and telecommunications, and Agriculture.
+
+Productivity laggards? Non-market sector, like Health Care, Education, Real estate services.
+:::
+
+```{r}
+productivity_sector <- read_abs_local("5204.0", 
+                                      filenames = "5204015_Labour_Productivity_Input.xlsx",
+                                      path = "data") |> 
+  filter(table_no == "5204015_Labour_Productivity_Input",
+         str_detect(series, "GVA"),
+         !is.na(value)) |>
+  mutate(industry = str_extract(series, "^(.*?);"),
+         industry = trimws(str_remove_all(industry, ";"))) |>
+  group_by(industry) |> 
+  mutate(index = 100*value/value[date == "1998-06-01"]) |> 
+  ungroup() 
+
+productivity_sector |> 
+  ggplot(aes(x = date, y = index, col = industry)) + 
+  scale_x_date(date_labels = "%e %b\n %Y",
+               breaks = plot_date_range(productivity_sector)) +
+  geom_line() +
+  scale_colour_nrc() +
+  gghighlight(industry %in% c("ALL INDUSTRIES", "Manufacturing", "Mining")) +
+  theme_nrc() +
+  labs(title = "Industry Productivity (June 1998 = 100)",
+       subtitle = "Original; Annual",
+       y = "gross value added per hour worked",
+       x = NULL) 
+
+```

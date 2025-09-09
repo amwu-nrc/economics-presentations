@@ -1,0 +1,97 @@
+# Tariffs {.center background-image="img/trump.webp" background-color="black"}
+
+## Definition
+
+-   A tariff is essentially a tax charged on imported goods.
+-   The tariff is paid by the *importer*, not the exporter.
+-   Increased costs for the importer will be passed on to the final consumer.
+
+## Tariffs in the US
+
+::: notes
+Trade surplus countries take advantage by using subsidies on domestic production, manipulate currency to keep their exchange rate low, and have their own tariffs on US imports.
+
+The impact on domestic industry (through price competition) resonates a lot with workers I think.
+
+The impact of deindustrialisation on the US (and other western economies) is real, and has caused significant community disruption, and destruction. Former (and current) industrial towns in the Midwest have suffered real impacts.
+
+Trump isn't even arguing that the tariffs will bring back manufacturing jobs in the US, instead focusing on using AI, automation, and robotics to do the work.
+
+So even if it's successful, even if the argument is believable, there is no room in the policy for workers to share the benefits. There is certainly no guarantee that a revitalised manufacturing industry in the US, brought upon by tariffs, would bring back many if any manufacturing jobs.
+:::
+
+The argument goes something like this:
+
+::: incremental
+-   The US is 'taken advantage of' by countries who export more to the US than the import.
+
+-   Dependence on foreign goods undermines domestic industry.
+
+-   Putting up tariffs reduces demand for imports and increases demand for domestic production (through price changes)
+
+-   Increase demand restores America's manufacturing base.
+:::
+
+## Tariffs to Protect Industry
+
+::: notes
+It's a classic "pull the ladder up after you" situation.
+:::
+
+::: incremental
+Tariffs are not new.
+
+-   Protecting local industry has long played a role in capitalist development.
+-   Tariffs have been used to protect new industries in developing/industrialising countries.
+-   Britain relied on high tariffs to develop their industry. Once developed, tariffs were disavowed in favour of "free markets" and global trade.
+:::
+
+## Tariffs to Reindustrialise
+
+::: notes
+US manufacturing moved off-shore as capitalists sought higher profit through lower labour costs during a period where the US dollar was very high. The US dollar was very high because Paul Volcker increased interest rates to 19% to curb inflation (through demand destruction, i.e. make everyone unemployed and poor)
+
+The question is - can tariffs work for a country trying to reindustrialise?
+
+America is a special case. If it could work for anyone, it would be them.
+
+They maintain economic, political, and military power over much of the rest of the world - especially across the west.
+
+But the strategy still faces significant head winds, including:
+
+-   Final product manufacturing in the US still requires intermediate inputs which are sourced from all over the world. So the price increase still gets passed on to domestic production!
+
+-   There's not sufficient domestic capabilities to meet consumers demand. But the price increases are already coming.
+
+-   With no comprehensive industrial strategy, investment and onshoring just means that manufacturing firms would have to accept lower profits out of the kindness of their hearts. Do we think the capitalist would do that?
+
+Even if it works for them, it is not going to be a viable strategy for the rest of us.
+:::
+
+-   America can probably extract concessions from the vassal states like South Korea and Japan.
+
+    -   If you're cynical, that might include Australia and the UK too.
+
+-   But, the stated strategy is relying on automation, AI, and robotics to do the work - not people.
+
+-   Globalisation means value chains are now spread across the world, so domestic prices will increase.
+
+-   Without significant investment into domestic manufacturing, demand can't actually be met by local industry.
+
+## Tariffs to Protect Capital
+
+::: notes
+In response to declining profit, capitalists try to discipline labour, move production somewhere cheaper, inflates asset bubbles, and retreat behind protective barriers.\
+\
+You have probably felt and noticed this over the course of your working lives.
+
+Most likely what is going on is that the capital class is using tariffs to try and protect their profits because they are no longer competitive.
+:::
+
+-   The rate of profit has a tendency to fall over time.
+
+-   Seeking constant productivity growth, capitalist investment focuses on machinery and technology at the expense of labour - reducing profit.
+
+-   US tariffs are intended to protect US capital from more productive or lower cost competitors, and to shift the burden of declining profitability off shore.
+
+-   This is a temporary solution. The time could be used to develop comprehensive industry policy to revitalise production, or it could be used to keep the plates spinning a bit longer.

@@ -1,0 +1,61 @@
+---
+title: "Useful Economics"
+subtitle: ""
+author: "Hamish Gamble"
+affiliation: "National Research Centre"
+execute: 
+  echo: false
+  warning: false
+  message: false
+format: 
+  revealjs:
+      embed-resources: true
+      incremental: false
+      slide-number: true
+      logo: img/amwu.png
+      fig-format: svg
+  pptx: 
+      incremental: false 
+      slide-level: 2
+editor: visual
+---
+
+{{< include sections/_section-01-hot-topics.qmd >}}
+
+{{< include sections/_section-02-chatting-economics.qmd >}}
+
+## Economic Anxiety
+
+::: notes
+Before we move onto the next section, I wanted to stop for a discussion about how you relate to the economy.
+
+How do you feel about the "big picture" economy?
+
+How do you feel about your economic situation?
+
+How do your neighbours, mates, colleagues feel?
+
+If you're feeling anxious, I don't blame you.
+
+The world has become increasingly competitive, and isolated. The rise of neo-liberalism, the decline in the power of labour, and the increased concentration of wealth have been disastrous.
+
+Workers are more precarious than ever:
+
+-   gig economy, 0-hour contract, no protection, a safety net that isn't safe at all.
+
+Workers are forced to pursue their personal monetary interest, because you need to to survive. This competition, and precarity, are used to keep employees divided, and to try and minimise solidarity between workers. And it's been happening since the 1980s. It is scary to put your head above the parapet and ask for better conditions because there is so much to lose.
+
+Solidarity is more important than ever. We are powerful as a collective.
+:::
+
+::: incremental
+-   How do you feel about the "big picture" economy?
+-   How do you feel about your economic situation?
+-   How do your mates, neighbours, or colleagues feel?
+:::
+
+{{< include sections/_section-03-tariffs.qmd  >}}
+
+{{< include sections/_section-04-industrial-capabilities.qmd >}}
+
+{{< include sections/_section-05-political-economy.qmd >}}
