@@ -176,7 +176,7 @@ national_accounts_hw <- national_accounts |>
          !is.na(value)) |> 
   mutate(series = case_when(
     series == "Hours worked: Index ;" ~ "Hours Worked",
-    series == "Hours worked market sector; Index ;" ~ "Hours Worked (Market)",
+    series == "Hours worked market sector: Index ;" ~ "Hours Worked (Market)",
     series == "Hours worked non-market sector: Index ;" ~ "Hours Worked (Non-Market)"
   ))
 
