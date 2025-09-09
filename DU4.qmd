@@ -22,7 +22,17 @@ editor: visual
 
 {{< include sections/_section-01-hot-topics.qmd >}}
 
-{{< include sections/_section-02-chatting-economics.qmd >}}
+# Chatting Economics
+
+> The purpose of studying economics is not to acquire a set of ready-made answers to economic questions, but to learn how to avoid being deceived by economists.
+
+{{< include sections/_section-02a-inflation.qmd >}}
+
+# Productivity
+
+{{< video https://www.youtube.com/watch?v=00npeUY_1Vg width="100%" height="85%">}}
+
+{{< include sections/_section-02b-productivity.qmd >}}
 
 ## Economic Anxiety
 
@@ -54,7 +64,7 @@ Solidarity is more important than ever. We are powerful as a collective.
 -   How do your mates, neighbours, or colleagues feel?
 :::
 
-{{< include sections/_section-03-tariffs.qmd  >}}
+{{< include sections/_section-03-tariffs.qmd >}}
 
 {{< include sections/_section-04-industrial-capabilities.qmd >}}
 
