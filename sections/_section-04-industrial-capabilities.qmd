@@ -74,12 +74,21 @@ An iPhone represents:
 
 ![](img/aus%20complexity%20rank.svg)
 
+## Why Does It Matter to Australia?
+
+![](img/What-did-Australia-export-in-2023.png)
+
+[^_section-04-industrial-capabilities-1]
+
+[^_section-04-industrial-capabilities-1]: <https://atlas.hks.harvard.edu/explore/treemap?exporter=country-36&colorBy=complexity>
+
 ## What Can Be Done?
 
 ::: notes
 The problem:
 
 -   is real, will not be solved by the market and will not be solved with small tweaks and adjustments.
+-   just transition and decarbonisation is an opportunity to PLAN something, and then to DO something.
 :::
 
 -   Recognise that there is a problem.
