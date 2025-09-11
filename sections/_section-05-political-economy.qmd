@@ -25,9 +25,7 @@ This shifted the discipline away from thinking about the interaction of the econ
 :::
 
 :::: {.column .incremental width="50%"}
-::: fragment
 ![](img/econ-maths.jpeg)
-:::
 ::::
 ::::::
 
@@ -149,7 +147,7 @@ Profit represents a payment on private capital to the owner of that capital. But
 ::: notes
 When the economy was based on manufacturing and heavy industry like mining, steel working, and shipbuilding, it was very easy to characterize the classes.
 
-A small number of people owned capital in the form of a factory, or mine - or ocassionally - state run monopolies in sectors like automotive manufacturing - with very few 'supervisors'.
+A small number of people owned capital in the form of a factory, or mine - or occasionally - state run monopolies in sectors like automotive manufacturing - with very few 'supervisors'.
 
 The division of labour was stark - you had workers on one side and the bosses or state on the other. Most households were *proletarian* or "working class" and the bosses were the *bourgeois* or capitalist class.
 
@@ -169,22 +167,18 @@ This has had a huge impact on trade union density.
 
 Just as the capitalist today is aesthetically different from the factory owner of the industrial revolution, so too has the working class changed.
 
-Marx defined class as a relationship between individual and the means of production. If you owned the means of production, you were
-
 It isn't as easy today to spot the capitalist class. Unlike in the industrial revolution, the company owner is unlikely to be on the factory floor - patrolling and keeping everyone in line. The modern capitalist tries to trade on the aesthetics of the working class.
 
 The concentration of wealth among the capital class however, has only increased since the industrial age. More and more wealth is held by fewer and fewer people. Owning shares, or investing in a mutual fund, does not make you a member of the capitalist class.
 :::
 
-::: panel-tabset
 ## Income Inequality
 
 ![](img/inequality1A.jpg){height="'85%'"}
 
 ## Wealth Inequality
 
-![](img/inequality2B.jpg){height="'85%'"}
-:::
+![](img/inequality2B.jpg){height="'85%'"} 
 
 # What Can We Do?
 
