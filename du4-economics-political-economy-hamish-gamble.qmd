@@ -1,6 +1,6 @@
 ---
-title: "Useful Economics"
-subtitle: ""
+title: "Economics and Political Economy"
+subtitle: "Useful Economics"
 author: "Hamish Gamble"
 affiliation: "National Research Centre"
 execute: 
