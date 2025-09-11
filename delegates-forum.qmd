@@ -16,7 +16,6 @@ format:
       slide-number: true
       logo: img/amwu.png
       fig-format: svg
-  pdf: default
   pptx: 
     incremental: false 
     slide-level: 2
