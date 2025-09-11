@@ -72,11 +72,13 @@ An iPhone represents:
 -   Australia does not have the industrial capabilities of other developed countries.
 :::
 
-![](img/aus%20complexity%20rank.svg)
+![](img/aus%20complexity%20rank)
 
 ## Why Does It Matter to Australia?
 
 ![](img/What-did-Australia-export-in-2023.png)
+
+[^_section-04-industrial-capabilities-1]
 
 [^_section-04-industrial-capabilities-1]: <https://atlas.hks.harvard.edu/explore/treemap?exporter=country-36&colorBy=complexity>
 
