@@ -29,12 +29,16 @@ This shifted the discipline away from thinking about the interaction of the econ
 ::::
 ::::::
 
-## What is The Economy?
+## What is The Economy? 
+
+::: {.incremental}
 
 -   Is the economy how much we produce in total?
 -   Is the economy how much we produce per person?
 -   Is the economy how well we meet the needs of society?
 -   Is the economy how well the stock market is performing?
+
+:::
 
 ## Political Economy
 
@@ -144,7 +148,16 @@ Profit represents a payment on private capital to the owner of that capital. But
 
 ## Class Consciousness and Solidarity
 
+{{< video https://youtu.be/vt5X8zrHiSM?si=tDM75Th0pBtxsyRc width="100%" height="85%">}}
+
+## Class Consciousness and Solidarity
+-   Capitalists understand the importance of class solidarity. 
+-   Identity politics, culture war, woke vs. anti-woke, etc. are tools used to keep the working class from building solidarity. 
+
 ::: notes
+
+Class solidarity is important - in a positive and negative sense. Capitalists maintain strong class consciousness and solidarity, and work hard to prevent solidarity forming in other classes. 
+
 When the economy was based on manufacturing and heavy industry like mining, steel working, and shipbuilding, it was very easy to characterize the classes.
 
 A small number of people owned capital in the form of a factory, or mine - or occasionally - state run monopolies in sectors like automotive manufacturing - with very few 'supervisors'.
@@ -174,13 +187,17 @@ The concentration of wealth among the capital class however, has only increased 
 
 ## Income Inequality
 
+{{< video https://www.youtube.com/watch?v=QPKKQnijnsM width="100%" height="85%">}}
+
+## Income Inequality
+
 ![](img/inequality1A.jpg){height="'85%'"}
 
 ## Wealth Inequality
 
 ![](img/inequality2B.jpg){height="'85%'"} 
 
-# What Can We Do?
+# What Is To Be Done?
 
 ::: notes
 Power comes from recognising that productive labour is the only source of value created in the economy. Without workers, there are no products. Without products, there is no profit to be collected by the capitalist. Financial institutions might keep swapping IOUs but this doesn't make for a happy or fed society.
@@ -188,4 +205,6 @@ Power comes from recognising that productive labour is the only source of value 
 Building labour power
 
 Building labour density
+
+Individual actions like voting, calling your local MP, protesting, signing a petition. Might work. But constrained by the choices we are offered, lobbying, one person can't make a difference. 
 :::
