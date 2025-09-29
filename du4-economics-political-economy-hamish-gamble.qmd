@@ -10,6 +10,8 @@ execute:
 format: 
   revealjs:
       embed-resources: true
+      theme: dracula
+      auto-play-media: true
       incremental: false
       slide-number: true
       logo: img/amwu.png
@@ -27,10 +29,6 @@ editor: visual
 > The purpose of studying economics is not to acquire a set of ready-made answers to economic questions, but to learn how to avoid being deceived by economists.
 
 {{< include sections/_section-02a-inflation.qmd >}}
-
-# Productivity
-
-{{< video https://www.youtube.com/watch?v=00npeUY_1Vg width="100%" height="85%">}}
 
 {{< include sections/_section-02b-productivity.qmd >}}
 
