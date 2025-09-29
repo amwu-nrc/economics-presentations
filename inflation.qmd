@@ -1,0 +1,17 @@
+---
+title: "Inflation" 
+subtitle: "" 
+affiliation: "National Research Centre" 
+execute:    
+  echo: false
+  warning: false
+  message: false
+format:    
+  pptx:
+    fig-format: svg
+    incremental: false
+    slide-level: 2 
+editor: visual 
+---
+
+{{< include sections/_section-02a-inflation.qmd >}}

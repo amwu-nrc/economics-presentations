@@ -1,0 +1,17 @@
+---
+title: "Hot Topics"
+subtitle: ""
+affiliation: "National Research Centre"
+execute: 
+  echo: false
+  warning: false
+  message: false
+format: 
+  pptx: 
+      incremental: false 
+      slide-level: 2
+      fig-format: svg
+editor: visual
+---
+
+{{< include sections/_section-01-hot-topics.qmd >}}

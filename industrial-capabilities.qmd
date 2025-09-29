@@ -1,0 +1,18 @@
+--- 
+title: "Industrial Capabilities" 
+subtitle: "" 
+affiliation: "National Research Centre" 
+execute:    
+  echo: false
+  warning: false
+  message: false
+format:    
+  pptx:
+    incremental: false
+    fig-format: svg
+    slide-level: 2 
+editor: visual 
+---
+
+{{< include sections/_section-04-industrial-capabilities.qmd >}}
+
