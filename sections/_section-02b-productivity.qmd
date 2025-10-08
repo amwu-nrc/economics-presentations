@@ -58,7 +58,10 @@ plot_date_range <- function(plot_data) {
 -   Changes in output can occur even without changes to input
 
 ::: notes
-Productivity is possibly the most misunderstood economic indicator, but simultaneously one of the most spoken about. The newly elected government has set its focus on productivity, and productivity growth, and has got the Productivity Commission in on the action.
+
+We need to understand productivity - how it's measured, and how bosses talk about it - because it is simultaneously misunderstood and over-emphasised in the media. 
+
+The newly elected government has set its focus on productivity, and productivity growth, and has got the Productivity Commission in on the action.
 
 The Productivity Commission by the way, should be seen as a complete joke. It was created by the Howard government in the 1990s, and sits within the Treasury department.
 
@@ -261,7 +264,7 @@ productivity_sector |>
                breaks = plot_date_range(productivity_sector)) +
   geom_line() +
   scale_colour_nrc() +
-  gghighlight(industry %in% c("ALL INDUSTRIES", "Manufacturing", "Mining"), ) +
+  gghighlight(industry %in% c("ALL INDUSTRIES", "Manufacturing", "Mining"), line_label_type = "ggrepel_text") +
   theme_nrc() +
   labs(title = "Industry Productivity (June 1998 = 100)",
        subtitle = "Original; Annual",
