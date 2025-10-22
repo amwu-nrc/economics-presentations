@@ -7,10 +7,10 @@ execute:
   echo: false
   warning: false
   message: false
+brand: _extensions/amwu-nrc/amwu-brand/brand.yml
 format: 
   revealjs:
       embed-resources: true
-      theme: dracula
       auto-play-media: true
       incremental: false
       slide-number: true
@@ -19,6 +19,7 @@ format:
   pptx: 
       incremental: false 
       slide-level: 2
+      reference-doc: template.pptx
 editor: visual
 ---
 
