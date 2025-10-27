@@ -1,4 +1,4 @@
---- 
+---
 title: "Productivity" 
 subtitle: "" 
 affiliation: "National Research Centre" 
@@ -6,13 +6,21 @@ execute:
   echo: false
   warning: false
   message: false
-format:    
+format:
+  revealjs:
+      embed-resources: true
+      auto-play-media: true
+      incremental: false
+      slide-number: true
+      fig-format: svg
+      
   pptx:
     incremental: false
     slide-level: 2 
     fig-format: svg
+    reference-doc: template.pptx
+brand: _extensions/amwu-nrc/amwu-brand/brand.yml
 editor: visual 
 ---
 
 {{< include sections/_section-02b-productivity.qmd >}}
-

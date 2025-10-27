@@ -14,7 +14,6 @@ format:
       auto-play-media: true
       incremental: false
       slide-number: true
-      logo: img/amwu.png
       fig-format: svg
   pptx: 
       incremental: false 

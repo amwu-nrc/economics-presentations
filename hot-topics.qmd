@@ -6,6 +6,7 @@ execute:
   echo: false
   warning: false
   message: false
+brand: _extensions/amwu-nrc/amwu-brand/brand.yml
 format: 
   pptx: 
       incremental: false 

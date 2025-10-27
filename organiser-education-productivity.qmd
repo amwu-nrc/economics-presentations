@@ -7,17 +7,17 @@ execute:
   echo: false
   warning: false
   message: false
+brand: _extensions/amwu-nrc/amwu-brand/brand.yml
 format: 
   revealjs: 
-    logo: img/amwu.png
-    theme: dracula
     auto-play-media: true
     fig-format: svg
     incremental: true
   pptx: 
-      incremental: false 
-      slide-level: 2
-      fig-format: svg
+    incremental: false 
+    slide-level: 2
+    fig-format: svg
+    reference-doc: template.pptx
 editor: visual
 ---
 
@@ -101,9 +101,15 @@ Talking points that you might find useful in starting a conversation in the work
 
 ## Productivity in the Workplace
 
-> A wage increase isn't affordable this year because productivity is stagnant
+::: notes
+This is an almost direct quote from Australian Chamber of Commerce and Industry chief executive Andrew McKellar in the AFR. https://www.afr.com/policy/economy/rba-says-australians-will-have-to-accept-lower-wages-growth-20251015-p5n2ms
+:::
 
--   This is often a lie but even if it is true - who is responsible for stagnant productivity? Worker or Boss?
+They say:
+
+> Unions need to moderate their wage claims, and offer measures to improve labour productivity.
+
+-   Who makes decisions that impact on labour productivity? Workers or Bosses?
 
 ## Productivity in the Workplace - Health
 
