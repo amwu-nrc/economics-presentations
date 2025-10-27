@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en"><head>
+<link href="site_libs\quarto-contrib\quarto-project\amwu-nrc\amwu-brand\img\amwu.png" rel="icon" type="image/png">
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-html/tabby.min.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.32">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-8162e5fc71f232ea33f1e8ee7aaa6861.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.8">
 
   <meta name="author" content="Hamish Gamble">
   <title>Organiser Essentials</title>
@@ -29,7 +30,7 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-175ec1c0ea92bc532c45781632c4e35e.css">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-84f5b08bd7a85c1f734f5563f816b713.css">
   <link href="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -440,11 +441,25 @@ Hamish Gamble
 </section>
 <section id="productivity-in-the-workplace-1" class="slide level2">
 <h2>Productivity in the Workplace</h2>
+<aside class="notes">
+<p>This is an almost direct quote from Australian Chamber of Commerce and Industry chief executive Andrew McKellar in the AFR. https://www.afr.com/policy/economy/rba-says-australians-will-have-to-accept-lower-wages-growth-20251015-p5n2ms</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+<p>They say:</p>
 <blockquote>
-<p>A wage increase isn’t affordable this year because productivity is stagnant</p>
+<p>Unions need to moderate their wage claims, and offer measures to improve labour productivity.</p>
 </blockquote>
 <ul>
-<li class="fragment">This is often a lie but even if it is true - who is responsible for stagnant productivity? Worker or Boss?</li>
+<li class="fragment">Who makes decisions that impact on labour productivity? Workers or Bosses?</li>
 </ul>
 </section>
 <section id="productivity-in-the-workplace---health" class="slide level2">
@@ -497,7 +512,7 @@ Hamish Gamble
 </section></section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
-<p><img src="img/amwu.png" class="slide-logo"></p>
+<p><img src="site_libs\quarto-contrib\quarto-project\amwu-nrc\amwu-brand\img\amwu.png" class="slide-logo"></p>
 <div class="footer footer-default">
 
 </div>
@@ -685,7 +700,7 @@ Hamish Gamble
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -835,13 +850,14 @@ Hamish Gamble
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy
