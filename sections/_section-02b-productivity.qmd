@@ -119,8 +119,8 @@ national_accounts_productivity |>
   scale_colour_nrc() +
   scale_x_date(breaks = plot_date_range(national_accounts_productivity),
                date_labels = "%e %b\n%Y") +
-  labs(title = "GDP per Hour Worked (June 1991 = 100)",
-       subtitle = "Seasonally Adjusted; Quarterly") +
+  labs(title = "GDP per Hour Worked",
+       subtitle = "Seasonally Adjusted; Quarterly; Index (June 1991 = 100)") +
   theme_nrc(legend = 'bottom') +
   labs(y = NULL,
        x = NULL)
@@ -151,9 +151,10 @@ national_accounts_20 |>
   scale_y_continuous(labels = scales::label_percent()) +
   scale_x_date(breaks = plot_date_range(national_accounts_20),
                date_labels = "%e %b\n%Y") +
-  labs(title = "20-year average productivity growth",
-       y = "quarterly productivity growth",
-      x = NULL) + 
+  labs(title = "Declining Productivity Growth",
+       subtitle = "20-Year Average Productivity Growth",
+      x = NULL,
+      y = NULL) + 
   theme_nrc()
 ```
 
@@ -193,8 +194,8 @@ national_accounts_hw |>
   theme_nrc(legend = "bottom") + 
   labs(x = NULL, 
        y = NULL,
-       title = "Hours Worked: Index (June 2022 = 100)",
-       subtitle = "Seasonally Adjusted; Quarterly")
+       title = "Hours Worked",
+       subtitle = "Seasonally Adjusted; Quarterly; Index: (June 2022 = 100)")
 ```
 
 ## GDP
@@ -266,10 +267,10 @@ productivity_sector |>
   scale_colour_nrc() +
   gghighlight(industry %in% c("ALL INDUSTRIES", "Manufacturing", "Mining"), line_label_type = "ggrepel_text") +
   theme_nrc() +
-  labs(title = "Industry Productivity (June 1998 = 100)",
-       subtitle = "Original; Annual",
-       y = "gross value added per hour worked",
-       x = NULL) 
+  labs(title = "Industry Productivity",
+       subtitle = "Gross Value Added per Hour Worked (June 1998 = 100)",
+       x = NULL,
+       y = NULL) 
 
 ```
 

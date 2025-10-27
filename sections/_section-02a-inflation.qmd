@@ -150,7 +150,7 @@ cpi_pc |>
                breaks = plot_date_range(cpi_pc)) +
   scale_y_continuous(labels = scales::label_percent(scale = 1)) + 
   labs(title = "Percentage Change in the CPI from Corresponding Month of Previous Year",
-       y = "percentage change",
+       y = NULL,
        x = NULL) +
   annotate(geom = "textsegment", 
            arrow = arrow(), 
@@ -196,8 +196,9 @@ cpi_index |>
   theme_nrc() +
   scale_x_date(date_labels = "%e %b\n%Y",
                breaks = plot_date_range(cpi_index)) +
-  labs(title = "Consumer Price Index, All groups CPI",
-       y = "consumer price index (100 = 2011/12)",
+  labs(title = "Consumer Price Index",
+       subtitle = "All groups CPI; Index: (June 2011 = 100)",
+       y = NULL,
        x = NULL) +
   annotate(geom = "textsegment", 
            arrow = arrow(), 
@@ -286,8 +287,8 @@ cpi_category |>
   theme_nrc() +
   labs(y = NULL,
        x = NULL,
-       title = "Consumer Price Index (100 = March 2020)",
-       subtitle = "CPI Expenditure Classes") +
+       title = "Consumer Price Index",
+       subtitle = "CPI Expenditure Classes; Index: (March 2020 = 100)") +
   expand_limits(x = ymd(c("2020-03-01", "2026-12-01"))) +
   scale_colour_nrc() 
 ```
