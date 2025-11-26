@@ -1,6 +1,6 @@
 # Tariffs {.center background-image="img/trump.webp" background-color="black"}
 
-## Definition
+## Definition {.incremental}
 
 -   A tariff is essentially a tax charged on imported goods.
 -   The tariff is paid by the *importer*, not the exporter.
@@ -10,6 +10,13 @@
 
 ::: notes
 Trade surplus countries take advantage by using subsidies on domestic production, manipulate currency to keep their exchange rate low, and have their own tariffs on US imports.
+
+There was a recent bit of news in the AFR:
+
+Century Aluminum has urged US President Donald Trump’s top trade
+official to register the Albanese government’s \$22.7 billion Future Made
+in Australia industrial policy, which aims to encourage onshore
+manufacturing, in its annual report on foreign trade barriers.
 
 The impact on domestic industry (through price competition) resonates a lot with workers I think.
 
@@ -41,7 +48,7 @@ It's a classic "pull the ladder up after you" situation.
 ::: incremental
 Tariffs are not new.
 
--   Protecting local industry has long played a role in capitalist development.
+-   Protecting local industry has long been the policy of industrialising nations.
 -   Tariffs have been used to protect new industries in developing/industrialising countries.
 -   Britain relied on high tariffs to develop their industry. Once developed, tariffs were disavowed in favour of "free markets" and global trade.
 :::
@@ -79,9 +86,7 @@ Even if it works for them, it is not going to be a viable strategy for the rest 
 ## Tariffs to Protect Capital
 
 ::: notes
-In response to declining profit, capitalists try to discipline labour, move production somewhere cheaper, inflates asset bubbles, and retreat behind protective barriers.\
-\
-You have probably felt and noticed this over the course of your working lives.
+In response to declining profit, capitalists try to discipline labour, move production somewhere cheaper, inflates asset bubbles, and retreat behind protective barriers.
 
 Most likely what is going on is that the capital class is using tariffs to try and protect their profits because they are no longer competitive.
 :::
@@ -93,3 +98,15 @@ Most likely what is going on is that the capital class is using tariffs to try a
 -   US tariffs are intended to protect US capital from more productive or lower cost competitors, and to shift the burden of declining profitability off shore.
 
 -   This is a temporary solution.
+
+## What About Australia
+
+-   Australia is a de-industrialised country.
+
+-   Policies like Future Made in Australia and the National Reconstruction Fund are intended to rebuild an industrial base
+
+-   How can we support these industries as they grow and become competitive?
+
+    -   Anti-Dumping Commission to support **fair** trade
+
+    -   ***targeted*** tariffs i.e. aluminium imports
