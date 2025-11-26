@@ -164,14 +164,12 @@ cpi_pc |>
            label = "decreasing inflation",
            x = as_date("2022-12-01"),
            y = 10,
-           xend = as_date(max(cpi_pc$date)),
+           xend = as_date("2025-08-01"),
            yend = 3)
 ```
 
 ::: notes
 -   This is the % change way of measuring inflation.
-
-<!-- -->
 
 -   Inflation goes up when the % change in one period is higher than the last period
 
@@ -319,7 +317,7 @@ lci |>
   arrange(-value) |> 
   gt(rowname_col = "cpi_category") |> 
   tab_header(title = md("**Change in living costs by product category**"),
-             subtitle = "% change between June 2025 and June 2024") |> 
+             subtitle = "% change between September 2025 and September 2024") |> 
   tab_stubhead(label = "Price Category") |> 
   tab_style(style = cell_text(weight = "bold"),
             locations = cells_body(
@@ -348,7 +346,7 @@ lci |>
   arrange(-percentage) |> 
   gt(rowname_col = "cpi_category") |> 
   tab_header(title = md("**Change in living costs by product category**"),
-             subtitle = "% change between June 2025 and June 2015") |> 
+             subtitle = "% change between September 2025 and September 2015") |> 
   tab_stubhead(label = "Price Category") |> 
   tab_style(style = cell_text(weight = "bold"),
             locations = cells_body(
@@ -380,9 +378,8 @@ What would this chart look like if you got a 6% pay rise for the next year, and 
 cumulative_cpi <- cpi_quarterly |> 
   filter(indicator == "Index Numbers",
          state == "Australia",
-         cpi_expenditure_class == "All groups CPI",
-         date >= "2020-03-01") |> 
-  mutate(cumulative_inflation = value - value[date=="2020-03-01"]) |> 
+         cpi_expenditure_class == "All groups CPI") |> 
+  mutate(cumulative_inflation = value - value[date=="1997-09-01"]) |> 
   select(date, cumulative_inflation)
 
 cumulative_wpi <- wpi_quarterly |> 
@@ -390,9 +387,8 @@ cumulative_wpi <- wpi_quarterly |>
          unit == "Index Numbers",
          indicator == "Total hourly rates of pay excluding bonuses",
          sector == "Private and Public",
-         industry == "All industries",
-         date >= "2020-03-01") |> 
-  mutate(cumulative_wages = value - value[date=="2020-03-01"]) |> 
+         industry == "All industries") |> 
+  mutate(cumulative_wages = value - value[date=="1997-09-01"]) |> 
   select(date, cumulative_wages) |> 
   distinct()
 
@@ -432,11 +428,12 @@ cumulative |>
 ```{r}
 
 fc <- tibble(
-  date = as_date(c("2025-09-01", "2025-12-01", "2026-03-01", "2026-06-01")),
-  cumulative_wages = rep(22.1+6, 4),
-  cumulative_inflation = c(25.1+2.5/4, 25.1+2.5/3, 25.1+2.5/2, 25.1+2.5)
+    date = as_date(c("2025-12-01", "2026-03-01", "2026-06-01", "2026-09-01", "2026-12-01")),
+    cumulative_wages = c(91.6+0.75, 91.6+1.5, 91.6+0.75+1.5+7.7, 91.6+0.75+1.5+7.7+.75, 91.6+0.75+1.5+7.7+1.5),
+    cumulative_inflation = 77.5+(2.5/4*c(1,2,3,4,5))
 ) |> 
-  mutate(cumulative_real_wage = cumulative_wages - cumulative_inflation)
+    mutate(cumulative_real_wage = cumulative_wages - cumulative_inflation)
+
 
 cumulative_forecast <- inner_join(cumulative_wpi, cumulative_cpi) |> 
   mutate(cumulative_real_wage = cumulative_wages - cumulative_inflation) |> 
@@ -451,11 +448,20 @@ cumulative_forecast <- inner_join(cumulative_wpi, cumulative_cpi) |>
   )) |> 
   mutate(value_label = ifelse(date == max(date),
                               scales::label_percent(scale = 1, accuracy = 0.1)(value),
-                              NA))
+                              NA),
+         is_fc = ifelse(date >= as_date("2025-09-01"), T, F))
+
+avg_real_wage_growth <- (17.4-0)/(as.integer(as_date("2020-03-01")) - as.integer(as_date("1997-09-01")))
+
+  
+seg <- tibble(x = as_date("2020-03-01"), xend = as_date("2026-09-01"), y = 17.4, yend = y + (avg_real_wage_growth*as.integer(xend-x)))
+
+
 
 cumulative_forecast |> 
-  ggplot(aes(x = date, y = value, colour = indicator)) +
+  ggplot(aes(x = date, y = value, colour = indicator, linetype = is_fc)) +
   geom_line() +
+  geom_segment(aes(x = seg$x, xend = seg$xend, y = seg$y, yend = seg$yend), linetype = 2, lwd = 0.5) +
   scale_x_date(breaks = plot_date_range(cumulative),
                date_labels = "%e %b\n %Y") +
   scale_y_continuous(labels = scales::label_percent(scale = 1)) +
@@ -463,14 +469,13 @@ cumulative_forecast |>
   labs(x = NULL,
        y = NULL,
        title = "Wages Have Not Kept Up With Inflation",
-       subtitle = "Cumulative change in hourly rates of pay and the CPI since March 2020 with 6% pay rise for 2025-26 and 2.5% inflation ") +
-  geom_dl(method = "last.qp", aes(label = value_label)) + 
+       subtitle = "Cumulative change in hourly rates of pay and the CPI. Forecast 7.7% pay rise for 2025-26 and 2.5% inflation ") +
   theme_nrc(legend = "bottom")
   
 ```
 
 ::: notes
--   We're really far behind from ***IMPROVING*** living standards.
+-   We're really far away from ***IMPROVING*** living standards.
 :::
 
 ## Inflation - Wages

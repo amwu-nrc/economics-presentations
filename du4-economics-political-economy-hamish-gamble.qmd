@@ -8,11 +8,12 @@ execute:
   warning: false
   message: false
 brand: _extensions/amwu-nrc/amwu-brand/brand.yml
+brand-mode: dark
 format: 
   revealjs:
       embed-resources: true
       auto-play-media: true
-      incremental: false
+      incremental: true
       slide-number: true
       fig-format: svg
   pptx: 
