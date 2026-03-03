@@ -45,6 +45,7 @@ plot_date_range <- function(plot_data) {
 }
 
 ```
+
 # Productivity
 
 ## Productivity
@@ -58,8 +59,7 @@ plot_date_range <- function(plot_data) {
 -   Changes in output can occur even without changes to input
 
 ::: notes
-
-We need to understand productivity - how it's measured, and how bosses talk about it - because it is simultaneously misunderstood and over-emphasised in the media. 
+We need to understand productivity - how it's measured, and how bosses talk about it - because it is simultaneously misunderstood and over-emphasised in the media.
 
 The newly elected government has set its focus on productivity, and productivity growth, and has got the Productivity Commission in on the action.
 

@@ -6,29 +6,6 @@
 
 {{< video https://www.youtube.com/watch?v=pQPv5oUfsbg width="100%" height="85%">}}
 
-## Economists
-
-::: notes
-Economics used to be the realm of the philosopher.
-
-In about the 1950s to 1960s, a new school of economists decided that adding maths equations to economics made it more rigorous, and more scientific.
-
-This shifted the discipline away from thinking about the interaction of the economy and the government, instead thinking of it as an abstract concept which can be modelled, and those models can be used to make predictions.
-:::
-
-:::::: columns
-::: {.column .incremental width="50%"}
--   Know it all
--   Work in *finance*
--   Kinda annoying
--   Think that adding maths equations make their work more "real"
-:::
-
-:::: {.column .incremental width="50%"}
-![](img/econ-maths.jpeg)
-::::
-::::::
-
 ## What is The Economy? 
 
 ::: {.incremental}
@@ -39,6 +16,21 @@ This shifted the discipline away from thinking about the interaction of the econ
 -   Is the economy how well the stock market is performing?
 
 :::
+
+## What are Economists?
+
+::: notes
+Economics was originally a philosophical subject. What happens when the economy interacts with the government? How do different classes interact? How do different classes experience the economy? It was a social science studying a social phenomenon. 
+
+In about the 1950s to 1960s, a new school of economists decided that adding maths equations to economics made it more rigorous, and more scientific, and more "true". The economy is this abstract thing, which we can model using mathematics. If we change one parameter (like investment or the unemployment rate or interest rates) we can see what happens to other parameters. Predictions from the model are used to make predictions about society. 
+
+:::
+- Too closely associated with business and finance
+- Love to explain why you're wrong
+- Get paid too much to make predictions which don't come true
+
+
+
 
 ## Political Economy
 
