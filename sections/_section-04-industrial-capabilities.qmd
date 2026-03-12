@@ -1,3 +1,12 @@
+```{r}
+#| label: setup-complexity
+library(ecomplexity)
+library(dplyr)
+library(ggplot2)
+library(gghighlight)
+library(reportabs)
+```
+
 # Industrial Capabilities
 
 > What you make is what you know
@@ -66,21 +75,33 @@ An iPhone represents:
 ## Why Does It Matter to Australia?
 
 ::: notes
--   Australia's ranking in 2023 was 105th - Sandwiched between Botswana and Côte d'Ivoire
+-   Australia's ranking in 2024 was 74th- Sandwiched between Madagascar and Uruguay
 -   Australia's exports are concentrated in only a few products
 -   Australia's exports are lower in average complexity
 -   Australia does not have the industrial capabilities of other developed countries.
 :::
 
-![](img/aus%20complexity%20rank)
+```{r}
+ntl <- read_complexitydata("atlas_complexity_country", export_dir = "data") 
 
-## Why Does It Matter to Australia?
+ntl |> 
+  ggplot(aes(x = year, y = eci_rank_hs92, col = location_code)) +
+  geom_line() +
+  scale_y_reverse(breaks = c(1, seq(25, 175, 25))) +
+  labs(x = NULL,
+       y = "Economic Complexity Index (Rank)") + 
+  gghighlight(location_code %in% c("AUS", "DEU", "CAN")) + 
+  theme_nrc()
+  
+  
+```
 
-![](img/What-did-Australia-export-in-2023.png)
+## Why Does it Matter to South Australia?
 
-[^_section-04-industrial-capabilities-1]
-
-[^_section-04-industrial-capabilities-1]: <https://atlas.hks.harvard.edu/explore/treemap?exporter=country-36&colorBy=complexity>
+```{r}
+state <- read_complexitydata("state_economic_complexity", export_dir = "data")
+graph_complexity_tree(state, 2023, "SA")
+```
 
 ## What Can Be Done?
 
@@ -98,3 +119,85 @@ The problem:
 -   Understand the connection between just transition, decarbonisation, and reindustrialisation.
 
 -   Develop a policy agenda which explicitly outlines existing and future opportunities, and how to get there.
+
+## The AMWU and a Future Made in Australia
+
+::: notes
+As part of a Future Made in Australia, what do we want to see? What will we be campaigning for?
+
+-   A Secure Australian Jobs Code
+
+-   Establishing a Manufacturing Competitiveness Council
+
+-   Demand local content
+
+-   Mandate apprentice participation
+
+-   Establish **fair trade** over free trade
+
+-   Nationalise strategic infrastructure
+:::
+
+-   The Future Made in Australia Act is a \$22.7 billion investment into restoring an industrial base in Australia.
+
+-   FMIA, which is public money, must be used to create secure, high-quality jobs. Not subsidise worker exploitation.
+
+-   The AMWU is calling for the establishment of a manufacturing council, and tying strong conditions to businesses receiving public money
+
+## Conditions for Employers
+
+::: notes
+This is about public money for a public good. Not subsidies to private capital to continue to exploit their workers. We are calling on the Labor government to mandate collective agreements for any businesses receiving public money, which reflect union rates of pay.
+
+**Local Content**
+
+-   Procurement is one of the most powerful levers we have for rebuilding our industrial base.
+
+-   Public money must explicitly support local industry.
+
+-   How do we make them enforceable?
+
+-   Local content, local content targets, and local industry participation. The government can provide certainty to businesses looking to expand to supply infrastructure to the energy transition.
+
+**Skills and Apprentices**
+
+-   To rebuild our industrial base we need skilled manufacturing workers
+
+-   Current apprentice requirements are toothless, letting employers off the hook
+:::
+
+-   Guarantee of secure jobs, fair wages, and safe conditions
+
+-   Collective bargaining as a requirement at workplaces who receive public money.
+
+-   Use the state's power in procurement to support local industry through local content targets.
+
+-   Mandate apprentice participation
+
+## Manufacturing Competitiveness Council
+
+-   Tripartite Manufacturing Competitiveness Council - with genuine union representation.
+
+-   Ensure that all decisions about capital investment, skills, and industry strategy are made with worker input.
+
+-   Establish and plan for the orderly transition of our economy - guided by human need, not market whims.
+
+## Fair Trade
+
+-   Empower the Anti-Dumping Commission
+
+-   Unfair trade, particular dumping, has significant negative effects on local industry. Especially in a country that is seeking to re-industrialise.
+
+-   Establish an Independent Advocate for Fair Trade.
+
+## Nationalising Strategic Infrastructure
+
+::: notes
+The goal of economic sovereignty cannot be achieved if the nation’s most vital infrastructure remains subject to the profit demands of private capital. Labor must move to nationalise strategic infrastructure essential to the Future Made in Australia Act agenda, particularly in the energy and green manufacturing sectors
+:::
+
+-   Infrastructure that is "too big to fail" or needed "in the national interest" can not be left in the hands of profit maximisers.
+
+-   Perpetual bailouts and subsidies
+
+-   Natioanalisation can help us to achieve our strategic goals.
