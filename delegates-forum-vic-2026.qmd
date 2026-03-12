@@ -240,11 +240,15 @@ cost_of_living_table(since = "2020-03-01")
 :::
 :::::
 
-# Cost of Living and Wages
-::: notes
-Looking only since 2023 suggests that wages have grown slightly faster than inflation. But the cost of living index shows that wages have not grown faster than the cost of living. 
+## Cost of Living and Wages
 
-The problem with looking only since 2023 is it neglects the impact of high inflation between 2021 and 2023, where real wages were seriously eroded. 
+
+::: notes
+Looking only since 2023 suggests that wages have grown slightly faster than inflation. But the cost of living index shows that wages have not grown faster than the cost of living.
+
+The problem with looking only since 2023 is it neglects the impact of high inflation between 2021 and 2023, where real wages were seriously eroded.
+:::
+
 ```{r}
 cumulative_cpi <- function(data, region, since, include_housing = F) {
 
@@ -391,3 +395,4 @@ plot_real_wages(cpi_quarterly_group,
                 since = "2020-03-01", 
                 include_housing = F)
 ```
+
