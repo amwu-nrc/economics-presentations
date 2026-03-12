@@ -1,0 +1,393 @@
+---
+title: "Inflation" 
+subtitle: "" 
+affiliation: "National Research Centre" 
+execute:    
+  echo: false
+  warning: false
+  message: false
+format:
+  revealjs:
+      embed-resources: true
+      auto-play-media: true
+      incremental: false
+      slide-number: true
+      fig-format: svg
+      
+  pptx:
+    incremental: false
+    slide-level: 2 
+    fig-format: svg
+    reference-doc: template-ndtd.potx
+brand: _brand/_brand.yml
+editor: visual 
+---
+
+```{r}
+#| label: setup
+
+library(tidyverse)
+library(readabs)
+library(reportabs)
+library(directlabels)
+library(scales)
+library(glue)
+library(gt)
+library(geomtextpath)
+
+cpi_quarterly_group <- read_absdata("cpi_quarterly_group", export_dir = "data", refresh = TRUE)
+
+wpi_quarterly <- read_absdata("wpi_quarterly", export_dir = "data", refresh = TRUE)
+
+cli_quarterly <- read_absdata("cli", export_dir = "data", refresh = TRUE)
+
+
+
+```
+
+## Overall Inflation Impact
+
+::: notes
+Since March 2023, prices have grown faster than wages.
+
+So what's the problem?
+:::
+
+```{r}
+plot_real_inflation_group <- function(cpi_category, since) {
+  
+  if (cpi_category == "Housing") {
+    cpi <- cli_quarterly |> 
+      filter(cpi_category == "Housing",
+             data_type == "Index Numbers",
+             household_type == "Employee households",
+             date >= {{since}}) |> 
+      mutate(value = value/value[date=={{since}}] - 1,
+             indicator = "Cost of Living Index") |> 
+      select(date, indicator, value)
+  } else {
+  cpi <- cpi_quarterly_group |> 
+    filter(cpi_category == {{cpi_category}},
+           unit == "Index Numbers",
+           date >= {{since}}) |> 
+    mutate(value = value/value[date=={{since}}] - 1,
+           indicator = "Consumer Price Index") |> 
+    select(date, indicator, value)
+  }
+  
+  wpi <- wpi_quarterly |> 
+    filter(data_type == "Quarterly Index", 
+           date >= {{since}},
+           state == "Australia",
+           indicator == "Ordinary time hourly rates of pay excluding bonuses",
+           sector == "Private and Public",
+           industry == "Manufacturing") |> 
+    mutate(value = value/value[date=={{since}}] -1,
+           indicator = "Manufacturing Wages") |> 
+    select(date, indicator, value)
+  
+  date_label <- label_date("%B %Y")(last(cpi$date))
+  since_label <- label_date("%B %Y")(as_date(since))
+  cpi_label <- label_percent(accuracy = 0.1)(last(cpi$value))
+  wpi_label <- label_percent(accuracy = 0.1)(last(wpi$value))
+  
+  plot_data <- bind_rows(cpi, wpi)  |>
+    group_by(indicator) |> 
+    mutate(label = label_percent(accuracy = 0.1)(last(value))) |> 
+    ungroup()
+  
+  inc_dec <- ifelse(last(cpi$value) > 0, "increased", "decreased")
+  
+  ggplot(plot_data, aes(x = date, y = value, col = indicator)) + 
+    geom_line() +
+    labs(x = NULL,
+         y = NULL,
+         title = glue("{cpi_category} {inc_dec} by {cpi_label} between {since_label} and {date_label}"),
+         subtitle = glue("Manufacturing wages increased by {wpi_label} between {since_label} and {date_label}")) + 
+    scale_x_date(breaks = plot_date_range(plot_data),
+                 date_labels = "%b-%y") +
+    scale_y_continuous(labels = label_percent()) +
+    geom_dl(aes(label = label), method = "last.qp") +
+    theme_nrc(legend = "bottom")
+  
+  
+}
+
+plot_real_inflation_group("All groups CPI", "2023-03-01")
+
+```
+
+# Inflation - Essential Goods and Services
+
+## Bread
+
+```{r}
+
+plot_real_inflation_group("Bread", since = "2023-03-01")
+```
+
+## Milk
+
+```{r}
+plot_real_inflation_group("Milk", since = "2023-03-01")
+```
+
+## Gas
+
+```{r}
+plot_real_inflation_group("Gas and other household fuels", since = "2023-03-01")
+```
+
+## Electricity
+
+```{r}
+plot_real_inflation_group("Electricity", since = "2023-03-01")
+```
+
+## Property Rates
+
+```{r}
+plot_real_inflation_group("Property rates and charges", since = "2023-03-01")
+```
+
+## Rents
+
+```{r}
+plot_real_inflation_group("Rents", since = "2023-03-01")
+```
+
+## Water
+
+```{r}
+plot_real_inflation_group("Water and sewerage", since = "2023-03-01")
+```
+
+## Food and Non-alcoholic Beverages
+
+```{r}
+plot_real_inflation_group("Food and non-alcoholic beverages", since = "2023-03-01")
+```
+
+## Housing - Including Mortgages
+
+```{r}
+plot_real_inflation_group("Housing", "2023-03-01")
+```
+
+## Summary
+
+::: notes
+Forget inflation. We're talking about cost of living, not a measure created for the purposes of helping the RBA determine what interest rates should be. The CPI is designed to measure price inflation for the household sector **as a whole** and is not the ideal measure for assessing the changes in the purchasing power of the disposable incomes of households.
+
+The Cost of Living Index can be interpreted as "How much would after tax incomes need to change to allow households to purchase the same quantity of goods and services between period A and period B".
+:::
+
+```{r}
+cost_of_living_table <- function(since) {
+  
+  wage_growth <- wpi_quarterly |> 
+    filter(date %in% c(max(date), {{since}}),
+           data_type == "Quarterly Index",
+           indicator == "Ordinary time hourly rates of pay excluding bonuses",
+           state == "Australia",
+           industry == "Manufacturing",
+           sector == "Private and Public") |> 
+    mutate(pc = value / value[date=={{since}}] - 1) |> 
+    filter(date == max(date)) 
+  
+  first_date <- label_date(format = "%B %Y")(as_date({{since}}))
+  last_date <-  label_date(format = "%B %Y")(wage_growth$date)
+  
+  cli_quarterly |> 
+    filter(data_type == "Index Numbers",
+           date %in% c(max(date), {{since}}),
+           household_type == "Employee households") |> 
+    group_by(cpi_category) |> 
+    mutate(pc = value / value[date=={{since}}] - 1) |> 
+    ungroup() |> 
+    filter(date == max(date)) |> 
+    select(cpi_category, pc) |> 
+    add_row(cpi_category = "Wages",
+            pc = wage_growth$pc) |> 
+    arrange(-pc) |> 
+    gt(rowname_col = "cpi_category") |> 
+    tab_header(
+      title = md("**Change in living costs by product category**"),
+      subtitle = glue("% change between {last_date} and {first_date}")
+    ) |> 
+    tab_stubhead(label = "Price Category") |> 
+    tab_style(style = cell_text(weight = "bold"),
+              locations = cells_body(
+                rows = cpi_category %in% c("All groups", "Wages")
+              )) |> 
+    fmt_percent(columns = pc, scale = 100, decimal = 1) |> 
+    cols_label(pc = "% change")
+  
+}
+```
+
+::::: columns
+::: {.column width="50%"}
+```{r}
+cost_of_living_table(since = "2023-03-01")
+```
+:::
+
+::: {.column width="50%"}
+```{r}
+cost_of_living_table(since = "2020-03-01")
+```
+:::
+:::::
+
+# Cost of Living and Wages
+::: notes
+Looking only since 2023 suggests that wages have grown slightly faster than inflation. But the cost of living index shows that wages have not grown faster than the cost of living. 
+
+The problem with looking only since 2023 is it neglects the impact of high inflation between 2021 and 2023, where real wages were seriously eroded. 
+```{r}
+cumulative_cpi <- function(data, region, since, include_housing = F) {
+
+  if (include_housing) {
+    data |>
+      filter(data_type == "Index Numbers",
+             date >= since,
+             household_type == "Employee households",
+             cpi_category == "All groups") |>
+      mutate(cumulative_prices = 100*(value / value[date == {{since}}] -1)) |>
+      select(date, cumulative_prices)
+  } else {
+    data |>
+      filter(data_type == "Index Numbers",
+             date >= since,
+             cpi_category == "All groups CPI",
+             region == {{region}}) |>
+      mutate(cumulative_prices = 100*(value / value[date=={{since}}] - 1)) |>
+      select(date, cumulative_prices)
+  }
+}
+
+
+
+cumulative_wpi <- function(data,
+                           state,
+                           indicator = "Total hourly rates of pay excluding bonuses",
+                           sector = "Private and Public",
+                           industry = "All industries",
+                           since) {
+  data |>
+    filter(data_type == "Quarterly Index",
+           state == {{state}},
+           indicator == {{indicator}},
+           sector == {{sector}},
+           industry == {{industry}},
+           date >= since) |>
+    mutate(cumulative_wages = 100*(value / value[date=={{since}}] - 1))  |>
+    select(date, cumulative_wages)
+}
+
+plot_real_wages <- function(cpi_data, wpi_data,
+                            forecast = list(years = 1, wage = 10, inflation = 3), ...) {
+
+  if (is.null(forecast$years)) {
+    forecast$years <- 1
+  }
+
+  if (is.null(forecast$wage)) {
+    forecast$wage <- 5
+  }
+
+  if (is.null(forecast$inflation)) {
+    forecast$inflation <- 3
+  }
+
+  args <- list(...)
+
+  # Some things are shared, like since and region. Other things only apply to wpi
+
+  cpi_args <- args[names(args) %in% c("region", "since", "include_housing")]
+  cpi_args$data <- cpi_data
+  wpi_args <- args[!names(args) %in% c("region", "include_housing")]
+  wpi_args$data <- wpi_data 
+  
+
+
+  cumulative_cpi_data <- do.call(cumulative_cpi, args = cpi_args)
+  cumulative_wpi_data <- do.call(cumulative_wpi, args = wpi_args)
+
+  cumulative <- inner_join(cumulative_wpi_data,
+                           cumulative_cpi_data) |>
+    mutate(cumulative_real_wage = cumulative_wages - cumulative_prices) |>
+    pivot_longer(cols = -date,
+                 values_to = "value",
+                 names_to = "indicator") |>
+    mutate(indicator = case_when(
+      indicator == "cumulative_wages" ~ "Hourly rates of pay",
+      indicator == "cumulative_prices" ~ "Prices",
+      indicator == "cumulative_real_wage" ~ "Real hourly rates of pay"
+    )) |>
+    mutate(value_label = ifelse(date == max(date),
+                                scales::label_percent(scale = 1, accuracy = 0.1)(value),
+                                NA))
+
+  # Assume about the inputs. The forecast period is years.
+  # The wage ask is averaged over the periods (ie years *4)
+  # Estimated inflation is averaged over the years.
+
+  forecast$periods = forecast$years * 4
+  forecast$wage = forecast$wage/forecast$periods
+  forecast$inflation = forecast$inflation/forecast$periods
+
+  fc <- tibble(
+    ix = 0:(forecast$years * 4),
+    date = max(cumulative_wpi_data$date) + months(ix)*3, # 3 months per quarter
+    cumulative_wages = last(cumulative_wpi_data)$cumulative_wages + forecast$wage*ix,
+    cumulative_prices = last(cumulative_cpi_data)$cumulative_prices + forecast$inflation*ix
+  ) |>
+    mutate(cumulative_real_wage = cumulative_wages - cumulative_prices) |>
+    select(-ix) |>
+    pivot_longer(cols = -date,
+                 values_to = "value",
+                 names_to = "indicator") |>
+    mutate(indicator = case_when(
+      indicator == "cumulative_wages" ~ "Hourly rates of pay",
+      indicator == "cumulative_prices" ~ "Prices",
+      indicator == "cumulative_real_wage" ~ "Real hourly rates of pay"
+    ))
+
+  seg <- tibble(date = bind_rows(cumulative, fc)$date,
+                value = 0.00116*as.integer(date - as_date("2020-03-01")),
+                label = "Average Real Wage Growth")
+
+  ggplot() +
+    geom_line(data = cumulative, aes(x = date, y = value, col = indicator)) +
+    geom_line(data = fc, aes(x = date, y = value, col = indicator), linetype = 2) +
+    geom_textpath(data = seg, aes(x = date, y = value, label = label),
+                  linetype = 2,
+                  lwd = 0.5,
+                  colour = "#111a41") +
+    scale_x_date(date_labels = "%e %b\n %Y",
+                 breaks = plot_date_range(bind_rows(cumulative,fc))) +
+    scale_y_continuous(labels = scales::label_percent(scale = 1)) +
+    scale_linetype_discrete() +
+    scale_colour_nrc() +
+    labs(x = NULL,
+         y = NULL,
+         title = "Wages Have Not Kept Up With Prices",
+         caption = paste(wpi_args$region,
+                         wpi_args$industry),
+         subtitle = glue::glue("Cumulative change in hourly rates of pay and prices<br>
+       *Forecast **{forecast$wage*forecast$periods}%** pay rise by {label_date(format = '%B %Y')(max(fc$date))} and **{forecast$inflation*forecast$periods}%** annual increase in inflation*")) +
+    theme_nrc(legend = "bottom") +
+    guides(linetype = "none")
+
+}
+
+plot_real_wages(cpi_quarterly_group, 
+                wpi_quarterly, 
+                forecast = list(years = 3, wage = 12, inflation = 3),
+                state = "Australia", 
+                region = "Australia", 
+                since = "2020-03-01", 
+                include_housing = F)
+```
