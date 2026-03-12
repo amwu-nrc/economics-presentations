@@ -14,8 +14,12 @@ color:
     blue: midnight
     red: vivid-orange
   primary: vivid-orange
-  background: midnight
-  foreground: silver
+  background: 
+    light: silver
+    dark: black
+  foreground: 
+    light: midnight
+    dark: silver
   
 logo: 
   small: img/amwu.png
