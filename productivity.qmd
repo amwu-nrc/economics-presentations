@@ -19,7 +19,7 @@ format:
     slide-level: 2 
     fig-format: svg
     reference-doc: template.pptx
-brand: _extensions/amwu-nrc/amwu-brand/brand.yml
+brand: _brand/_brand.yml
 editor: visual 
 ---
 

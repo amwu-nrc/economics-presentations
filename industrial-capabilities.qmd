@@ -6,7 +6,7 @@ execute:
   echo: false
   warning: false
   message: false
-brand: _extensions/amwu-nrc/amwu-brand/brand.yml
+brand: _brand/brand.yml
 
 format:
   revealjs:
@@ -14,10 +14,10 @@ format:
       auto-play-media: true
       incremental: false
       slide-number: true
-      fig-format: svg
+      fig-format: retina
   pptx:
     incremental: false
-    fig-format: svg
+    fig-format: retina
     slide-level: 2 
     reference-doc: template.pptx
 editor: visual 
