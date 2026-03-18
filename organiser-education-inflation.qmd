@@ -1,6 +1,7 @@
 ---
-title: "Inflation" 
-subtitle: "" 
+title: "Organiser Essentials" 
+subtitle: "Inflation, Wages, and Cost of Living"
+author: "Hamish Gamble"
 affiliation: "National Research Centre" 
 execute:    
   echo: false
@@ -18,212 +19,191 @@ format:
     incremental: false
     slide-level: 2 
     fig-format: svg
-    reference-doc: template.potx
+    reference-doc: template.pptx
 brand: _brand/_brand.yml
 editor: visual 
 ---
 
 ```{r}
 #| label: setup
-
 library(tidyverse)
 library(readabs)
 library(reportabs)
 library(directlabels)
 library(scales)
+library(glue)
+library(gt)
 library(geomtextpath)
 
+cpi_quarterly_group <- read_absdata("cpi_quarterly_group", export_dir = "data", refresh = TRUE)
 
-inflation_group <- read_abs(cat_no = "6401.0", tables = "18", path = "data") |> 
-  separate_series(column_names = c("index", "cpi_category", "australia"),
-                  remove_nas = T) |> 
-  select(-index, -australia) 
+wpi_quarterly <- read_absdata("wpi_quarterly", export_dir = "data", refresh = TRUE)
+
+cli_quarterly <- read_absdata("cli", export_dir = "data", refresh = TRUE)
+
+plot_real_inflation_group <- function(cpi_category, since) {
+  
+  if (cpi_category == "Housing") {
+    cpi <- cli_quarterly |> 
+      filter(cpi_category == "Housing",
+             data_type == "Index Numbers",
+             household_type == "Employee households",
+             date >= {{since}}) |> 
+      mutate(value = value/value[date=={{since}}] - 1,
+             indicator = "Cost of Living Index") |> 
+      select(date, indicator, value)
+  } else {
+  cpi <- cpi_quarterly_group |> 
+    filter(cpi_category == {{cpi_category}},
+           unit == "Index Numbers",
+           date >= {{since}}) |> 
+    mutate(value = value/value[date=={{since}}] - 1,
+           indicator = "Consumer Price Index") |> 
+    select(date, indicator, value)
+  }
+  
+  wpi <- wpi_quarterly |> 
+    filter(data_type == "Quarterly Index", 
+           date >= {{since}},
+           state == "Australia",
+           indicator == "Ordinary time hourly rates of pay excluding bonuses",
+           sector == "Private and Public",
+           industry == "Manufacturing") |> 
+    mutate(value = value/value[date=={{since}}] -1,
+           indicator = "Manufacturing Wages") |> 
+    select(date, indicator, value)
+  
+  date_label <- label_date("%B %Y")(last(cpi$date))
+  since_label <- label_date("%B %Y")(as_date(since))
+  cpi_label <- label_percent(accuracy = 0.1)(last(cpi$value))
+  wpi_label <- label_percent(accuracy = 0.1)(last(wpi$value))
+  
+  plot_data <- bind_rows(cpi, wpi)  |>
+    group_by(indicator) |> 
+    mutate(label = label_percent(accuracy = 0.1)(last(value))) |> 
+    ungroup()
+  
+  inc_dec <- ifelse(last(cpi$value) > 0, "increased", "decreased")
+  
+  ggplot(plot_data, aes(x = date, y = value, col = indicator)) + 
+    geom_line() +
+    labs(x = NULL,
+         y = NULL,
+         title = glue("{cpi_category} {inc_dec} by {cpi_label} between {since_label} and {date_label}"),
+         subtitle = glue("Manufacturing wages increased by {wpi_label} between {since_label} and {date_label}")) + 
+    scale_x_date(breaks = plot_date_range(plot_data),
+                 date_labels = "%b-%y") +
+    scale_y_continuous(labels = label_percent()) +
+    geom_dl(aes(label = label), method = "last.qp") +
+    theme_nrc(legend = "bottom")
+  
+  
+}
 
 
 ```
 
-## Overall Inflation Impact
+## Organiser Essentials
+
+::: notes
+This is the second session in the NRC Legal, Political and Economic Education series which we are developing. These sessions are designed to:
+
+-   help build a culture of mindful militancy
+-   have a shared understanding (as a union) on legal, political, and economic issues
+-   provide consistency in training across delegates and organisers, to help with coaching and mentoring of delegates following DU4 and more broadly around knowledge and skill building.
+-   provide some useful talking points in recruitment and organising conversations.
+-   What comes next will be influenced by what you think you need/what you think will be useful
+:::
+
+-   These sessions are designed to help build a culture of mindful militancy.
+
+-   Consistency in education across members, delegates, and organisers
+
+-   Tell us what you need!
+
+## Talking About Inflation
+
+::: notes
+Understanding Inflation is key to why:
+
+-   Cost of living is not accurately reflected in the CPI
+
+-   Limitations of tying wage increases to CPI
+:::
+
+-   Why do we need to understand inflation?
+
+-   What is inflation, and what is it not?
+
+-   Talking about productivity in the workplace
+
+## Talking About Inflation
+
+::: notes
+So over the past 3 years, wages have actually grown faster than CPI. Job done, problem solved.
+:::
 
 ```{r}
 
-inflation_group |> 
-  filter(cpi_category == "All groups CPI",
-         unit == "Index Numbers",
-         date >= "2023-01-01") |> 
-   mutate(reindex = value / value[date == "2023-03-01"] - 1,
-         label = scales::label_percent(accuracy = 0.1)(last(reindex))) |> 
-  ggplot(aes(x = date, y = reindex)) + 
-  geom_line() + 
-  labs(x = NULL,
-       y = NULL,
-       title = "Average prices in December 2025 were **8.9%** higher than prices in March 2023") +
-  theme_nrc() +
-  scale_x_date(breaks = seq(as_date("2023-03-01"), as_date("2026-03-01"), by = "1 year"),
-               date_labels = "%Y") +
-  scale_y_continuous(labels = scales::label_percent())
+plot_real_inflation_group("All groups CPI", "2023-03-01")
 
 ```
+
+{{< include sections/_section-02a-inflation.qmd >}}
 
 ## Inflation Impact - Essential Goods and Services
 
 ::: notes
-Keep in mind - over this period wages increased by 10.5%??
 :::
 
 ## Bread
 
 ```{r}
 
-inflation_items <- inflation_group |> 
-  distinct(date, cpi_category, value, unit) |> 
-  filter(cpi_category %in% c("Bread", "Milk", "Gas and other household fuels", "Electricity", "Property rates and charges", "Rents", "Water and sewerage", "Food and non-alcoholic beverages"),
-         unit == "Index Numbers",
-         date >= "2023-01-01") |> 
-  group_by(cpi_category) |> 
-  mutate(reindex = value / value[date == "2023-03-01"] - 1,
-         label = scales::label_percent()(last(reindex)))
 
-inflation_items |> 
-  filter(cpi_category == "Bread") |> 
-  ggplot(aes(x = date, y = reindex)) + 
-  geom_line() + 
-  facet_wrap(~cpi_category, scales = "free_y") +
-  labs(x = NULL, y = NULL,
-       title = "Price Change in Essential Goods and Services, March 2023 - December 2025") + 
-  theme_nrc(legend = "bottom") +
-  scale_x_date(breaks = seq(as_date("2023-03-01"), as_date("2026-06-01"), by = "1 year"),
-               date_labels = "%Y") +
-  scale_y_continuous(labels = scales::label_percent()) +
-  geom_dl(aes(label = label),  method = "last.points") +
-  coord_cartesian(xlim = as_date(c("2023-03-01", "2026-09-01")))
-  
 
 ```
 
 ## Milk
 
 ```{r}
-inflation_items |> 
-  filter(cpi_category == "Milk") |> 
-  ggplot(aes(x = date, y = reindex)) + 
-  geom_line() + 
-  facet_wrap(~cpi_category, scales = "free_y") +
-  labs(x = NULL, y = NULL,
-       title = "Price Change in Essential Goods and Services, March 2023 - December 2025") + 
-  theme_nrc(legend = "bottom") +
-  scale_x_date(breaks = seq(as_date("2023-03-01"), as_date("2026-06-01"), by = "1 year"),
-               date_labels = "%Y") +
-  scale_y_continuous(labels = scales::label_percent()) +
-  geom_dl(aes(label = label),  method = "last.points") +
-  coord_cartesian(xlim = as_date(c("2023-03-01", "2026-09-01")))
+
 ```
 
 ## Gas
 
 ```{r}
-inflation_items |> 
-  filter(cpi_category == "Gas and other household fuels") |> 
-  ggplot(aes(x = date, y = reindex)) + 
-  geom_line() + 
-  facet_wrap(~cpi_category, scales = "free_y") +
-  labs(x = NULL, y = NULL,
-       title = "Price Change in Essential Goods and Services, March 2023 - December 2025") + 
-  theme_nrc(legend = "bottom") +
-  scale_x_date(breaks = seq(as_date("2023-03-01"), as_date("2026-06-01"), by = "1 year"),
-               date_labels = "%Y") +
-  scale_y_continuous(labels = scales::label_percent()) +
-  geom_dl(aes(label = label),  method = "last.points") +
-  coord_cartesian(xlim = as_date(c("2023-03-01", "2026-09-01")))
+
 ```
 
 ## Electricity
 
 ```{r}
-inflation_items |> 
-  filter(cpi_category == "Electricity") |> 
-  ggplot(aes(x = date, y = reindex)) + 
-  geom_line() + 
-  facet_wrap(~cpi_category, scales = "free_y") +
-  labs(x = NULL, y = NULL,
-       title = "Price Change in Essential Goods and Services, March 2023 - December 2025") + 
-  theme_nrc(legend = "bottom") +
-  scale_x_date(breaks = seq(as_date("2023-03-01"), as_date("2026-06-01"), by = "1 year"),
-               date_labels = "%Y") +
-  scale_y_continuous(labels = scales::label_percent()) +
-  geom_dl(aes(label = label),  method = "last.points") +
-  coord_cartesian(xlim = as_date(c("2023-03-01", "2026-09-01")))
+
 ```
 
 ## Property Rates
 
 ```{r}
-inflation_items |> 
-  filter(cpi_category == "Property rates and charges") |> 
-  ggplot(aes(x = date, y = reindex)) + 
-  geom_line() + 
-  facet_wrap(~cpi_category, scales = "free_y") +
-  labs(x = NULL, y = NULL,
-       title = "Price Change in Essential Goods and Services, March 2023 - December 2025") + 
-  theme_nrc(legend = "bottom") +
-  scale_x_date(breaks = seq(as_date("2023-03-01"), as_date("2026-06-01"), by = "1 year"),
-               date_labels = "%Y") +
-  scale_y_continuous(labels = scales::label_percent()) +
-  geom_dl(aes(label = label),  method = "last.points") +
-  coord_cartesian(xlim = as_date(c("2023-03-01", "2026-09-01")))
+
 ```
 
 ## Rents
 
 ```{r}
-inflation_items |> 
-  filter(cpi_category == "Rents") |> 
-  ggplot(aes(x = date, y = reindex)) + 
-  geom_line() + 
-  facet_wrap(~cpi_category, scales = "free_y") +
-  labs(x = NULL, y = NULL,
-       title = "Price Change in Essential Goods and Services, March 2023 - December 2025") + 
-  theme_nrc(legend = "bottom") +
-  scale_x_date(breaks = seq(as_date("2023-03-01"), as_date("2026-06-01"), by = "1 year"),
-               date_labels = "%Y") +
-  scale_y_continuous(labels = scales::label_percent()) +
-  geom_dl(aes(label = label),  method = "last.points") +
-  coord_cartesian(xlim = as_date(c("2023-03-01", "2026-09-01")))
+
 ```
 
 ## Water
 
 ```{r}
-inflation_items |> 
-  filter(cpi_category == "Water and sewerage") |> 
-  ggplot(aes(x = date, y = reindex)) + 
-  geom_line() + 
-  facet_wrap(~cpi_category, scales = "free_y") +
-  labs(x = NULL, y = NULL,
-       title = "Price Change in Essential Goods and Services, March 2023 - December 2025") + 
-  theme_nrc(legend = "bottom") +
-  scale_x_date(breaks = seq(as_date("2023-03-01"), as_date("2026-06-01"), by = "1 year"),
-               date_labels = "%Y") +
-  scale_y_continuous(labels = scales::label_percent()) +
-  geom_dl(aes(label = label),  method = "last.points") +
-  coord_cartesian(xlim = as_date(c("2023-03-01", "2026-09-01")))
+
 ```
 
 ## Food and Non-alcoholic Beverages
 
 ```{r}
-inflation_items |> 
-  filter(cpi_category == "Food and non-alcoholic beverages") |> 
-  ggplot(aes(x = date, y = reindex)) + 
-  geom_line() + 
-  facet_wrap(~cpi_category, scales = "free_y") +
-  labs(x = NULL, y = NULL,
-       title = "Price Change in Essential Goods and Services, March 2023 - December 2025") + 
-  theme_nrc(legend = "bottom") +
-  scale_x_date(breaks = seq(as_date("2023-03-01"), as_date("2026-06-01"), by = "1 year"),
-               date_labels = "%Y") +
-  scale_y_continuous(labels = scales::label_percent()) +
-  geom_dl(aes(label = label),  method = "last.points") +
-  coord_cartesian(xlim = as_date(c("2023-03-01", "2026-09-01")))
+
 ```
 
 ## Housing - Including Mortgages
@@ -231,24 +211,7 @@ inflation_items |>
 ```{r}
 
 
-cli <- read_abs("6467.0", tables =  2, path = "data", check_local = TRUE) |> separate_series(column_names = c("data_type", "household", "cpi_category"), remove_nas = TRUE)
 
-cli |> 
-  filter(unit == "Index Numbers",
-         household == "Employee households",
-         cpi_category == "Housing",
-         date >= "2023-01-01") |> 
-  mutate(reindex = value / value[date == "2023-03-01"] - 1,
-         label = scales::label_percent()(last(reindex))) |> 
-  ggplot(aes(x = date, y = reindex)) + 
-  geom_line() + 
-  labs(x = NULL,
-       y = NULL,
-       title = "The cost of housing has increased by **14.4%** between March 2023 and December 2025") +
-  theme_nrc(legend = "bottom") +
-  scale_x_date(breaks = seq(as_date("2023-03-01"), as_date("2026-09-01"), by = "1 year"),
-               date_labels = "%Y") +
-  scale_y_continuous(labels = scales::label_percent()) 
                                                                         
 
 ```
@@ -257,250 +220,18 @@ cli |>
 
 ```{r}
 
-inflation <- read_abs(cat_no = "6401.0", tables = "17", path = "data") |> 
-  separate_series(column_names = c("index", "cpi_category", "state"),
-                  remove_nas = T) 
 
-wages <- read_abs("6345.0", tables = paste0(c(2:5, 7:9), "b"), retain_files = F) |> 
-  separate_series(column_names = c("data_type", "indicator", "state", "sector", "industry")) |> 
-  select(date, data_type, indicator, state, sector, industry, unit, value) 
-
-cumulative_wpi <- wages |> 
-  filter(state == "Australia",
-         unit == "Index Numbers",
-         indicator == "Total hourly rates of pay excluding bonuses",
-         sector == "Private and Public",
-         date >= "2020-03-01",
-         industry == "All industries") |> 
-  mutate(cumulative_wages = 100*(value/value[date=="2020-03-01"] - 1)) |> 
-  select(date, cumulative_wages) |> 
-  distinct()
-
-cumulative_cpi <- inflation |> 
-  filter(data_type == "INDEX",
-         state == "Australia", 
-         date >= "2020-03-01",
-         cpi_category == "All groups CPI") |> 
-  mutate(cumulative_inflation = 100*(value/value[date == "2020-03-01"] -1)) |> 
-  select(date, cumulative_inflation)
-
-cumulative <- inner_join(cumulative_wpi, cumulative_cpi) |> 
-  mutate(cumulative_real_wage = cumulative_wages - cumulative_inflation) |> 
-  pivot_longer(cols = -date,
-               values_to = "value",
-               names_to = "indicator") |> 
-  mutate(indicator = case_when(
-    indicator == "cumulative_wages" ~ "Hourly rates of pay",
-    indicator == "cumulative_inflation" ~ "CPI",
-    indicator == "cumulative_real_wage" ~ "Real hourly rates of pay"
-  )) |> 
-  mutate(value_label = ifelse(date == max(date),
-                              scales::label_percent(scale = 1, accuracy = 0.1)(value),
-                              NA))
-
-cumulative |> 
-  ggplot(aes(x = date, y = value, colour = indicator)) +
-  geom_line() +
-  scale_x_date(breaks = plot_date_range(cumulative),
-               date_labels = "%e %b\n %Y") +
-  scale_y_continuous(labels = scales::label_percent(scale = 1)) +
-  scale_colour_nrc() +
-  labs(x = NULL,
-       y = NULL,
-       title = "Wages Have Not Kept Up With Inflation",
-       subtitle = "Cumulative change in hourly rates of pay and the CPI since March 2020") +
-  geom_dl(method = "last.qp", aes(label = value_label)) + 
-  theme_nrc(legend = "bottom")
 ```
 
 ## So how much should we ask for?
 
 ```{r}
 
-wage_index_last <- cumulative_wpi |> 
-  slice_max(order_by = date, n = 1) |> 
-  pull(cumulative_wages)
 
-price_index_last <- cumulative_cpi |> 
-  slice_max(order_by = date, n = 1) |> 
-  pull(cumulative_inflation)
-
-wage_ask <- 9
-
-#Where does 0.75 come from? 
-c_wage <- wage_index_last + seq(0.75, 4, by = 0.75) + c(0, 0, 0, wage_ask, wage_ask)
-
-fc <- tibble(
-  ix = 0:5,
-  date = max(cumulative_wpi$date) + months(ix)*3,
-  cumulative_wages = wage_index_last + 0.75*ix,
-  cumulative_inflation = price_index_last + (2.5/4*ix)
-) |> 
-  mutate(cumulative_wages = ifelse(date >= "2026-06-01", cumulative_wages+wage_ask, cumulative_wages),
-         cumulative_real_wage = cumulative_wages - cumulative_inflation) |> 
-  select(-ix) |> 
-  pivot_longer(cols = -date,
-               values_to = "value",
-               names_to = "indicator") |> 
-  mutate(indicator = case_when(
-    indicator == "cumulative_wages" ~ "Hourly rates of pay",
-    indicator == "cumulative_inflation" ~ "CPI",
-    indicator == "cumulative_real_wage" ~ "Real hourly rates of pay"
-  ))
-         
-         
-cumulative_forecast <- inner_join(cumulative_wpi, cumulative_cpi) |> 
-  mutate(cumulative_real_wage = cumulative_wages - cumulative_inflation) |> 
-  pivot_longer(cols = -date,
-               values_to = "value",
-               names_to = "indicator") |> 
-  mutate(indicator = case_when(
-    indicator == "cumulative_wages" ~ "Hourly rates of pay",
-    indicator == "cumulative_inflation" ~ "CPI",
-    indicator == "cumulative_real_wage" ~ "Real hourly rates of pay"
-  )) |> 
-  mutate(value_label = ifelse(date == max(date),
-                              scales::label_percent(scale = 100, accuracy = 0.1)(value),
-                              NA))
-
-avg_real_wage_growth <- (17.4-0)/(as.integer(as_date("2020-03-01")) - as.integer(as_date("1997-09-01")))
-
-  
-seg <- tibble(date = seq(as_date("2020-03-01"), as_date("2026-12-01"), by = "quarter"),
-              value = avg_real_wage_growth*as.integer(date - as_date("2020-03-01")),
-              label = "Average Real Wage Growth")
-
-
-
-ggplot() +
-  geom_line(data = cumulative_forecast, aes(x = date, y = value, col = indicator)) +
-  geom_line(data = fc, aes(x = date, y = value, col = indicator), linetype = 2) + 
-  geom_textpath(data = seg, aes(x = date, y = value, label = label), 
-                linetype = 2,
-                lwd = 0.5,
-                colour = "#111a41") + 
-  scale_x_date(breaks = plot_date_range(cumulative_forecast),
-               date_labels = "%e %b\n %Y") +
-  scale_y_continuous(labels = scales::label_percent(scale = 1)) +
-  scale_linetype_discrete() +
-  scale_colour_nrc() +
-  labs(x = NULL,
-       y = NULL,
-       title = "Wages Have Not Kept Up With Inflation",
-       subtitle = "Cumulative change in hourly rates of pay and the CPI<br>
-       *Forecast **9%** pay rise in July 2026 and **2.5%** inflation*") +
-  theme_nrc(legend = "bottom") +
-  guides(linetype = "none") 
 ```
 
 ## Wages in Manufacturing
 
 ```{r}
-cumulative_wpi <- wages |> 
-  filter(state == "Australia",
-         unit == "Index Numbers",
-         indicator == "Total hourly rates of pay excluding bonuses",
-         sector == "Private and Public",
-         date >= "2020-03-01",
-         industry == "Manufacturing") |> 
-  mutate(cumulative_wages = 100*(value/value[date=="2020-03-01"] - 1)) |> 
-  select(date, cumulative_wages) |> 
-  distinct()
 
-cumulative_cpi <- inflation |> 
-  filter(data_type == "INDEX",
-         state == "Australia", 
-         date >= "2020-03-01",
-         cpi_category == "All groups CPI") |> 
-  mutate(cumulative_inflation = 100*(value/value[date == "2020-03-01"] -1)) |> 
-  select(date, cumulative_inflation)
-
-cumulative <- inner_join(cumulative_wpi, cumulative_cpi) |> 
-  mutate(cumulative_real_wage = cumulative_wages - cumulative_inflation) |> 
-  pivot_longer(cols = -date,
-               values_to = "value",
-               names_to = "indicator") |> 
-  mutate(indicator = case_when(
-    indicator == "cumulative_wages" ~ "Hourly rates of pay (Manufacturing)",
-    indicator == "cumulative_inflation" ~ "CPI",
-    indicator == "cumulative_real_wage" ~ "Real hourly rates of pay (Manufacturing)"
-  )) |> 
-  mutate(value_label = ifelse(date == max(date),
-                              scales::label_percent(scale = 1, accuracy = 0.1)(value),
-                              NA))
-
-wage_index_last <- cumulative_wpi |> 
-  slice_max(order_by = date, n = 1) |> 
-  pull(cumulative_wages)
-
-price_index_last <- cumulative_cpi |> 
-  slice_max(order_by = date, n = 1) |> 
-  pull(cumulative_inflation)
-
-wage_ask <- 9
-
-#Where does 0.75 come from? 
-c_wage <- wage_index_last + seq(0.75, 4, by = 0.75) + c(0, 0, 0, wage_ask, wage_ask)
-
-fc <- tibble(
-  ix = 0:5,
-  date = max(cumulative_wpi$date) + months(ix)*3,
-  cumulative_wages = wage_index_last + 0.75*ix,
-  cumulative_inflation = price_index_last + (2.5/4*ix)
-) |> 
-  mutate(cumulative_wages = ifelse(date >= "2026-06-01", cumulative_wages+wage_ask, cumulative_wages),
-         cumulative_real_wage = cumulative_wages - cumulative_inflation) |> 
-  select(-ix) |> 
-  pivot_longer(cols = -date,
-               values_to = "value",
-               names_to = "indicator") |> 
-  mutate(indicator = case_when(
-    indicator == "cumulative_wages" ~ "Hourly rates of pay (Manufacturing)",
-    indicator == "cumulative_inflation" ~ "CPI",
-    indicator == "cumulative_real_wage" ~ "Real hourly rates of pay (Manufacturing)"
-  ))
-         
-         
-cumulative_forecast <- inner_join(cumulative_wpi, cumulative_cpi) |> 
-  mutate(cumulative_real_wage = cumulative_wages - cumulative_inflation) |> 
-  pivot_longer(cols = -date,
-               values_to = "value",
-               names_to = "indicator") |> 
-  mutate(indicator = case_when(
-    indicator == "cumulative_wages" ~ "Hourly rates of pay (Manufacturing)",
-    indicator == "cumulative_inflation" ~ "CPI",
-    indicator == "cumulative_real_wage" ~ "Real hourly rates of pay (Manufacturing)"
-  )) |> 
-  mutate(value_label = ifelse(date == max(date),
-                              scales::label_percent(scale = 100, accuracy = 0.1)(value),
-                              NA))
-
-avg_real_wage_growth <- (17.4-0)/(as.integer(as_date("2020-03-01")) - as.integer(as_date("1997-09-01")))
-
-  
-seg <- tibble(date = seq(as_date("2020-03-01"), as_date("2026-12-01"), by = "quarter"),
-              value = avg_real_wage_growth*as.integer(date - as_date("2020-03-01")),
-              label = "Average Real Wage Growth")
-
-
-
-ggplot() +
-  geom_line(data = cumulative_forecast, aes(x = date, y = value, col = indicator)) +
-  geom_line(data = fc, aes(x = date, y = value, col = indicator), linetype = 2) + 
-  geom_textpath(data = seg, aes(x = date, y = value, label = label), 
-                linetype = 2,
-                lwd = 0.5,
-                colour = "#111a41") + 
-  scale_x_date(breaks = plot_date_range(cumulative_forecast),
-               date_labels = "%e %b\n %Y") +
-  scale_y_continuous(labels = scales::label_percent(scale = 1)) +
-  scale_linetype_discrete() +
-  scale_colour_nrc() +
-  labs(x = NULL,
-       y = NULL,
-       title = "Wages Have Not Kept Up With Inflation",
-       subtitle = "Cumulative change in hourly rates of pay and the CPI<br>
-       *Forecast **9%** pay rise in July 2026 and **2.5%** inflation*") +
-  theme_nrc(legend = "bottom") +
-  guides(linetype = "none") 
 ```
