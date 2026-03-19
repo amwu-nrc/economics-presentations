@@ -8,24 +8,197 @@ library(readabs)
 library(gghighlight)
 library(strayr)
 library(gt)
-cpi <- read_abs_local("6484.0", filenames = "648401.xlsx", path = "data") |> 
-  separate_series(column_names = c("data_type", "cpi_category", "capital_city"))
+
 
 cpi_quarterly <- read_absdata("cpi_quarterly", export_dir = "data", refresh = TRUE)
 wpi_quarterly <- read_absdata("wpi_quarterly", export_dir = "data", refresh = TRUE)
-national_accounts <- read_abs_local(cat_no = "5206.0", path = "data")
+cpi_quarterly_group <- read_absdata("cpi_quarterly_group", export_dir = "data", refresh = TRUE)
 
-plot_date_range <- function(plot_data) {
+cost_of_living_table <- function(since) {
+  
+  wage_growth <- wpi_quarterly |> 
+    filter(date %in% c(max(date), {{since}}),
+           data_type == "Quarterly Index",
+           indicator == "Ordinary time hourly rates of pay excluding bonuses",
+           state == "Australia",
+           industry == "Manufacturing",
+           sector == "Private and Public") |> 
+    mutate(pc = value / value[date=={{since}}] - 1) |> 
+    filter(date == max(date)) 
+  
+  first_date <- label_date(format = "%B %Y")(as_date({{since}}))
+  last_date <-  label_date(format = "%B %Y")(wage_growth$date)
+  
+  cli_quarterly |> 
+    filter(data_type == "Index Numbers",
+           date %in% c(max(date), {{since}}),
+           household_type == "Employee households") |> 
+    group_by(cpi_category) |> 
+    mutate(pc = value / value[date=={{since}}] - 1) |> 
+    ungroup() |> 
+    filter(date == max(date)) |> 
+    select(cpi_category, pc) |> 
+    add_row(cpi_category = "Wages",
+            pc = wage_growth$pc) |> 
+    arrange(-pc) |> 
+    gt(rowname_col = "cpi_category") |> 
+    tab_header(
+      title = md("**Change in living costs by product category**"),
+      subtitle = glue("% change between {last_date} and {first_date}")
+    ) |> 
+    tab_stubhead(label = "Price Category") |> 
+    tab_style(style = cell_text(weight = "bold"),
+              locations = cells_body(
+                rows = cpi_category %in% c("All groups", "Wages")
+              )) |> 
+    fmt_percent(columns = pc, scale = 100, decimal = 1) |> 
+    cols_label(pc = "% change")
+}
+  
+cumulative_cpi <- function(data, region, since, include_housing = F) {
 
- date_min <- as.Date(min(plot_data$date))
-  date_max <- as.Date(max(plot_data$date))
+  if (include_housing) {
+    data |>
+      filter(data_type == "Index Numbers",
+             date >= since,
+             household_type == "Employee households",
+             cpi_category == "All groups") |>
+      mutate(cumulative_prices = 100*(value / value[date == {{since}}] -1)) |>
+      select(date, cumulative_prices)
+  } else {
+    data |>
+      filter(data_type == "Index Numbers",
+             date >= since,
+             cpi_category == "All groups CPI",
+             region == {{region}}) |>
+      mutate(cumulative_prices = 100*(value / value[date=={{since}}] - 1)) |>
+      select(date, cumulative_prices)
+  }
+}
 
-  pre <- scales::breaks_pretty(n = 5)(c(date_min, date_max))
-  date_adj <- as.numeric(pre[length(pre)] - date_max)
-  adj <- pre - date_adj
-  names(adj) <- NULL
-  date_breaks <- adj[adj >= date_min & adj <= date_max]
-  return(date_breaks)
+
+
+cumulative_wpi <- function(data,
+                           state,
+                           indicator = "Total hourly rates of pay excluding bonuses",
+                           sector = "Private and Public",
+                           industry = "All industries",
+                           since) {
+  data |>
+    filter(data_type == "Quarterly Index",
+           state == {{state}},
+           indicator == {{indicator}},
+           sector == {{sector}},
+           industry == {{industry}},
+           date >= since) |>
+    mutate(cumulative_wages = 100*(value / value[date=={{since}}] - 1))  |>
+    select(date, cumulative_wages)
+}
+
+plot_real_wages <- function(cpi_data, wpi_data,
+                            forecast = list(years = 1, wage = 10, inflation = 3), ...) {
+
+  if (is.null(forecast$years)) {
+    forecast$years <- 1
+  }
+
+  if (is.null(forecast$wage)) {
+    forecast$wage <- 5
+  }
+
+  if (is.null(forecast$inflation)) {
+    forecast$inflation <- 3
+  }
+
+  args <- list(...)
+
+  # Some things are shared, like since and region. Other things only apply to wpi
+
+  cpi_args <- args[names(args) %in% c("region", "since", "include_housing")]
+  cpi_args$data <- cpi_data
+  wpi_args <- args[!names(args) %in% c("region", "include_housing")]
+  wpi_args$data <- wpi_data 
+  
+
+
+  cumulative_cpi_data <- do.call(cumulative_cpi, args = cpi_args)
+  cumulative_wpi_data <- do.call(cumulative_wpi, args = wpi_args)
+
+  cumulative <- inner_join(cumulative_wpi_data,
+                           cumulative_cpi_data) |>
+    mutate(cumulative_real_wage = cumulative_wages - cumulative_prices) |>
+    pivot_longer(cols = -date,
+                 values_to = "value",
+                 names_to = "indicator") |>
+    mutate(indicator = case_when(
+      indicator == "cumulative_wages" ~ "Hourly rates of pay",
+      indicator == "cumulative_prices" ~ "Prices",
+      indicator == "cumulative_real_wage" ~ "Real hourly rates of pay"
+    )) |>
+    mutate(value_label = ifelse(date == max(date),
+                                scales::label_percent(scale = 1, accuracy = 0.1)(value),
+                                NA))
+
+  # Assume about the inputs. The forecast period is years.
+  # The wage ask is averaged over the periods (ie years *4)
+  # Estimated inflation is averaged over the years.
+
+  forecast$periods = forecast$years * 4
+  forecast$wage = forecast$wage/forecast$periods
+  forecast$inflation = forecast$inflation/forecast$periods
+
+  fc <- tibble(
+    ix = 0:(forecast$years * 4),
+    date = max(cumulative_wpi_data$date) + months(ix)*3, # 3 months per quarter
+    cumulative_wages = last(cumulative_wpi_data)$cumulative_wages + forecast$wage*ix,
+    cumulative_prices = last(cumulative_cpi_data)$cumulative_prices + forecast$inflation*ix
+  ) |>
+    mutate(cumulative_real_wage = cumulative_wages - cumulative_prices) |>
+    select(-ix) |>
+    pivot_longer(cols = -date,
+                 values_to = "value",
+                 names_to = "indicator") |>
+    mutate(indicator = case_when(
+      indicator == "cumulative_wages" ~ "Hourly rates of pay",
+      indicator == "cumulative_prices" ~ "Prices",
+      indicator == "cumulative_real_wage" ~ "Real hourly rates of pay"
+    ))
+  
+  if (args$include_housing) {
+    # Average real wage growth when deflated by the CLI all series up to March 2020
+    avg_real_growth <- 0.00337
+    deflator = "Cost of Living Index"
+  } else {
+    # Average real wage growth when deflated by the CPI all series up to March 2020 
+    avg_real_growth <- 0.00116
+    deflator = "Consumer Price Index"
+  }
+  
+
+  seg <- tibble(date = bind_rows(cumulative, fc)$date,
+                value = avg_real_growth*as.integer(date - as_date(args$since)),
+                label = "Average Real Wage Growth")
+
+  ggplot() +
+    geom_line(data = cumulative, aes(x = date, y = value, col = indicator)) +
+    geom_line(data = fc, aes(x = date, y = value, col = indicator), linetype = 2) +
+    geom_textpath(data = seg, aes(x = date, y = value, label = label),
+                  linetype = 2,
+                  lwd = 0.5,
+                  colour = "#111a41") +
+    scale_x_date(date_labels = "%e %b\n %Y",
+                 breaks = plot_date_range(bind_rows(cumulative,fc))) +
+    scale_y_continuous(labels = scales::label_percent(scale = 1)) +
+    scale_linetype_discrete() +
+    scale_colour_nrc() +
+    labs(x = NULL,
+         y = NULL,
+         title = "Real Wages Have Not Kept Up With Prices",
+         caption = glue("Nominal wages deflated with {deflator}"),
+         subtitle = glue::glue("Cumulative change in hourly rates of pay and prices<br>
+       *Forecast **{forecast$wage*forecast$periods}%** pay rise by {label_date(format = '%B %Y')(max(fc$date))} and **{forecast$inflation*forecast$periods}%** annual increase in inflation*")) +
+    theme_nrc(legend = "bottom") +
+    guides(linetype = "none")
 
 }
 
@@ -136,11 +309,15 @@ Example 2
 ```{r}
 #| label: inflation-pc
 #| out-width: 100%
-cpi_pc <- cpi |> 
-  filter(data_type == "Percentage Change from Corresponding Month of Previous Year",
-         capital_city == "Australia",
-         cpi_category == "All groups CPI",
-         date >= "2020-01-01") 
+cpi_pc <- cpi_quarterly |> 
+  filter(data_type == "Index Numbers") |> 
+  mutate(month = month(date)) |> 
+  group_by(region, month) |> 
+  mutate(pcslm = 100*(value/lag(value) - 1)) |> 
+  ungroup() |> 
+  select(date, region, value = pcslm) |> 
+  filter(region == "Australia", 
+         date >= "2020-03-01")
 
 cpi_pc |> 
   ggplot(aes(x = date, y = value, col = "inflation")) +
@@ -182,10 +359,9 @@ cpi_pc |>
 #| label: inflation-index
 #| out-width: 100%
 
-cpi_index <- cpi |> 
+cpi_index <- cpi_quarterly |> 
   filter(data_type == "Index Numbers",
-         capital_city == "Australia",
-         cpi_category == "All groups CPI",
+         region == "Australia",
          date >= "2020-01-01")
 
 cpi_index |> 
@@ -195,23 +371,23 @@ cpi_index |>
   scale_x_date(date_labels = "%e %b\n%Y",
                breaks = plot_date_range(cpi_index)) +
   labs(title = "Consumer Price Index",
-       subtitle = "All groups CPI; Index: (June 2011 = 100)",
+       subtitle = "All groups CPI; Index: (June 2025 = 100)",
        y = NULL,
        x = NULL) +
   annotate(geom = "textsegment", 
            arrow = arrow(), 
            label = "increasing prices",
            x = as_date("2020-06-01"), 
-           y = 110,
+           y = 80,
            xend = as_date("2022-12-01"), 
-           yend = 120) +
+           yend = 92) +
   annotate(geom = "textsegment", 
            arrow = arrow(),
            label = "increasing prices???",
            x = as_date("2022-12-01"),
-           y = 120,
+           y = 95,
            xend = as_date(max(cpi_index$date)),
-           yend = 130)
+           yend = 102)
 ```
 
 ::: notes
@@ -235,7 +411,7 @@ Other weird things about inflation - it hasn't included mortgage repayments (sin
 :::
 
 ```{r}
-cpi_category <- cpi |> 
+cpi_category <- cpi_quarterly_group |> 
   filter(cpi_category %in% c("All groups CPI",
                              "Food and non-alcoholic beverages",
                              "Alcohol and tobacco",
@@ -248,9 +424,8 @@ cpi_category <- cpi |>
                              "Recreation and Culture",
                              "Education",
                              "Insurance and financial services"),
-         series_type == "Original",
          data_type == "Index Numbers",
-         capital_city == "Australia") |> 
+         region == "Australia") |> 
   group_by(cpi_category) |> 
   mutate(reindex = 100*value/value[date=="2020-03-01"],
          alpha = ifelse(cpi_category %in% c("All groups CPI",
@@ -303,57 +478,16 @@ The living cost index asks "By how much would after tax money incomes need to ch
 ::: {.column width="50%"}
 ```{r}
 #| label: tab-cost-of-living
-lci <- read_abs_local("6467.0", filenames = "646702.xlsx", path = "data") |> 
-  separate_series(c("data_type", "household_type", "cpi_category")) 
+lci <- read_absdata("cli", export_dir = "data", refresh = TRUE)
 
-lci |> 
-  filter(data_type == "Percentage Change from Corresponding Quarter of Previous Year", 
-         !is.na(value), 
-         date == max(date),
-         household_type == "Employee households") |> 
-  select(cpi_category, value) |> 
-  add_row(cpi_category = "Wages",
-          value = 3.4) |> 
-  arrange(-value) |> 
-  gt(rowname_col = "cpi_category") |> 
-  tab_header(title = md("**Change in living costs by product category**"),
-             subtitle = "% change between September 2025 and September 2024") |> 
-  tab_stubhead(label = "Price Category") |> 
-  tab_style(style = cell_text(weight = "bold"),
-            locations = cells_body(
-              rows = cpi_category %in% c("All groups", "Wages")
-            )) |> 
-  fmt_percent(columns = value, scale = F, decimal = 1) |> 
-  cols_label(value = "% change")
+cost_of_living_table(since = max(lci$date)-years(1))
   
 ```
 :::
 
 ::: {.column width="50%"}
 ```{r}
-lci |> 
-  filter(data_type == "Index Numbers", 
-         !is.na(value), 
-         date %in% c(max(date), max(date)-years(10)),
-         household_type == "Employee households") |> 
-   group_by(cpi_category) |> 
-  mutate(percentage = 100*(value-lag(value))/lag(value)) |>
-  ungroup() |> 
-  filter(date == max(date)) |> 
-  select(cpi_category, percentage) |> 
-  add_row(cpi_category = "Wages",
-          percentage = 28.7) |> 
-  arrange(-percentage) |> 
-  gt(rowname_col = "cpi_category") |> 
-  tab_header(title = md("**Change in living costs by product category**"),
-             subtitle = "% change between September 2025 and September 2015") |> 
-  tab_stubhead(label = "Price Category") |> 
-  tab_style(style = cell_text(weight = "bold"),
-            locations = cells_body(
-              rows = cpi_category %in% c("All groups", "Wages")
-            )) |> 
-  fmt_percent(columns = percentage, scale = F, decimal = 1) |> 
-  cols_label(percentage = "% change")
+cost_of_living_table(since = "2020-03-01")
 ```
 :::
 :::::
@@ -375,52 +509,13 @@ What would this chart look like if you got a 6% pay rise for the next year, and 
 :::
 
 ```{r}
-cumulative_cpi <- cpi_quarterly |> 
-  filter(data_type == "Index Numbers",
-         region == "Australia",
-         date >= "2020-03-01") |> 
-  mutate(cumulative_inflation = 100*(value/value[date=="2020-03-01"] - 1)) |> 
-  select(date, cumulative_inflation)
-
-cumulative_wpi <- wpi_quarterly |> 
-  filter(state == "Australia",
-         unit == "Index Numbers",
-         indicator == "Total hourly rates of pay excluding bonuses",
-         sector == "Private and Public",
-         date >= "2020-03-01",
-         industry == "All industries") |> 
-  mutate(cumulative_wages = 100*(value / value[date=="2020-03-01"] -1)) |> 
-  select(date, cumulative_wages) |> 
-  distinct()
-
-
-cumulative <- inner_join(cumulative_wpi, cumulative_cpi) |> 
-  mutate(cumulative_real_wage = cumulative_wages - cumulative_inflation) |> 
-  pivot_longer(cols = -date,
-               values_to = "value",
-               names_to = "indicator") |> 
-  mutate(indicator = case_when(
-    indicator == "cumulative_wages" ~ "Hourly rates of pay",
-    indicator == "cumulative_inflation" ~ "CPI",
-    indicator == "cumulative_real_wage" ~ "Real hourly rates of pay"
-  )) |> 
-  mutate(value_label = ifelse(date == max(date),
-                              scales::label_percent(scale = 1, accuracy = 0.1)(value),
-                              NA))
-
-cumulative |> 
-  ggplot(aes(x = date, y = value, colour = indicator)) +
-  geom_line() +
-  scale_x_date(breaks = plot_date_range(cumulative),
-               date_labels = "%e %b\n %Y") +
-  scale_y_continuous(labels = scales::label_percent(scale = 1)) +
-  scale_colour_nrc() +
-  labs(x = NULL,
-       y = NULL,
-       title = "Wages Have Not Kept Up With Inflation",
-       subtitle = "Cumulative change in hourly rates of pay and the CPI since March 2020") +
-  geom_dl(method = "last.qp", aes(label = value_label)) + 
-  theme_nrc(legend = "bottom")
+plot_real_wages(cpi_quarterly_group, 
+                wpi_quarterly, 
+                forecast = list(years = 3, wage = 12, inflation = 3),
+                state = "Australia", 
+                region = "Australia", 
+                since = "2020-03-01", 
+                include_housing = F)
 
 ```
 
@@ -428,79 +523,13 @@ cumulative |>
 
 ```{r}
 
-wage_index_last <- cumulative_wpi |> 
-  slice_max(order_by = date, n = 1) |> 
-  pull(cumulative_wages)
-
-price_index_last <- cumulative_cpi |> 
-  slice_max(order_by = date, n = 1) |> 
-  pull(cumulative_inflation)
-
-wage_ask <- 9
-
-c_wage <- wage_index_last + seq(0.75, 4, by = 0.75) + c(0, 0, 0, wage_ask, wage_ask)
-
-fc <- tibble(
-  ix = 0:5,
-  date = max(cumulative_wpi$date) + months(ix)*3,
-  cumulative_wages = wage_index_last + 0.75*ix,
-  cumulative_inflation = price_index_last + (2.5/4*ix)
-) |> 
-  mutate(cumulative_wages = ifelse(date >= "2026-06-01", cumulative_wages+wage_ask, cumulative_wages),
-         cumulative_real_wage = cumulative_wages - cumulative_inflation) |> 
-  select(-ix) |> 
-  pivot_longer(cols = -date,
-               values_to = "value",
-               names_to = "indicator") |> 
-  mutate(indicator = case_when(
-    indicator == "cumulative_wages" ~ "Hourly rates of pay",
-    indicator == "cumulative_inflation" ~ "CPI",
-    indicator == "cumulative_real_wage" ~ "Real hourly rates of pay"
-  ))
-         
-         
-cumulative_forecast <- inner_join(cumulative_wpi, cumulative_cpi) |> 
-  mutate(cumulative_real_wage = cumulative_wages - cumulative_inflation) |> 
-  pivot_longer(cols = -date,
-               values_to = "value",
-               names_to = "indicator") |> 
-  mutate(indicator = case_when(
-    indicator == "cumulative_wages" ~ "Hourly rates of pay",
-    indicator == "cumulative_inflation" ~ "CPI",
-    indicator == "cumulative_real_wage" ~ "Real hourly rates of pay"
-  )) |> 
-  mutate(value_label = ifelse(date == max(date),
-                              scales::label_percent(scale = 1, accuracy = 0.1)(value),
-                              NA))
-
-avg_real_wage_growth <- (17.4-0)/(as.integer(as_date("2020-03-01")) - as.integer(as_date("1997-09-01")))
-
-  
-seg <- tibble(date = seq(as_date("2020-03-01"), as_date("2026-12-01"), by = "quarter"),
-              value = avg_real_wage_growth*as.integer(date - as_date("2020-03-01")),
-              label = "Average Real Wage Growth")
-
-
-
-ggplot() +
-  geom_line(data = cumulative_forecast, aes(x = date, y = value, col = indicator)) +
-  geom_line(data = fc, aes(x = date, y = value, col = indicator), linetype = 2) + 
-  geom_textpath(data = seg, aes(x = date, y = value, label = label), 
-                linetype = 2,
-                lwd = 0.5,
-                colour = "#111a41") + 
-  scale_x_date(breaks = plot_date_range(cumulative_forecast),
-               date_labels = "%e %b\n %Y") +
-  scale_y_continuous(labels = scales::label_percent(scale = 1)) +
-  scale_linetype_discrete() +
-  scale_colour_nrc() +
-  labs(x = NULL,
-       y = NULL,
-       title = "Wages Have Not Kept Up With Inflation",
-       subtitle = "Cumulative change in hourly rates of pay and the CPI<br>
-       *Forecast **9.0%** pay rise in July 2026 and **2.5%** inflation*") +
-  theme_nrc(legend = "bottom") +
-  guides(linetype = "none") 
+plot_real_wages(cpi_quarterly_group, 
+                wpi_quarterly, 
+                forecast = list(years = 3, wage = 12, inflation = 3),
+                state = "Australia", 
+                region = "Australia", 
+                since = "2020-03-01", 
+                include_housing = F)
   
 ```
 
@@ -529,40 +558,40 @@ ggplot() +
 
 -   Inflation has eroded real wage increases that we have collectively struggled for.
 
-## Sub-Minimum Wages
+<!-- ## Sub-Minimum Wages -->
 
-::: notes
-This is immoral and unfair. Our submission to this years annual wage review is calling for sub-minimum wages to be abolished.
+<!-- ::: notes -->
+<!-- This is immoral and unfair. Our submission to this years annual wage review is calling for sub-minimum wages to be abolished. -->
 
-All workers are human beings who are deserving of dignity and protection. Workers are not a commodity to be exploited for profit.
+<!-- All workers are human beings who are deserving of dignity and protection. Workers are not a commodity to be exploited for profit. -->
 
-Workers with a disability are able to be paid **significantly** less than the minimum wage because they have "reduced productivity".
-:::
+<!-- Workers with a disability are able to be paid **significantly** less than the minimum wage because they have "reduced productivity". -->
+<!-- ::: -->
 
--   It is currently legal for employers to pay workers below the minimum wage:
+<!-- -   It is currently legal for employers to pay workers below the minimum wage: -->
 
-    -   Workers to who training arrangements apply (apprentices)
+<!--     -   Workers to who training arrangements apply (apprentices) -->
 
-    -   Junior workers (aged under 21)
+<!--     -   Junior workers (aged under 21) -->
 
-    -   Workers with a disability
+<!--     -   Workers with a disability -->
 
-## From a Minimum Wage to a Living Wage
+<!-- ## From a Minimum Wage to a Living Wage -->
 
-::: notes
-We have a national minimum wage. But is that enough to support a worker to fully participate in society?
-:::
+<!-- ::: notes -->
+<!-- We have a national minimum wage. But is that enough to support a worker to fully participate in society? -->
+<!-- ::: -->
 
--   What wage is required to fully participate in Australian society?
--   Full participation in society promotes the health and well-being of workers, and helps to develop a productive workforce.
+<!-- -   What wage is required to fully participate in Australian society? -->
+<!-- -   Full participation in society promotes the health and well-being of workers, and helps to develop a productive workforce. -->
 
-## Living Is Expensive
+<!-- ## Living Is Expensive -->
 
-```{r}
-living_wage <- read_csv("data/living_wage.csv")
+<!-- ```{r} -->
+<!-- living_wage <- read_csv("data/living_wage.csv") -->
 
-gt(living_wage) |> 
-  fmt_currency(columns = 2:5,
-               decimals = 0)
-  
-```
+<!-- gt(living_wage) |>  -->
+<!--   fmt_currency(columns = 2:5, -->
+<!--                decimals = 0) -->
+
+<!-- ``` -->
