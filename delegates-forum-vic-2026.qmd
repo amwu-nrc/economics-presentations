@@ -1,6 +1,7 @@
 ---
-title: "Inflation" 
-subtitle: "" 
+title: "Inflation, Cost of Living, and Real Wages" 
+subtitle: "Victorian Delegates Training Day"
+author: "Hamish Gamble"
 affiliation: "National Research Centre" 
 execute:    
   echo: false
@@ -12,20 +13,19 @@ format:
       auto-play-media: true
       incremental: false
       slide-number: true
-      fig-format: svg
+      fig-format: retina
       
   pptx:
     incremental: false
     slide-level: 2 
-    fig-format: svg
-    reference-doc: template-ndtd.potx
+    fig-format: retina
+    reference-doc: template-ndtd.pptx
 brand: _brand/_brand.yml
 editor: visual 
 ---
 
 ```{r}
 #| label: setup
-
 library(tidyverse)
 library(readabs)
 library(reportabs)
@@ -44,6 +44,9 @@ cli_quarterly <- read_absdata("cli", export_dir = "data", refresh = TRUE)
 
 
 ```
+
+
+# Inflation, Cost of Living, and Real Wages
 
 ## Overall Inflation Impact
 
@@ -116,8 +119,6 @@ plot_real_inflation_group <- function(cpi_category, since) {
 plot_real_inflation_group("All groups CPI", "2023-03-01")
 
 ```
-
-# Inflation - Essential Goods and Services
 
 ## Bread
 
@@ -240,8 +241,7 @@ cost_of_living_table(since = "2020-03-01")
 :::
 :::::
 
-## Cost of Living and Wages
-
+## Inflation and Wages
 
 ::: notes
 Looking only since 2023 suggests that wages have grown slightly faster than inflation. But the cost of living index shows that wages have not grown faster than the cost of living.
@@ -358,9 +358,20 @@ plot_real_wages <- function(cpi_data, wpi_data,
       indicator == "cumulative_prices" ~ "Prices",
       indicator == "cumulative_real_wage" ~ "Real hourly rates of pay"
     ))
+  
+  if (args$include_housing) {
+    # Average real wage growth when deflated by the CLI all series up to March 2020
+    avg_real_growth <- 0.00337
+    deflator = "Cost of Living Index"
+  } else {
+    # Average real wage growth when deflated by the CPI all series up to March 2020 
+    avg_real_growth <- 0.00116
+    deflator = "Consumer Price Index"
+  }
+  
 
   seg <- tibble(date = bind_rows(cumulative, fc)$date,
-                value = 0.00116*as.integer(date - as_date("2020-03-01")),
+                value = avg_real_growth*as.integer(date - as_date(args$since)),
                 label = "Average Real Wage Growth")
 
   ggplot() +
@@ -377,9 +388,8 @@ plot_real_wages <- function(cpi_data, wpi_data,
     scale_colour_nrc() +
     labs(x = NULL,
          y = NULL,
-         title = "Wages Have Not Kept Up With Prices",
-         caption = paste(wpi_args$region,
-                         wpi_args$industry),
+         title = "Real Wages Have Not Kept Up With Prices",
+         caption = glue("Nominal wages deflated with {deflator}"),
          subtitle = glue::glue("Cumulative change in hourly rates of pay and prices<br>
        *Forecast **{forecast$wage*forecast$periods}%** pay rise by {label_date(format = '%B %Y')(max(fc$date))} and **{forecast$inflation*forecast$periods}%** annual increase in inflation*")) +
     theme_nrc(legend = "bottom") +
@@ -396,3 +406,14 @@ plot_real_wages(cpi_quarterly_group,
                 include_housing = F)
 ```
 
+## Cost of Living and Wages
+
+```{r}
+plot_real_wages(cli_quarterly, 
+                wpi_quarterly, 
+                forecast = list(years = 3, wage = 12, inflation = 3),
+                state = "Australia", 
+                region = "Australia", 
+                since = "2020-03-01", 
+                include_housing = T)
+```

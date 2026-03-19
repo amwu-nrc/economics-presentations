@@ -82,7 +82,7 @@ An iPhone represents:
 :::
 
 ```{r}
-ntl <- read_complexitydata("atlas_complexity_country", export_dir = "data") 
+ntl <- read_complexitydata("atlas_complexity_country92", export_dir = "data") 
 
 ntl |> 
   ggplot(aes(x = year, y = eci_rank_hs92, col = location_code)) +

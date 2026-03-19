@@ -4,15 +4,18 @@ library(reportabs)
 library(tidyverse)
 library(directlabels)
 library(geomtextpath)
+library(scales)
 library(readabs)
 library(gghighlight)
 library(strayr)
 library(gt)
+library(glue)
 
 
 cpi_quarterly <- read_absdata("cpi_quarterly", export_dir = "data", refresh = TRUE)
 wpi_quarterly <- read_absdata("wpi_quarterly", export_dir = "data", refresh = TRUE)
 cpi_quarterly_group <- read_absdata("cpi_quarterly_group", export_dir = "data", refresh = TRUE)
+cli_quarterly <- read_absdata("cli", export_dir = "data", refresh = TRUE)
 
 cost_of_living_table <- function(since) {
   
@@ -558,40 +561,4 @@ plot_real_wages(cpi_quarterly_group,
 
 -   Inflation has eroded real wage increases that we have collectively struggled for.
 
-<!-- ## Sub-Minimum Wages -->
 
-<!-- ::: notes -->
-<!-- This is immoral and unfair. Our submission to this years annual wage review is calling for sub-minimum wages to be abolished. -->
-
-<!-- All workers are human beings who are deserving of dignity and protection. Workers are not a commodity to be exploited for profit. -->
-
-<!-- Workers with a disability are able to be paid **significantly** less than the minimum wage because they have "reduced productivity". -->
-<!-- ::: -->
-
-<!-- -   It is currently legal for employers to pay workers below the minimum wage: -->
-
-<!--     -   Workers to who training arrangements apply (apprentices) -->
-
-<!--     -   Junior workers (aged under 21) -->
-
-<!--     -   Workers with a disability -->
-
-<!-- ## From a Minimum Wage to a Living Wage -->
-
-<!-- ::: notes -->
-<!-- We have a national minimum wage. But is that enough to support a worker to fully participate in society? -->
-<!-- ::: -->
-
-<!-- -   What wage is required to fully participate in Australian society? -->
-<!-- -   Full participation in society promotes the health and well-being of workers, and helps to develop a productive workforce. -->
-
-<!-- ## Living Is Expensive -->
-
-<!-- ```{r} -->
-<!-- living_wage <- read_csv("data/living_wage.csv") -->
-
-<!-- gt(living_wage) |>  -->
-<!--   fmt_currency(columns = 2:5, -->
-<!--                decimals = 0) -->
-
-<!-- ``` -->
