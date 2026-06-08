@@ -9,41 +9,45 @@ library(gghighlight)
 library(strayr)
 library(gt)
 
-national_accounts <- read_abs_local(cat_no = "5206.0", path = "data")
+national_accounts <- read_abs(
+  cat_no = "5206.0",
+  tables = c(1, 7),
+  path = "data"
+)
 
-productivity_decouple <- read_absdata("productivity", export_dir = "data") |> 
-  pivot_longer(cols = c(gdp_per_hour_index, real_compensation_per_hour_index)) |> 
-  mutate(name = case_when(
-    name == "gdp_per_hour_index" ~ "Productivity (GDP per Hour Worked)",
-    name == "real_compensation_per_hour_index" ~ "Real Compensation per Hour Worked"
-  )) 
+productivity_decouple <- read_absdata(
+  "productivity",
+  export_dir = "data",
+  refresh = T
+) |>
+  pivot_longer(
+    cols = c(gdp_per_hour_index, real_compensation_per_hour_index)
+  ) |>
+  mutate(
+    name = case_when(
+      name == "gdp_per_hour_index" ~ "Productivity (GDP per Hour Worked)",
+      name ==
+        "real_compensation_per_hour_index" ~ "Real Compensation per Hour Worked"
+    )
+  )
 
-productivity_sector <- read_abs_local("5204.0", 
-                                      filenames = "5204015_Labour_Productivity_Input.xlsx",
-                                      path = "data") |> 
-  filter(table_no == "5204015_Labour_Productivity_Input",
-         str_detect(series, "GVA"),
-         !is.na(value)) |>
-  mutate(industry = str_extract(series, "^(.*?);"),
-         industry = trimws(str_remove_all(industry, ";"))) |>
-  group_by(industry) |> 
-  mutate(index = 100*value/value[date == "1998-06-01"]) |> 
-  ungroup() 
-
-plot_date_range <- function(plot_data) {
-
- date_min <- as.Date(min(plot_data$date))
-  date_max <- as.Date(max(plot_data$date))
-
-  pre <- scales::breaks_pretty(n = 5)(c(date_min, date_max))
-  date_adj <- as.numeric(pre[length(pre)] - date_max)
-  adj <- pre - date_adj
-  names(adj) <- NULL
-  date_breaks <- adj[adj >= date_min & adj <= date_max]
-  return(date_breaks)
-
-}
-
+productivity_sector <- read_abs_local(
+  "5204.0",
+  filenames = "5204015_Labour_Productivity_Input.xlsx",
+  path = "data"
+) |>
+  filter(
+    table_no == "5204015_Labour_Productivity_Input",
+    str_detect(series, "GVA"),
+    !is.na(value)
+  ) |>
+  mutate(
+    industry = str_extract(series, "^(.*?);"),
+    industry = trimws(str_remove_all(industry, ";"))
+  ) |>
+  group_by(industry) |>
+  mutate(index = 100 * value / value[date == "1998-06-01"]) |>
+  ungroup()
 ```
 
 # Productivity
@@ -100,30 +104,42 @@ GDP per hour worked, with June 1991 set as the base or reference year.
 :::
 
 ```{r}
-national_accounts_productivity <- national_accounts |> 
- filter(series %in% c("GDP per hour worked: Index ;",
-                       "Gross value added per hour worked market sector: Index ;",
-                       "Gross value added per hour worked non-market sector: Index ;"),
-        series_type == "Seasonally Adjusted",
-        !is.na(value)) |> 
-  mutate(index = 100*value/value[date == "1991-06-01"],
-         series = case_when(
-           series == "GDP per hour worked: Index ;" ~ "Labour Productivity",
-           series == "Gross value added per hour worked market sector: Index ;" ~ "Labour Productivity (Market)",
-           series == "Gross value added per hour worked non-market sector: Index ;" ~ "Labour Productivity (Non-Market)"
-         )) 
+national_accounts_productivity <- national_accounts |>
+  filter(
+    series %in%
+      c(
+        "GDP per hour worked: Index ;",
+        "Gross value added per hour worked market sector: Index ;",
+        "Gross value added per hour worked non-market sector: Index ;"
+      ),
+    series_type == "Seasonally Adjusted",
+    !is.na(value)
+  ) |>
+  mutate(
+    index = 100 * value / value[date == "1991-06-01"],
+    series = case_when(
+      series == "GDP per hour worked: Index ;" ~ "Labour Productivity",
+      series ==
+        "Gross value added per hour worked market sector: Index ;" ~ "Labour Productivity (Market)",
+      series ==
+        "Gross value added per hour worked non-market sector: Index ;" ~ "Labour Productivity (Non-Market)"
+    )
+  )
 
-national_accounts_productivity |> 
+national_accounts_productivity |>
   ggplot(aes(x = date, y = index, col = series)) +
   geom_line() +
   scale_colour_nrc() +
-  scale_x_date(breaks = plot_date_range(national_accounts_productivity),
-               date_labels = "%e %b\n%Y") +
-  labs(title = "GDP per Hour Worked",
-       subtitle = "Seasonally Adjusted; Quarterly; Index (June 1991 = 100)") +
+  scale_x_date(
+    breaks = plot_date_range(national_accounts_productivity),
+    date_labels = "%e %b\n%Y"
+  ) +
+  labs(
+    title = "GDP per Hour Worked",
+    subtitle = "Seasonally Adjusted; Quarterly; Index (June 1991 = 100)"
+  ) +
   theme_nrc(legend = 'bottom') +
-  labs(y = NULL,
-       x = NULL)
+  labs(y = NULL, x = NULL)
 ```
 
 ## Productivity Trends
@@ -139,22 +155,28 @@ The ABS uses a 20 year average "compound average growth rate" formula.
 :::
 
 ```{r}
-national_accounts_20 <- national_accounts|> 
-  filter(series %in% c("GDP per hour worked: Index ;"),
-         series_type == "Seasonally Adjusted") |> 
-  mutate(cagr = (value/lag(value, n = 80))^(1/80) - 1) |> 
-  filter(!is.na(cagr)) 
+national_accounts_20 <- national_accounts |>
+  filter(
+    series %in% c("GDP per hour worked: Index ;"),
+    series_type == "Seasonally Adjusted"
+  ) |>
+  mutate(cagr = (value / lag(value, n = 80))^(1 / 80) - 1) |>
+  filter(!is.na(cagr))
 
-national_accounts_20 |> 
+national_accounts_20 |>
   ggplot(aes(x = date, y = cagr, col = series)) +
-  geom_line() + 
+  geom_line() +
   scale_y_continuous(labels = scales::label_percent()) +
-  scale_x_date(breaks = plot_date_range(national_accounts_20),
-               date_labels = "%e %b\n%Y") +
-  labs(title = "Declining Productivity Growth",
-       subtitle = "20-Year Average Productivity Growth",
-      x = NULL,
-      y = NULL) + 
+  scale_x_date(
+    breaks = plot_date_range(national_accounts_20),
+    date_labels = "%e %b\n%Y"
+  ) +
+  labs(
+    title = "Declining Productivity Growth",
+    subtitle = "20-Year Average Quarterly Productivity Growth",
+    x = NULL,
+    y = NULL
+  ) +
   theme_nrc()
 ```
 
@@ -173,50 +195,70 @@ Even the Productivity Commission recognise that high hours worked is pulling pro
 :::
 
 ```{r}
-national_accounts_hw <- national_accounts |> 
-  filter(series %in% c("Hours worked: Index ;",
-                       "Hours worked market sector: Index ;",
-                       "Hours worked non-market sector: Index ;"),
-         series_type == "Seasonally Adjusted",
-         !is.na(value)) |> 
-  mutate(series = case_when(
-    series == "Hours worked: Index ;" ~ "Hours Worked",
-    series == "Hours worked market sector: Index ;" ~ "Hours Worked (Market)",
-    series == "Hours worked non-market sector: Index ;" ~ "Hours Worked (Non-Market)"
-  ))
+national_accounts_hw <- national_accounts |>
+  filter(
+    series %in%
+      c(
+        "Hours worked: Index ;",
+        "Hours worked market sector: Index ;",
+        "Hours worked non-market sector: Index ;"
+      ),
+    series_type == "Seasonally Adjusted",
+    !is.na(value)
+  ) |>
+  mutate(
+    series = case_when(
+      series == "Hours worked: Index ;" ~ "Hours Worked",
+      series == "Hours worked market sector: Index ;" ~ "Hours Worked (Market)",
+      series ==
+        "Hours worked non-market sector: Index ;" ~ "Hours Worked (Non-Market)"
+    )
+  )
 
-national_accounts_hw |> 
-  ggplot(aes(x = date, y = value, col = series)) + 
-  scale_x_date(date_labels = "%e %b\n %Y",
-               breaks = plot_date_range(national_accounts_hw)) +
+national_accounts_hw |>
+  ggplot(aes(x = date, y = value, col = series)) +
+  scale_x_date(
+    date_labels = "%e %b\n %Y",
+    breaks = plot_date_range(national_accounts_hw)
+  ) +
   scale_colour_nrc() +
-  geom_line() + 
-  theme_nrc(legend = "bottom") + 
-  labs(x = NULL, 
-       y = NULL,
-       title = "Hours Worked",
-       subtitle = "Seasonally Adjusted; Quarterly; Index: (June 2022 = 100)")
+  geom_line() +
+  theme_nrc(legend = "bottom") +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Hours Worked",
+    subtitle = "Seasonally Adjusted; Quarterly; Index: (June 2022 = 100)"
+  )
 ```
 
 ## GDP
 
 ```{r}
-national_accounts_gdp <- national_accounts |> 
-  filter(series == "Gross domestic product: Chain volume measures ;",
-         series_type == "Seasonally Adjusted",
-         !is.na(value)) 
+national_accounts_gdp <- national_accounts |>
+  filter(
+    series == "Gross domestic product: Chain volume measures ;",
+    series_type == "Seasonally Adjusted",
+    !is.na(value)
+  )
 
-national_accounts_gdp |> 
-  ggplot(aes(x = date, y = value, col = 'hours')) + 
-  geom_line() + 
-  scale_x_date(date_labels = "%e %b\n %Y",
-               breaks = plot_date_range(national_accounts_gdp)) +
-  theme_nrc() + 
-  labs(x = NULL,
-       y = NULL, 
-       title = "Gross Domestic Product",
-       subtitle = "Seasonally Adjusted; Quarterly") + 
-  scale_y_continuous(labels = scales::label_currency(scale = 1e-3, suffix = "bn"))
+national_accounts_gdp |>
+  ggplot(aes(x = date, y = value, col = 'hours')) +
+  geom_line() +
+  scale_x_date(
+    date_labels = "%e %b\n %Y",
+    breaks = plot_date_range(national_accounts_gdp)
+  ) +
+  theme_nrc() +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Gross Domestic Product",
+    subtitle = "Seasonally Adjusted; Quarterly"
+  ) +
+  scale_y_continuous(
+    labels = scales::label_currency(scale = 1e-3, suffix = "bn")
+  )
 ```
 
 ## Workers Share
@@ -230,18 +272,21 @@ Damn.
 :::
 
 ```{r}
-productivity_decouple |> 
+productivity_decouple |>
   ggplot(aes(x = date, y = value, col = name)) +
   geom_line() +
-  scale_x_date(date_labels = "%e %b\n %Y",
-               breaks = plot_date_range(productivity_decouple)) +
-  labs(x = NULL,
-       y = NULL,
-       title = "The Benefits of Increased Productivity Are Not Passed On To Workers",
-       subtitle = "Productivity and Real Compensation per Hour Worked (March 1991 = 100)") +
+  scale_x_date(
+    date_labels = "%e %b\n %Y",
+    breaks = plot_date_range(productivity_decouple)
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "The Benefits of Increased Productivity Are Not Passed On To Workers",
+    subtitle = "Productivity and Real Compensation per Hour Worked (March 1991 = 100)"
+  ) +
   theme_nrc(legend = "bottom") +
   scale_colour_nrc()
-
 ```
 
 ## Industry Productivity
@@ -259,19 +304,25 @@ Productivity laggards? Non-market sector, like Health Care, Education, Real esta
 :::
 
 ```{r}
-productivity_sector |> 
-  ggplot(aes(x = date, y = index, col = industry)) + 
-  scale_x_date(date_labels = "%e %b\n %Y",
-               breaks = plot_date_range(productivity_sector)) +
+productivity_sector |>
+  ggplot(aes(x = date, y = index, col = industry)) +
+  scale_x_date(
+    date_labels = "%e %b\n %Y",
+    breaks = plot_date_range(productivity_sector)
+  ) +
   geom_line() +
   scale_colour_nrc() +
-  gghighlight(industry %in% c("ALL INDUSTRIES", "Manufacturing", "Mining"), line_label_type = "ggrepel_text") +
+  gghighlight(
+    industry %in% c("ALL INDUSTRIES", "Manufacturing", "Mining"),
+    line_label_type = "ggrepel_text"
+  ) +
   theme_nrc() +
-  labs(title = "Industry Productivity",
-       subtitle = "Gross Value Added per Hour Worked (June 1998 = 100)",
-       x = NULL,
-       y = NULL) 
-
+  labs(
+    title = "Industry Productivity",
+    subtitle = "Gross Value Added per Hour Worked (June 1998 = 100)",
+    x = NULL,
+    y = NULL
+  )
 ```
 
 ## What Productivity is Not

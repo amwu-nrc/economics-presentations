@@ -46,9 +46,9 @@ Which by the way, is why the budget in 2024, by the nominative party of labour, 
 -   How does the video match your experience?
 :::
 
-## Productivity Disaster!
+## Productivity Crisis!
 
-{{< video https://www.youtube.com/watch?v=cdRCDaQrHJ0 width="100%" height="85%" >}}
+{{< video https://www.youtube.com/watch?v=MVErL94YLGM width="100%" height="85%" >}}
 
 ## Productivity: Discussion
 
@@ -88,3 +88,7 @@ Finally, real wages and productivity decoupled long ago. Increased productivity 
 -   Who benefits from increased productivity?
 -   What factors influence how productive you feel at work?
 :::
+
+## Discussion: Economic Reports {.incremental}
+1. What kind of language is used in economic reports on the news?
+2. Why does the news include a finance report? 

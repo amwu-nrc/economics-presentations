@@ -1,0 +1,129 @@
+# Housing
+
+```{r}
+#|label: housing-setup
+library(tidyverse)
+library(readabs)
+library(reportabs)
+library(gt)
+library(systemfonts)
+
+knitr::opts_chunk$set(dev = "ragg_png")
+# Required data for house price stuff:
+# Total Value of Dwellings (Table 1)
+mean_house_price <- read_abs("6432.0", tables = 1) |>
+  filter(series == "Mean price of residential dwellings ;  Australia ;") |>
+  select(date, mean_house_price = value)
+# House price index
+hpi <- read_csv(
+  "https://stats.bis.org/api/v2/data/dataflow/BIS/WS_SPP/1.0/Q.AU.N.628?format=csv"
+) |>
+  select(date = TIME_PERIOD, house_price_index = OBS_VALUE) |>
+  mutate(date = yq(date) + months(2))
+# National accounts
+national_accounts <- read_abs("5206.0", tables = c(1, 2, 20))
+# Table 1 (real GDP per capita)
+# Table 2 (real GDP)
+# Table 20 (gross disposable income)
+gdi_pc <- national_accounts |>
+  filter(
+    series %in%
+      c(
+        "GROSS DISPOSABLE INCOME ;",
+        "GDP per capita: Current prices ;",
+        "Gross domestic product: Current prices ;"
+      ),
+    series_type == "Seasonally Adjusted"
+  ) |>
+  pivot_wider(
+    id_cols = date,
+    names_from = series,
+    values_from = value,
+    names_repair = janitor::make_clean_names
+  ) |>
+  mutate(
+    population = gross_domestic_product_current_prices /
+      gdp_per_capita_current_prices,
+    gross_disposable_income_per_capita = gross_disposable_income / population,
+    gross_disposable_income_per_capita_annual = slider::slide_dbl(
+      gross_disposable_income_per_capita,
+      ~ sum(.x),
+      .before = 3
+    )
+  ) |>
+  inner_join(hpi) |>
+  left_join(mean_house_price) |>
+  mutate(
+    mean_house_price = ifelse(
+      is.na(mean_house_price),
+      yes = mean_house_price[date == "2011-09-01"] *
+        house_price_index /
+        house_price_index[date == "2011-09-01"],
+      no = mean_house_price
+    ),
+    ratio = 1000 * mean_house_price / gross_disposable_income_per_capita_annual
+  )
+
+# Required data for house finance stuff:
+lending <- read_abs("5601.0", tables = 13, path = "data") |>
+  separate_series(
+    column_names = c(
+      "households",
+      "housing_finance",
+      "investor",
+      "purpose",
+      "new_loan_commitments",
+      "unit"
+    ),
+    remove_nas = T
+  )
+
+fhb_share <- read_abs(cat_no = "5601.0", tables = 1) |>
+  filter(
+    series_type == "Seasonally Adjusted",
+    series %in%
+      c(
+        "Households ;  Housing Finance ;  Owner occupier ;  Total dwellings excluding refinancing ;  New loan commitments ;  Number ;",
+        "Households ;  Housing Finance ;  Investor ;  Total dwellings excluding refinancing ;  New loan commitments ;  Number ;"
+      )
+  )
+```
+
+::: notes
+We're going to talk about the housing market, house prices, and the changes made in relation to housing in the 2026 Budget
+:::
+
+## House Prices and Affordability
+
+::: notes
+House prices have grown much faster than incomes in Australia. The median household income per year (before-tax) in September 2025 was estimated at about \$105,000. Meanwhile, the median dwelling value was \$860,000 and the median weekly rent was \$670.
+
+The average time required to save up a 20% deposit for the average dwelling is 11 years. While saving for the deposit, you're committing 33% of your income on rent. After securing a loan, you're committing 45% of your income just to service the mortgage.
+:::
+
+- It is more difficult than ever for first home buyers.
+
+- Household income has not grown as fast as house prices
+
+- Saving for a deposit is also more difficult
+
+## House Prices and Affordability - Historical
+
+::: notes
+How has the picture changed over time?
+:::
+
+```{r}
+gdi_pc |>
+  filter(!is.na(ratio)) |>
+  ggplot(aes(x = date, y = ratio)) +
+  geom_line() +
+  scale_x_date(breaks = plot_date_range(gdi_pc), date_labels = "%b-%Y") +
+  theme_nrc() +
+  labs(
+    x = NULL,
+    y = NULL,
+    caption = "Source: ABS 5206.0 (Tables 1, 2, 20), ABS 6432.0 (Table 1), BIS (Q.AU.N.628)",
+    title = "Ratio of Average House Price to Household Diposable Income"
+  )
+```

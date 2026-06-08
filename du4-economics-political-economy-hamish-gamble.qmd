@@ -2,7 +2,7 @@
 title: "Economics and Political Economy"
 subtitle: "Useful Economics"
 author: "Hamish Gamble"
-affiliation: "National Research Centre"
+affiliation: "National Research Centre, AMWU"
 execute: 
   echo: false
   warning: false
@@ -33,6 +33,8 @@ editor: visual
 
 {{< include sections/_section-02b-productivity.qmd >}}
 
+{{< include sections/_section-02c-housing.qmd >}}
+
 ## Economic Anxiety
 
 ::: notes
@@ -50,7 +52,7 @@ The world has become increasingly competitive, and isolated. The rise of neo-lib
 
 Workers are more precarious than ever:
 
--   gig economy, 0-hour contract, no protection, a safety net that isn't safe at all.
+- gig economy, 0-hour contract, no protection, a safety net that isn't safe at all.
 
 Workers are forced to pursue their personal monetary interest, because you need to to survive. This competition, and precarity, are used to keep employees divided, and to try and minimise solidarity between workers. And it's been happening since the 1980s. It is scary to put your head above the parapet and ask for better conditions because there is so much to lose.
 
@@ -58,9 +60,9 @@ Solidarity is more important than ever. We are powerful as a collective.
 :::
 
 ::: incremental
--   How do you feel about the "big picture" economy?
--   How do you feel about your economic situation?
--   How do your mates, neighbours, or colleagues feel?
+- How do you feel about the "big picture" economy?
+- How do you feel about your economic situation?
+- How do your mates, neighbours, or colleagues feel?
 :::
 
 {{< include sections/_section-03-tariffs.qmd >}}
