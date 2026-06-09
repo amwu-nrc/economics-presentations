@@ -127,3 +127,119 @@ gdi_pc |>
     title = "Ratio of Average House Price to Household Diposable Income"
   )
 ```
+
+## House Prices and Affordability - Historical
+
+```{r}
+gdi_pc |>
+  group_by(year = year(date)) |>
+  summarise(
+    house = 1000 * mean(mean_house_price),
+    income = mean(gross_disposable_income_per_capita_annual)
+  ) |>
+  filter(year %in% c(1975, 1985, 1995, 2005, 2015, 2025)) |>
+  gt() |>
+  cols_label(
+    year = "Year",
+    house = "Average House Price ($)",
+    income = "Average Per Capita Disposable Income ($)"
+  ) |>
+  fmt_currency(columns = -year, decimals = 0)
+```
+
+## Investor Financing
+
+```{r}
+lending |>
+  filter(
+    series_type == "Original",
+    unit == "Number",
+    !purpose %in%
+      c(
+        "Internal refinancing",
+        "External refinancing",
+        "Alterations, additions and repairs",
+        "Purchase of residential land"
+      )
+  ) |>
+  group_by(date) |>
+  mutate(value_share = 2 * value / sum(value)) |>
+  ungroup() |>
+  filter(purpose != "Total dwellings excluding refinancing") |>
+  mutate(purpose = fct_reorder(purpose, -value)) |>
+  ggplot(aes(x = date, y = value_share, col = purpose)) +
+  geom_line() +
+  theme_nrc(legend = "bottom") +
+  scale_x_date(date_labels = "%b-%Y") +
+  scale_y_continuous(labels = scales::label_percent()) +
+  scale_colour_nrc(guide = guide_legend(nrow = 2)) +
+  annotate("label", x = as_date("2025-11-01"), y = .90, label = "82.3%") +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Do Investors Contribute to Rental Supply?",
+    subtitle = "Share of New Loan Committments to Investors by Purpose",
+    caption = "Source: ABS, 5601.0, Lending Indicators, Table 13"
+  )
+```
+
+## Budget Changes
+
+::: notes
+The changes announced in the budget mostly apply only to new investments made after 1 July 2027. The additional year is intended to allow time to make decisions about what to do with existing assets.
+
+From a housing perspective, the key changes relate to negative gearing, and the capital gains tax discount - however these changes also apply across all asset classes which generate capital gains - including stocks, cryptocurrency, or other investments.
+
+For new properties which are purchased after the budget, investors will no longer be able to deduct losses from the operation of their investment property (negative gearing) from their income tax. Instead, losses can be carried forward and used to reduce the amount of capital gains tax paid when the investment property is sold.
+
+The 30% minimum tax rate on capital gains was introduced to prevent the scenario where you hold onto an asset while working, use negative gearing to reduce your taxable income, and then sell the property when your income is low, so that you're in a lower income tax bracket.
+
+Cost based indexation basically means you only pay tax on the *real* (ie discount inflation) gain accrued. The change in tax arrangements DOES apply to existing investors, but only for the growth which occurs after 1 July 2027. That means if you already own a property, the tax on any gains accrued between purchase and 1 July 2027 is still subject to the 50% discount.
+:::
+
+- Negative gearing limited to new builds only from 1 July 2027.
+- Losses accrued in running an investment property can no longer reduce your taxable income.
+- A 30% minimum tax rate on capital gains is introduced.
+- The Capital Gains Tax Discount is replaced with cost-based indexation
+
+## Example
+
+::: notes
+A worker who earns \$100,000 per year sells some capital asset (a house, shares, cryptocurrency) five years after purchase. They bought the asset for \$100,000 and sold it for \$200,000, earning a capital gain of \$100,000.
+
+At tax time, he pays income tax on \$100,000 (from working) and \$50,000 (from capital gains), and gets the other \$50,000 tax free.
+
+The tax on \$150,000 income is \$31,288 + 37 cents for every dollar over \$135,000. The total tax bill is \$36,838.
+
+What's the effective tax rate on the capital gain?
+
+- First 50k tax free, second 50k is taxed between the 35 and 37 brackets.
+
+- 0 + 35% of 35,000 + 37% of 15,000 = \$14,300 or 14.3%
+
+What would the effective tax rate on \$100,000 more labour income have been?
+
+- 35% of 35,000 + 37% of 55,000+ 45% of 10,000 = \$37,100 or 37%.
+:::
+
+| Capital Gain | Tax Rate | Notes |
+|------------------------|------------------------|------------------------|
+| 50,000 | 0 | Not taxed due to CGT discount |
+| 35,000 | 30% | The first 35,000 of the remaining 50,000 is taxed in the 45,001-135,000 bracket |
+| 15,000 | 37% | The remaining 15,00 is taxed in the 135,001-190,000 tax bracket |
+
+## Likely Impact
+
+::: notes
+The balance was too in favour of wealth over income. These changes try to restore the balance by increasing the rate of taxation on capital gains.
+
+Housing is a fundamental right and it should not have got this far.
+
+However - people invested in housing in particular because it was a viable way at generating wealth. Stagnant wage growth means that it's harder to get by and harder to become financially independent just through working alone. The changes reduce the incentive to invest, but do not adequately increase the incentive to work. The \$250 tax break in 2027 doesn't really cut it.
+:::
+
+- The estimated impact on house prices and supply is minimal.
+
+- First home buyers should face less competition when purchasing established homes.
+
+- Changes only partially address the reasons why property investment was so popular.

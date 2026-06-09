@@ -17,7 +17,7 @@
 
 :::
 
-## What are Economists?
+## Who are Economists?
 
 ::: notes
 Economics was originally a philosophical subject. What happens when the economy interacts with the government? How do different classes interact? How do different classes experience the economy? It was a social science studying a social phenomenon. 
@@ -29,13 +29,32 @@ In about the 1950s to 1960s, a new school of economists decided that adding math
 - Love to explain why you're wrong
 - Get paid too much to make predictions which don't come true
 
+## What is Economics?
+::: notes
+Capitalism has been the dominant mode of production in Australia and the western world for most of modern history. 
+
+So much so that you'll often hear arguments referring to "economics 101" like it is so simple and so natural. 
+
+When problems arise (inequality, unemployment, housing affordability, the cost of living) it is natural to seek solutions which fit within the boundaries and assumptions set by capitalism. But capitalism is not the inevitable or ultimate model of an economy. Problems caused by capitalism do not have to be solved by capitalism.
+:::
+- What we call economics today only refers to one kind of economics - the economics of capitalism. 
+- Capitalism is the mainstream branch of economics.
+- It is hard to imagine other forms that our economy could take. 
 
 
+## A (Brief) History of Economics
+The way the economy has been structured has changed over human history:
+- Hunter Gatherer Societies
+- Agricultural Societies
+- Slave Owning Production
+- Feudalism 
+- Capitalism 
 
-## Political Economy
 
 ::: notes
-What we call 'economics' today is very different from what would have been called economics in the 1960s, economics in the 1890s, economics in the 1600s, and economics prior to the invention of agriculture.
+What we call 'economics' today is very different from what would have been called economics in the 1960s, economics in the 1890s, economics in the 1600s, and economics prior to the invention of agriculture. 
+
+While we've always had "an economy", it is only since the industrial revolution that the economy has been structured in a way which would be called capitalism. 
 
 The study of economics is ideological. It is a social science, not a hard science. There is no Nobel prize in economics (the Nobel Memorial Prize in Economic Sciences was not and is not one of the original 5).
 
@@ -45,22 +64,10 @@ Early economics was philosophical - looking at questions like:
 
 -   What is value?
 
-In the 1600s, the dominant ideology of Britain was *mercantilism,* based on the growing power of Britain, and the vast trade networks they had developed through colonialism. The economics of the time was a reflection of this ideology, highlighting the ways in which trade was important for a country's economic development. Economists argued for increased power of the state (to strengthen colonial power) and for government's to maintain a trade surplus.
 
-In France, about 100 years later, the *physiocrats* considered two distinct industries - agricultural, and non-agricultural, in reflection of the growing industrialisation in workshops and of artisans. The physiocrats believed that only agricultural labour could create value in the products of society, and that non-agricultural labour was unproductive.
 :::
 
-Despite what economists would have you believe:
-
-::: incremental
--   Economics is not an independent, neutral, or technical system
-
--   Economics is inherently linked to political ideology.
-
--   You can't eat "headline inflation fell to 2.4%"
-:::
-
-## Political Economy - Modern Economics
+## Political Economy - Classical Economics
 
 ::: notes
 **Classical Economics**
@@ -108,13 +115,11 @@ The most important message is:
 
 ## Political Economy - Modern Economics
 
--   Class analysis was neglected in the late 1800s and early 1900s in favour of analysis of individuals. This is "Neo Classical" economics, and is what they teach at University.
+-   Class analysis was neglected in the late 1800s and early 1900s in favour of analysis of individuals. 
 
 -   When thinking of economics, remember that it is ideological:
 
     -   What kind of growth do we want?
-
-    -   Efficiency for whom?
 
     -   Who should get the benefits of increased productivity?
 
@@ -140,11 +145,13 @@ Profit represents a payment on private capital to the owner of that capital. But
 
 ## Class Consciousness and Solidarity
 
-{{< video https://youtu.be/vt5X8zrHiSM?si=tDM75Th0pBtxsyRc width="100%" height="85%">}}
+{{< video https://www.youtube.com/watch?v=dsoEf8Yqe3I width="100%" height="85%">}}
 
 ## Class Consciousness and Solidarity
--   Capitalists understand the importance of class solidarity. 
--   Identity politics, culture war, woke vs. anti-woke, etc. are tools used to keep the working class from building solidarity. 
+
+-   Class is defined by the relationship between a person and the "means of production". 
+-   Capitalists understand the importance of class solidarity.
+-   Working class solidarity has been undermined by decades of neoliberal policy. 
 
 ::: notes
 
@@ -172,7 +179,7 @@ This has had a huge impact on trade union density.
 
 Just as the capitalist today is aesthetically different from the factory owner of the industrial revolution, so too has the working class changed.
 
-It isn't as easy today to spot the capitalist class. Unlike in the industrial revolution, the company owner is unlikely to be on the factory floor - patrolling and keeping everyone in line. The modern capitalist tries to trade on the aesthetics of the working class.
+It isn't as easy today to spot the capitalist class. Unlike in the industrial revolution, the company owner is unlikely to be on the factory floor - patrolling and keeping everyone in line. The modern capitalist tries to trade on the aesthetics of the working class. And the modern capitalist outsources the work of being a boss to middle management. People whose job it is to direct workers in the benefit of capital. 
 
 The concentration of wealth among the capital class however, has only increased since the industrial age. More and more wealth is held by fewer and fewer people. Owning shares, or investing in a mutual fund, does not make you a member of the capitalist class.
 :::
