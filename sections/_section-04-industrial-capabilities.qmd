@@ -82,25 +82,27 @@ An iPhone represents:
 :::
 
 ```{r}
-ntl <- read_complexitydata("atlas_complexity_country92", export_dir = "data") 
+ntl <- read_complexitydata("atlas_complexity_country92", export_dir = "data")
 
-ntl |> 
+ntl |>
   ggplot(aes(x = year, y = eci_rank_hs92, col = location_code)) +
   geom_line() +
   scale_y_reverse(breaks = c(1, seq(25, 175, 25))) +
-  labs(x = NULL,
-       y = "Economic Complexity Index (Rank)") + 
-  gghighlight(location_code %in% c("AUS", "DEU", "CAN")) + 
+  labs(x = NULL, y = "Economic Complexity Index (Rank)") +
+  gghighlight(location_code %in% c("AUS", "DEU", "CAN")) +
   theme_nrc()
-  
-  
 ```
 
-## Why Does it Matter to South Australia?
+## Why Does it Matter to Victoria?
 
 ```{r}
-state <- read_complexitydata("state_economic_complexity", export_dir = "data")
-graph_complexity_tree(state, 2023, "SA")
+state <- read_complexitydata(
+  "state_economic_complexity",
+  export_dir = "data",
+  refresh = T
+) |>
+  rename(product_code = hs_product_code, pci = product_complexity_index)
+graph_complexity_tree(state, 2023, "Vic", digits = 4, classification = "hs92")
 ```
 
 ## What Can Be Done?
