@@ -1,0 +1,210 @@
+---
+title: "Inflation and the Cost of Living"
+format: html
+fig-width: 6
+fig-asp: 0.618
+fig-format: retina
+execute: 
+  echo: false
+  warning: false
+editor: visual
+---
+
+```{r}
+#| label: setup
+
+library(tidyverse)
+library(readabs)
+library(reportabs)
+library(directlabels)
+library(scales)
+library(glue)
+library(gt)
+library(geomtextpath)
+
+cpi_quarterly_group <- read_absdata("cpi_quarterly_group", export_dir = "data", refresh = TRUE)
+
+wpi_quarterly <- read_absdata("wpi_quarterly", export_dir = "data", refresh = TRUE)
+
+cli_quarterly <- read_absdata("cli", export_dir = "data", refresh = TRUE)
+
+plot_real_inflation_group <- function(cpi_category, since) {
+  
+  if (cpi_category == "Housing") {
+    cpi <- cli_quarterly |> 
+      filter(cpi_category == "Housing",
+             data_type == "Index Numbers",
+             household_type == "Employee households",
+             date >= {{since}}) |> 
+      mutate(value = value/value[date=={{since}}] - 1,
+             indicator = "Cost of Living Index") |> 
+      select(date, indicator, value)
+  } else {
+  cpi <- cpi_quarterly_group |> 
+    filter(cpi_category == {{cpi_category}},
+           unit == "Index Numbers",
+           date >= {{since}}) |> 
+    mutate(value = value/value[date=={{since}}] - 1,
+           indicator = "Consumer Price Index") |> 
+    select(date, indicator, value)
+  }
+  
+  wpi <- wpi_quarterly |> 
+    filter(data_type == "Quarterly Index", 
+           date >= {{since}},
+           state == "Australia",
+           indicator == "Ordinary time hourly rates of pay excluding bonuses",
+           sector == "Private and Public",
+           industry == "Manufacturing") |> 
+    mutate(value = value/value[date=={{since}}] -1,
+           indicator = "Manufacturing Wages") |> 
+    select(date, indicator, value)
+  
+  date_label <- label_date("%B %Y")(last(cpi$date))
+  since_label <- label_date("%B %Y")(as_date(since))
+  cpi_label <- label_percent(accuracy = 0.1)(last(cpi$value))
+  wpi_label <- label_percent(accuracy = 0.1)(last(wpi$value))
+  
+  plot_data <- bind_rows(cpi, wpi)  |>
+    group_by(indicator) |> 
+    mutate(label = label_percent(accuracy = 0.1)(last(value))) |> 
+    ungroup()
+  
+  inc_dec <- ifelse(last(cpi$value) > 0, "increased", "decreased")
+  
+  ggplot(plot_data, aes(x = date, y = value, col = indicator)) + 
+    geom_line() +
+    labs(x = NULL,
+         y = NULL,
+         title = glue("{cpi_category} {inc_dec} by {cpi_label} between {since_label} and {date_label}"),
+         subtitle = glue("Manufacturing wages increased by {wpi_label} between {since_label} and {date_label}")) + 
+    scale_x_date(breaks = plot_date_range(plot_data),
+                 date_labels = "%b-%y") +
+    scale_y_continuous(labels = label_percent()) +
+    geom_dl(aes(label = label), method = list(cex = 10, "last.qp")) +
+    theme_nrc(legend = "bottom")
+  
+  
+}
+
+cost_of_living_table <- function(since) {
+  
+  wage_growth <- wpi_quarterly |> 
+    filter(date %in% c(max(date), {{since}}),
+           data_type == "Quarterly Index",
+           indicator == "Ordinary time hourly rates of pay excluding bonuses",
+           state == "Australia",
+           industry == "Manufacturing",
+           sector == "Private and Public") |> 
+    mutate(pc = value / value[date=={{since}}] - 1) |> 
+    filter(date == max(date)) 
+  
+  first_date <- label_date(format = "%B %Y")(as_date({{since}}))
+  last_date <-  label_date(format = "%B %Y")(wage_growth$date)
+  
+  cli_quarterly |> 
+    filter(data_type == "Index Numbers",
+           date %in% c(max(date), {{since}}),
+           household_type == "Employee households") |> 
+    group_by(cpi_category) |> 
+    mutate(pc = value / value[date=={{since}}] - 1) |> 
+    ungroup() |> 
+    filter(date == max(date)) |> 
+    select(cpi_category, pc) |> 
+    add_row(cpi_category = "Wages",
+            pc = wage_growth$pc) |> 
+    arrange(-pc) |> 
+    mutate(cpi_category = ifelse(cpi_category == "All groups", 
+                                 "Average",
+                                 cpi_category
+                                 ),
+           cpi_category = fct_inorder(cpi_category),
+           cpi_category = fct_relevel(cpi_category, 
+                                      c("Average"), 
+                                      after = Inf
+                                      )
+           ) |> 
+    arrange(cpi_category) |> 
+    gt(rowname_col = "cpi_category") |> 
+    tab_header(
+      title = md("**Change in living costs by product category**"),
+      subtitle = glue("% change between {last_date} and {first_date}")
+    ) |> 
+    tab_stubhead(label = "Price Category") |> 
+    tab_style(style = cell_text(weight = "bold"),
+              locations = cells_body(
+                rows = cpi_category %in% c("Average", "Wages")
+              )) |>  
+    tab_style(style = cell_text(weight = "bold"),
+              locations = cells_stub(
+                rows = cpi_category %in% c("Average", "Wages")
+              )) |> 
+    tab_style(style = cell_text(align = "left"),
+              locations = cells_stub()) |> 
+    tab_style(style = cell_fill(color = "#FF7D38"),
+              locations = cells_body(rows = cpi_category %in% c("Food and non-alcoholic beverages", "Housing", "Health"))) |> 
+    fmt_percent(columns = pc, scale = 100, decimal = 1) |> 
+    cols_label(pc = "% change")
+  
+}
+
+```
+
+# What is Inflation?
+
+Inflation (officially the **Consumer Price Index**) measures changes in the price of a 'basket' of goods and services which account for a high proportion of expenditure by metropolitan households.
+
+```{r}
+#| label: fig-cpi-wpi
+#| fig-cap: Inflation and Wages, March 2020 - December 2025
+
+
+plot_real_inflation_group("All groups CPI", "2020-03-01")
+
+```
+
+# Inflation and the Cost of Living
+
+Inflation is designed to measure price changes for the household sector as a whole. It is not an accurate reflection of how much your disposable income can buy. A more accurate measure is the **Living Cost Index.** This measures *by how much your disposable income would have to change to afford the same goods today as in the past*.
+
+```{r}
+
+cost_of_living_table(since = "2020-03-01") |> 
+  tab_footnote(locations = cells_body(columns = pc, rows = 4),
+               placement = "right",
+               "To afford the same amount of food in December 2025 as you did in March 2020, your pay would have had to increase by 24%")
+
+```
+
+# Breaking News
+
+While the Consumer Price Index is not useful for understanding changes to the cost of living, it is updated more frequently, andcan provide information about future cost of living increases.
+
+However this will not capture any changes in prices resulting from the closure of the Strait of Hormuz.
+
+```{r}
+#| label: fig-monthly-cpi
+#| fig-cap: Price Inflation, Selected Goods and Services, Last 12 months
+#| fig-width: 10
+
+monthly_cpi <- read_abs("6401.0", tables = "2")
+
+monthly_cpi_plot <- monthly_cpi  |> 
+  separate_series() |> 
+  filter(series_1 == "Percentage Change from Corresponding Month of Previous Year",
+         series_3 == "Australia",
+         date == max(date)) |>
+  arrange(value) |> 
+  mutate(series_2 = fct_inorder(series_2),
+         nudge = max(value)*0.075 + max(value) - value)
+
+monthly_cpi_plot |> 
+  ggplot(aes(x = value, y = series_2, label = scales::label_percent(scale = 1)(value))) + 
+  geom_col() +
+  geom_text(nudge_x = monthly_cpi_plot$nudge) + 
+  theme_nrc(flipped = TRUE) +
+  labs(x = "% change from February 2025",
+       y = NULL) +
+  scale_x_continuous(labels = scales::label_percent(scale = 1)) 
+
+```
