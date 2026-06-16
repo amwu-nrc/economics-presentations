@@ -45,7 +45,6 @@ cli_quarterly <- read_absdata("cli", export_dir = "data", refresh = TRUE)
 
 ```
 
-
 # Inflation, Cost of Living, and Real Wages
 
 ## Overall Inflation Impact

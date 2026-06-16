@@ -1,0 +1,741 @@
+---
+title: "Economics in the Real World"
+subtitle: "SA Delegates Forum"
+author: "Hamish Gamble"
+affiliation: "National Research Centre - AMWU"
+execute: 
+  echo: false
+  warning: false
+  message: false
+brand: _brand/_brand.yml
+format: 
+  revealjs:
+      brand-mode: dark
+      auto-play-media: true
+      incremental: false
+      slide-number: true
+      embed-resources: true
+      fig-format: retina
+  pptx: 
+    incremental: false 
+    slide-level: 2
+    fig-format: retina
+    reference-doc: template-ndtd.pptx
+---
+
+## Who Am I?
+
+-   Economist, National Research Centre
+
+-   Research focus on industrial capabilities and economic complexity
+
+## Agenda
+
+::: notes
+-   Talk about inflation and real wages. What they are, how they are measured, and importantly - what they are not.
+
+-   How does inflation and real wages link with the AMWU broader goals of a living wage, and increasing the minimum wage for apprentices.
+
+-   Talk about sovereign capability. What it means, why it is important, and how we're advocating for industry policy through FMIA and the Defence industry.
+:::
+
+-   Inflation, Real Wages, and the Living Wage
+
+-   Sovereign Capability, Economic Complexity and a Future Made in Australia
+
+```{r}
+#| label: setup-inflation
+library(reportabs)
+library(tidyverse)
+library(directlabels)
+library(geomtextpath)
+library(scales)
+library(readabs)
+library(gghighlight)
+library(strayr)
+library(gt)
+library(glue)
+
+
+cpi_quarterly <- read_absdata(
+  "cpi_quarterly",
+  export_dir = "data",
+  refresh = TRUE
+)
+wpi_quarterly <- read_absdata(
+  "wpi_quarterly",
+  export_dir = "data",
+  refresh = TRUE
+)
+cpi_quarterly_group <- read_absdata(
+  "cpi_quarterly_group",
+  export_dir = "data",
+  refresh = TRUE
+)
+cli_quarterly <- read_absdata("cli", export_dir = "data", refresh = TRUE)
+
+
+cumulative_cpi <- function(data, region, since, include_housing = F) {
+  if (include_housing) {
+    data |>
+      filter(
+        data_type == "Index Numbers",
+        date >= since,
+        household_type == "Employee households",
+        cpi_category == "All groups"
+      ) |>
+      mutate(
+        cumulative_prices = 100 * (value / value[date == {{ since }}] - 1)
+      ) |>
+      select(date, cumulative_prices)
+  } else {
+    data |>
+      filter(
+        data_type == "Index Numbers",
+        date >= since,
+        cpi_category == "All groups CPI",
+        region == {{ region }}
+      ) |>
+      mutate(
+        cumulative_prices = 100 * (value / value[date == {{ since }}] - 1)
+      ) |>
+      select(date, cumulative_prices)
+  }
+}
+
+
+cumulative_wpi <- function(
+  data,
+  state,
+  indicator = "Total hourly rates of pay excluding bonuses",
+  sector = "Private and Public",
+  industry = "All industries",
+  since
+) {
+  data |>
+    filter(
+      data_type == "Quarterly Index",
+      state == {{ state }},
+      indicator == {{ indicator }},
+      sector == {{ sector }},
+      industry == {{ industry }},
+      date >= since
+    ) |>
+    mutate(cumulative_wages = 100 * (value / value[date == {{ since }}] - 1)) |>
+    select(date, cumulative_wages)
+}
+```
+
+# Inflation
+
+::: notes
+We're going to talk about:
+
+-   inflation
+
+-   why "economic good news" doesn't necessarily translate to how you feel
+
+-   things your boss will use to justify why you shouldn't get a pay rise
+
+Hopefully give you confidence to talk about economic indicators, by letting you know the tricks that "economists" use.
+
+Inflation, under neo-liberalism has become the single most important economic priority.
+
+This coincides with the increased dominance and 'importance' of the financial industry and the decline in productive industry like manufacturing.
+
+Controlling inflation is More Important than:
+
+-   full employment
+
+-   reducing inequality
+
+-   housing affordability
+
+-   alleviating poverty
+
+Instead of full employment, government and institutions now push the "non-accelerating inflation rate of unemployment" which suggests there is a minimum level of unemployment necessary in order to stop wages growth and rising inflation. Of course, we can't measure the NAIRU, only show that it might exist, if a bunch of assumptions are made about how the economy works. Estimates from data suggest that it falls somewhere between 4 and 5%.
+
+This means that it is explicit government policy to keep up-to 5% of the labour force out of work, in order to keep wages and inflation down.
+
+Such policy MIGHT be palatable if there was a strong social safety net to support workers who lose their job and are looking for another one. Of course, we don't even get that, with only the below poverty JobSeeker payment available.
+
+But it is still a very inefficient use of the labour power that our economy has access to. Why shouldn't someone who wants to work not have access to a job? It also means that policy is designed to discipline labour.
+
+Which by the way, is why the budget in 2024, by the nominative party of labour, forecast that the plan was to tackle inflation by driving the unemployment rate UP to at least 4.5 percent by June 2025
+:::
+
+## Inflation (or, the Consumer Price Index)
+
+::: notes
+By their nature, averages are not representative of individuals. Statistical agencies have to make a lot of decisions when calculating price indices, including:
+
+-   What goes into the basket?
+
+-   How should like items be grouped?
+
+-   How should each group be weighted into the overall?
+
+-   How often should the weighting change?
+
+Ultimately, the basket of goods and services does not represent the spending or expenditure patterns of any one individual.
+
+There will be a disconnect between how the CPI is reported, and how you feel it as an individual.
+
+For example, in 2025 the weight of tobacco in the CPI was reduced because tobacco sales fell as fewer people are smoking. That means increases in the price of cigarettes don't impact on the overall CPI as much. So smokers will feel that prices are increasing faster than the CPI.
+
+That doesn't mean your feelings are wrong, or that you're spending money 'incorrectly'. It also means that we should not accept pay rises equal to changes in the CPI.
+
+Note that I specified housing as a good/service that is included in the consumer price index. What would you expect that to measure? The cost of housing is measured as the price of a new home (excluding land). Mortgage payments are excluded.
+:::
+
+-   The CPI is a measure of changes in the price of a "basket" of goods and services.
+-   The basket includes (among other things):
+    -   Food and non-alcoholic beverages, alcohol and tobacco, and housing
+-   It represents the average inflation experience - and is **not** reflective of changes in cost of living.
+
+## Reporting Inflation - Index
+
+-   CPI data is reported as an ***index***, or as a % change compared to the previous quarter, or previous year.
+    -   an *index* shows how prices have changed relative to a value of 100 in a reference period.
+
+::: notes
+The ABS indexes the CPI such that the 2011/12 financial year = 100. All index numbers are reported relative to this period. That means that an index of 110 in March 2020 would mean that prices have increased by 10% since the 2011/12 financial year.
+:::
+
+## Reporting Inflation - Percentage Change
+
+-   CPI data is reported as an index, or as a **% change in since last month, last quarter, or last year.**
+    -   A percentage change measures the relative change in prices compared to another period.
+
+::: notes
+Annual Change
+
+-   The *annual change* is a measure of the price now compared to the price one year ago.
+
+Change from Previous Quarter:
+
+-   The *change from previous quarter* is a measure of the price now compared to the price 3 months ago.
+
+Example 1
+
+-   An annual change of 7.8% in December 2022 means prices in December 2022 were 7.8% higher than they were in December 2021.
+
+Example 2
+
+-   A change from previous quarter of -1.9% in June 2020 means that prices in June 2020 were 1.9% lower than they were in March 2020.
+:::
+
+## Inflation - Percentage Change
+
+```{r}
+#| label: inflation-pc
+#| out-width: 100%
+cpi_pc <- cpi_quarterly |>
+  filter(data_type == "Index Numbers") |>
+  mutate(month = month(date)) |>
+  group_by(region, month) |>
+  mutate(pcslm = 100 * (value / lag(value) - 1)) |>
+  ungroup() |>
+  select(date, region, value = pcslm) |>
+  filter(region == "Australia", date >= "2020-03-01")
+
+cpi_pc |>
+  ggplot(aes(x = date, y = value, col = "inflation")) +
+  geom_line() +
+  theme_nrc() +
+  scale_x_date(date_labels = "%e %b\n%Y", breaks = plot_date_range(cpi_pc)) +
+  scale_y_continuous(labels = scales::label_percent(scale = 1)) +
+  labs(
+    title = "Percentage Change in the CPI from Corresponding Month of Previous Year",
+    y = NULL,
+    x = NULL
+  ) +
+  annotate(
+    geom = "textsegment",
+    arrow = arrow(),
+    label = "increasing inflation",
+    x = as_date("2020-06-01"),
+    y = 2,
+    xend = as_date("2022-12-01"),
+    yend = 10
+  ) +
+  annotate(
+    geom = "textsegment",
+    arrow = arrow(),
+    label = "decreasing inflation",
+    x = as_date("2022-12-01"),
+    y = 10,
+    xend = as_date("2026-03-01"),
+    yend = 4.5
+  )
+```
+
+::: notes
+-   This is the % change way of measuring inflation.
+
+-   Inflation goes up when the % change in one period is higher than the last period
+
+-   All the numbers (except for one in 2020) are positive. In fact, since the September quarter of 1948, inflation has only been negative 5 times.
+:::
+
+## Inflation - Index
+
+```{r}
+#| label: inflation-index
+#| out-width: 100%
+cpi_index <- cpi_quarterly |>
+  filter(
+    data_type == "Index Numbers",
+    region == "Australia",
+    date >= "2020-01-01"
+  )
+
+cpi_index |>
+  ggplot(aes(x = date, y = value, col = "inflation")) +
+  geom_line() +
+  theme_nrc() +
+  scale_x_date(date_labels = "%e %b\n%Y", breaks = plot_date_range(cpi_index)) +
+  labs(
+    title = "Consumer Price Index",
+    subtitle = "All groups CPI; Index: (June 2025 = 100)",
+    y = NULL,
+    x = NULL
+  ) +
+  annotate(
+    geom = "textsegment",
+    arrow = arrow(),
+    label = "increasing prices",
+    x = as_date("2020-06-01"),
+    y = 80,
+    xend = as_date("2022-12-01"),
+    yend = 92
+  ) +
+  annotate(
+    geom = "textsegment",
+    arrow = arrow(),
+    label = "increasing prices???",
+    x = as_date("2022-12-01"),
+    y = 92,
+    xend = as_date(max(cpi_index$date)),
+    yend = cpi_index[cpi_index$date == max(cpi_index$date), ]$value * 1.01
+  )
+```
+
+::: notes
+-   Now looking at the index number approach.
+
+-   Decreasing inflation is usually presented in the media as good news. But because inflation measures the rate of change of a rate of change (i.e. how much the change in prices changed), decreasing inflation just means that prices didn't increase as fast.
+
+-   The index measure shows you the effect of 'cumulative' inflation on prices.
+:::
+
+## Inflation - By Type
+
+::: notes
+Reported inflation tends to focus on the overall average - but it's collected at a highly disaggregated level, of 87 different groups.
+
+Things that have increased faster than the average since March 2020 include: housing, food, alcohol and tobacco, health, transport, education, and insurance
+
+Compared to things which have gone down? Clothing and footwear, and furnishings...
+
+Other weird things about inflation - it hasn't included mortgage repayments (since 1998).
+:::
+
+```{r}
+cpi_category <- cpi_quarterly_group |>
+  filter(
+    cpi_category %in%
+      c(
+        "All groups CPI",
+        "Food and non-alcoholic beverages",
+        "Alcohol and tobacco",
+        "Clothing and footwear",
+        "Housing",
+        "Furnishings, household equipment and services",
+        "Health",
+        "Transport",
+        "Communications",
+        "Recreation and Culture",
+        "Education",
+        "Insurance and financial services"
+      ),
+    data_type == "Index Numbers",
+    region == "Australia"
+  ) |>
+  group_by(cpi_category) |>
+  mutate(
+    reindex = 100 * value / value[date == "2020-03-01"],
+    alpha = ifelse(
+      cpi_category %in%
+        c(
+          "All groups CPI",
+          "Food and non-alcoholic beverages",
+          "Housing",
+          "Furnishings, household equipment and services",
+          "Clothing and Footwear"
+        ),
+      1,
+      0
+    ),
+    label = ifelse(
+      cpi_category %in%
+        c(
+          "All groups CPI",
+          "Food and non-alcoholic beverages",
+          "Housing",
+          "Furnishings, household equipment and services",
+          "Clothing and Footwear"
+        ),
+      cpi_category,
+      NA_character_
+    ),
+    color = case_when(
+      cpi_category == "All groups CPI" ~ "Colour 1",
+      cpi_category %in%
+        c(
+          "Food and non-alcoholic beverages",
+          "Housing",
+          "Furnishings, household equipment and services",
+          "Clothing and Footwear"
+        ) ~ "Colour 2",
+      TRUE ~ "Colour 3"
+    )
+  ) |>
+  filter(date >= as_date("2020-03-01")) |>
+  ungroup()
+
+cpi_category |>
+  ggplot(aes(
+    x = date,
+    y = reindex,
+    group = cpi_category,
+    label = label,
+    col = color,
+    alpha = alpha
+  )) +
+  geom_line() +
+  scale_x_date(
+    date_labels = "%e %b\n %Y",
+    breaks = plot_date_range(cpi_category)
+  ) +
+  geom_dl(method = list("last.qp", cex = 0.75)) +
+  theme_nrc() +
+  labs(
+    y = NULL,
+    x = NULL,
+    title = "Consumer Price Index",
+    subtitle = "CPI Expenditure Classes; Index: (March 2020 = 100)"
+  ) +
+  expand_limits(x = ymd(c("2020-03-01", "2026-12-01"))) +
+  scale_colour_nrc()
+```
+
+## Inflation - Cost of Living
+
+::: notes
+As mentioned previously, the CPI is not a measure of the cost of living. In fact there is no definitive cost of living measure collected by the ABS but the ABS does collect a living cost index, which looks at different household types expenditure patterns.
+
+The living cost index asks "By how much would after tax money incomes need to change to allow households to purchase the same quantity of consumer goods and services that they purchased in the base period?"
+:::
+
+::::: columns
+::: {.column width="50%"}
+```{r}
+#| label: tab-cost-of-living
+table_cli(
+  wpi_quarterly,
+  cli_quarterly,
+  since = max(cli_quarterly$date) - years(1)
+)
+```
+:::
+
+::: {.column width="50%"}
+```{r}
+table_cli(wpi_quarterly, cli_quarterly, since = "2020-03-01")
+```
+:::
+:::::
+
+## Inflation - Wages
+
+{{<video https://www.youtube.com/watch?v=g6-lciEvkpA width="100%" height="85%">}}
+
+## Inflation - Wages
+
+
+::: notes
+What is relevant to everyone is how well wages are keeping up with increased costs. It isn't particularly worrisome if the price of everything doubles but your income also doubles.
+
+Unfortunately it's not really that easy to tell if this is happening or not.
+
+Does it feel to you that things are more expensive relative to how much your earning?
+
+Because the CPI is measured using a basket of goods, which is supposed to represent the 'average' consumer, it is guaranteed that your experience is different - because you buy different things in different proportions than the "representative" consumer.
+
+But we can look at the "real" value of wages - how far their purchasing power goes. And here we have another trick of the economist. How do you convert "nominal" dollars - how much you earn today (or yesterday) into "real" dollars - how much does that dollar buy you?
+
+What would this chart look like if you got a 6% pay rise for the next year, and inflation grew at the RBAs target of 2.5%?
+:::
+
+```{r}
+plot_real_wages(
+  cpi_quarterly_group,
+  wpi_quarterly,
+  forecast = NULL,
+  state = "Australia",
+  region = "Australia",
+  since = "2020-03-01",
+  include_housing = F
+)
+```
+
+## Inflation - Pay Increase
+
+```{r}
+plot_real_wages(
+  cpi_quarterly_group,
+  wpi_quarterly,
+  forecast = list(years = 3, wage = 12, inflation = 3),
+  state = "Australia",
+  region = "Australia",
+  since = "2020-03-01",
+  include_housing = F
+)
+```
+
+::: notes
+-   We're really far away from ***IMPROVING*** living standards.
+:::
+
+## What Inflation Is Not
+
+::: incremental
+-   Inflation is not a measure of the cost of living.
+
+-   Decreasing inflation does not mean prices have gone down.
+
+-   Inflation is not more important than any other economic indicator.
+:::
+
+# The AMWU and Wages
+
+::: notes
+:::
+
+-   Increasing real wages is our core business.
+
+-   It is about improving living standards. And making sure people aren't getting left behind, or exploited by their employer.
+
+-   Inflation has eroded real wage increases that we have collectively struggled for.
+
+
+
+
+```{r}
+#| label: setup-complexity
+library(ecomplexity)
+library(dplyr)
+library(ggplot2)
+library(gghighlight)
+library(reportabs)
+```
+
+# Industrial Capabilities
+
+> What you make is what you know
+
+## Industrial Capabilities
+
+-   Core concepts:
+    -   a country makes (or does) what it knows
+    -   products (or activities) represent combinations of knowledge
+-   Capabilities are like letters in Scrabble
+    -   The more you have, the more words you can make
+    -   Rare letters create words worth more points
+
+## Products Embody Knowledge
+
+::::: columns
+::: {.column width="50%"}
+![](img/red-apple.png)
+:::
+
+::: {.column width="50%"}
+An apple in the supermarket represents:
+
+-   Horticulture
+
+-   Pest control
+
+-   Refrigeration
+
+-   Logistics
+:::
+:::::
+
+## Products Embody Knowledge
+
+::::: columns
+::: {.column width="50%"}
+![](img/Apple.png)
+:::
+
+::: {.column width="50%"}
+An iPhone represents:
+
+-   Semiconductors
+-   Software/Hardware Engineering
+-   Materials science
+-   Lenses
+-   Marketing
+-   Packaging
+:::
+:::::
+
+## Measuring Industrial Capabilities
+
+-   Export data reveals what a country makes
+-   Comparison between countries reveals which capabilities are common, and which are rare
+-   The presence of different capabilities in different countries allows a ranking called the Economic Complexity Index
+
+## Why Does It Matter?
+
+-   The Economic Complexity Index is predictive of the direction of future economic growth.
+    -   Countries with higher complexity are predicted to grow faster
+-   Useful tool to identify productive capabilities of a country.
+-   Can be used to identify future opportunities and direct strategy.
+
+## Why Does It Matter to Australia?
+
+::: notes
+-   Australia's ranking in 2024 was 74th- Sandwiched between Madagascar and Uruguay
+-   Australia's exports are concentrated in only a few products
+-   Australia's exports are lower in average complexity
+-   Australia does not have the industrial capabilities of other developed countries.
+:::
+
+```{r}
+ntl <- read_complexitydata("atlas_complexity_country92", export_dir = "data") 
+
+ntl |> 
+  ggplot(aes(x = year, y = eci_rank_hs92, col = location_code)) +
+  geom_line() +
+  scale_y_reverse(breaks = c(1, seq(25, 175, 25))) +
+  labs(x = NULL,
+       y = "Economic Complexity Index (Rank)") + 
+  gghighlight(location_code %in% c("AUS", "DEU", "CAN")) + 
+  theme_nrc()
+  
+  
+```
+
+## Why Does it Matter to South Australia?
+
+```{r}
+state <- read_complexitydata("state_economic_complexity", export_dir = "data")
+graph_complexity_tree(state, 2023, "SA")
+```
+
+## What Can Be Done?
+
+::: notes
+The problem:
+
+-   is real, will not be solved by the market and will not be solved with small tweaks and adjustments.
+-   just transition and decarbonisation is an opportunity to PLAN something, and then to DO something.
+:::
+
+-   Recognise that there is a problem.
+
+-   The lack of sufficient existing capabilities requires explicit and direct industrial policy.
+
+-   Understand the connection between just transition, decarbonisation, and reindustrialisation.
+
+-   Develop a policy agenda which explicitly outlines existing and future opportunities, and how to get there.
+
+## The AMWU and a Future Made in Australia
+
+::: notes
+As part of a Future Made in Australia, what do we want to see? What will we be campaigning for?
+
+-   A Secure Australian Jobs Code
+
+-   Establishing a Manufacturing Competitiveness Council
+
+-   Demand local content
+
+-   Mandate apprentice participation
+
+-   Establish **fair trade** over free trade
+
+-   Nationalise strategic infrastructure
+:::
+
+-   The Future Made in Australia Act is a \$22.7 billion investment into restoring an industrial base in Australia.
+
+-   FMIA, which is public money, must be used to create secure, high-quality jobs. Not subsidise worker exploitation.
+
+-   The AMWU is calling for the establishment of a manufacturing council, and tying strong conditions to businesses receiving public money
+
+## Conditions for Employers
+
+::: notes
+This is about public money for a public good. Not subsidies to private capital to continue to exploit their workers. We are calling on the Labor government to mandate collective agreements for any businesses receiving public money, which reflect union rates of pay.
+
+**Local Content**
+
+-   Procurement is one of the most powerful levers we have for rebuilding our industrial base.
+
+-   Public money must explicitly support local industry.
+
+-   How do we make them enforceable?
+
+-   Local content, local content targets, and local industry participation. The government can provide certainty to businesses looking to expand to supply infrastructure to the energy transition.
+
+**Skills and Apprentices**
+
+-   To rebuild our industrial base we need skilled manufacturing workers
+
+-   Current apprentice requirements are toothless, letting employers off the hook
+:::
+
+-   Guarantee of secure jobs, fair wages, and safe conditions
+
+-   Collective bargaining as a requirement at workplaces who receive public money.
+
+-   Use the state's power in procurement to support local industry through local content targets.
+
+-   Mandate apprentice participation
+
+## Manufacturing Competitiveness Council
+
+-   Tripartite Manufacturing Competitiveness Council - with genuine union representation.
+
+-   Ensure that all decisions about capital investment, skills, and industry strategy are made with worker input.
+
+-   Establish and plan for the orderly transition of our economy - guided by human need, not market whims.
+
+## Fair Trade
+
+-   Empower the Anti-Dumping Commission
+
+-   Unfair trade, particular dumping, has significant negative effects on local industry. Especially in a country that is seeking to re-industrialise.
+
+-   Establish an Independent Advocate for Fair Trade.
+
+## Nationalising Strategic Infrastructure
+
+::: notes
+The goal of economic sovereignty cannot be achieved if the nation’s most vital infrastructure remains subject to the profit demands of private capital. Labor must move to nationalise strategic infrastructure essential to the Future Made in Australia Act agenda, particularly in the energy and green manufacturing sectors
+:::
+
+-   Infrastructure that is "too big to fail" or needed "in the national interest" can not be left in the hands of profit maximisers.
+
+-   Perpetual bailouts and subsidies
+
+-   Natioanalisation can help us to achieve our strategic goals.
+
+
+# Questions
+

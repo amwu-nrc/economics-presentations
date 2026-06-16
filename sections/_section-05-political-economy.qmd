@@ -17,7 +17,7 @@
 
 :::
 
-## What are Economists?
+## Who are Economists?
 
 ::: notes
 Economics was originally a philosophical subject. What happens when the economy interacts with the government? How do different classes interact? How do different classes experience the economy? It was a social science studying a social phenomenon. 
@@ -32,7 +32,9 @@ In about the 1950s to 1960s, a new school of economists decided that adding math
 ## Political Economy
 
 ::: notes
-What we call 'economics' today is very different from what would have been called economics in the 1960s, economics in the 1890s, economics in the 1600s, and economics prior to the invention of agriculture.
+What we call 'economics' today is very different from what would have been called economics in the 1960s, economics in the 1890s, economics in the 1600s, and economics prior to the invention of agriculture. 
+
+While we've always had "an economy", it is only since the industrial revolution that the economy has been structured in a way which would be called capitalism. 
 
 The study of economics is ideological. It is a social science, not a hard science. There is no Nobel prize in economics (the Nobel Memorial Prize in Economic Sciences was not and is not one of the original 5).
 
@@ -42,22 +44,10 @@ Early economics was philosophical - looking at questions like:
 
 -   What is value?
 
-In the 1600s, the dominant ideology of Britain was *mercantilism,* based on the growing power of Britain, and the vast trade networks they had developed through colonialism. The economics of the time was a reflection of this ideology, highlighting the ways in which trade was important for a country's economic development. Economists argued for increased power of the state (to strengthen colonial power) and for government's to maintain a trade surplus.
 
-In France, about 100 years later, the *physiocrats* considered two distinct industries - agricultural, and non-agricultural, in reflection of the growing industrialisation in workshops and of artisans. The physiocrats believed that only agricultural labour could create value in the products of society, and that non-agricultural labour was unproductive.
 :::
 
-Despite what economists would have you believe:
-
-::: incremental
--   Economics is not an independent, neutral, or technical system
-
--   Economics is inherently linked to political ideology.
-
--   You can't eat "headline inflation fell to 2.4%"
-:::
-
-## Political Economy - Modern Economics
+## Political Economy - Classical Economics
 
 ::: notes
 **Classical Economics**
@@ -105,13 +95,11 @@ The most important message is:
 
 ## Political Economy - Modern Economics
 
--   Class analysis was neglected in the late 1800s and early 1900s in favour of analysis of individuals. This is "Neo Classical" economics, and is what they teach at University.
+-   Class analysis was neglected in the late 1800s and early 1900s in favour of analysis of individuals. 
 
 -   When thinking of economics, remember that it is ideological:
 
     -   What kind of growth do we want?
-
-    -   Efficiency for whom?
 
     -   Who should get the benefits of increased productivity?
 
@@ -174,7 +162,7 @@ This has had a huge impact on trade union density.
 
 Just as the capitalist today is aesthetically different from the factory owner of the industrial revolution, so too has the working class changed.
 
-It isn't as easy today to spot the capitalist class. Unlike in the industrial revolution, the company owner is unlikely to be on the factory floor - patrolling and keeping everyone in line. The modern capitalist tries to trade on the aesthetics of the working class.
+It isn't as easy today to spot the capitalist class. Unlike in the industrial revolution, the company owner is unlikely to be on the factory floor - patrolling and keeping everyone in line. The modern capitalist tries to trade on the aesthetics of the working class. And the modern capitalist outsources the work of being a boss to middle management. People whose job it is to direct workers in the benefit of capital. 
 
 The concentration of wealth among the capital class however, has only increased since the industrial age. More and more wealth is held by fewer and fewer people. Owning shares, or investing in your superannuation fund, does not make you a member of the capitalist class. Because you are not in control of the decisions made. 
 

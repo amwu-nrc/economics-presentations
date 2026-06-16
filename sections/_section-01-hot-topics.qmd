@@ -36,15 +36,14 @@ But it is still a very inefficient use of the labour power that our economy has 
 Which by the way, is why the budget in 2024, by the nominative party of labour, forecast that the plan was to tackle inflation by driving the unemployment rate UP to at least 4.5 percent by June 2025. Last weeks unemployment figures showed that unemployment unexpectedly had increased to 4.2%. It would be cold comfort for those who find themselves recently unemployed that they're doing their part to combat inflation and keep wages down!
 :::
 
-::: incremental
--   Why do economists care about inflation?
+-   Why do you care about inflation?
+
+-   Why does your boss care about inflation?
 
 -   What is inflation measuring?
 
--   What does a decrease in inflation mean?
+-   Does the video reflect your experience of inflation?
 
--   How does the video match your experience?
-:::
 
 ## Productivity Crisis!
 
@@ -82,13 +81,14 @@ Estimates of productivity in non-market sectors like education, or health care, 
 Finally, real wages and productivity decoupled long ago. Increased productivity no longer translates with increases in real wages. That means that private business is getting more output per unit of input, but they are not passing that on to the workers who actually supply their labour. Instead, productivity growth contributes to increasing worker exploitation through increased profit margins. How that profit is spent is then up to the capitalist, not the worker.
 :::
 
-::: incremental
--   Why do economists care about productivity?
+
+-   Why do you care about productivity?
+-   Why does the boss care about productivity?
 -   What is productivity measuring?
 -   Who benefits from increased productivity?
 -   What factors influence how productive you feel at work?
-:::
 
-## Discussion: Economic Reports {.incremental}
-1. What kind of language is used in economic reports on the news?
+
+## Discussion: Economic Reports 
+1. Describe how the finance section is reported on the news
 2. Why does the news include a finance report? 
