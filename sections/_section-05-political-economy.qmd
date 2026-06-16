@@ -4,7 +4,7 @@
 
 ## Economics
 
-{{< video https://www.youtube.com/watch?v=pQPv5oUfsbg width="100%" height="85%">}}
+{{< video https://www.youtube-nocookie.com/watch?v=pQPv5oUfsbg width="100%" height="85%">}}
 
 ## What is The Economy? 
 
@@ -28,9 +28,6 @@ In about the 1950s to 1960s, a new school of economists decided that adding math
 - Too closely associated with business and finance
 - Love to explain why you're wrong
 - Get paid too much to make predictions which don't come true
-
-
-
 
 ## Political Economy
 
@@ -130,6 +127,8 @@ It is impossible to produce value without work. Even fully automated production 
 -   Labour to repair the equipment
 
 Profit represents a payment on private capital to the owner of that capital. But profit itself is not a productive activity - but a social relationship between owner, worker, and capital. Profit can be used to re-invest into more capital - and this was the fundamental driver of capitalism during the industrial revolution. Productivity increases from the increased division of labour rapidly increased profits. SOME of these profits were re-invested into production - both to maintain machinery, and to improve processes. Of course, some of the profits were consumed by the 'capitalist fat cat' - which is why they're always depicted as such during this period.
+
+Compare the labour theory of value, which is "objective", with modern theories of value which are "subjective"
 :::
 
 -   Everything in the economy comes from some combination of work and the natural environment, but only work can "add value"
@@ -140,11 +139,14 @@ Profit represents a payment on private capital to the owner of that capital. But
 
 ## Class Consciousness and Solidarity
 
-{{< video https://youtu.be/vt5X8zrHiSM?si=tDM75Th0pBtxsyRc width="100%" height="85%">}}
+{{< video https://www.youtube.com/watch?v=dsoEf8Yqe3I width="100%" height="85%">}}
 
-## Class Consciousness and Solidarity
+## Class Consciousness
 -   Capitalists understand the importance of class solidarity. 
--   Identity politics, culture war, woke vs. anti-woke, etc. are tools used to keep the working class from building solidarity. 
+-   The boss is our class **enemy**. 
+-   When capitalism faces crisis, the playbook is always the same. 
+    - The working class must be divided or the position of the boss is at risk. 
+
 
 ::: notes
 
@@ -174,12 +176,19 @@ Just as the capitalist today is aesthetically different from the factory owner o
 
 It isn't as easy today to spot the capitalist class. Unlike in the industrial revolution, the company owner is unlikely to be on the factory floor - patrolling and keeping everyone in line. The modern capitalist tries to trade on the aesthetics of the working class.
 
-The concentration of wealth among the capital class however, has only increased since the industrial age. More and more wealth is held by fewer and fewer people. Owning shares, or investing in a mutual fund, does not make you a member of the capitalist class.
+The concentration of wealth among the capital class however, has only increased since the industrial age. More and more wealth is held by fewer and fewer people. Owning shares, or investing in your superannuation fund, does not make you a member of the capitalist class. Because you are not in control of the decisions made. 
+
 :::
+
+## Class Solidarity
+- As workers we have far more in common with each other, than we have with the boss. Even:
+- The children mining cobalt in the Congo
+- The workers in a call center in India
+
 
 ## Income Inequality
 
-{{< video https://www.youtube.com/watch?v=QPKKQnijnsM width="100%" height="85%">}}
+{{< video https://www.youtube-nocookie.com/watch?v=QPKKQnijnsM width="100%" height="85%">}}
 
 ## Income Inequality
 
@@ -198,5 +207,9 @@ Building labour power
 
 Building labour density
 
+Building class solidarity
+
 Individual actions like voting, calling your local MP, protesting, signing a petition. Might work. But constrained by the choices we are offered, lobbying, one person can't make a difference. 
+
+What actions can you take back to your workplace? Based on what we've discussed today. 
 :::

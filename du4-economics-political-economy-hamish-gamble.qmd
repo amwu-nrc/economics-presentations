@@ -11,6 +11,7 @@ brand: _brand/_brand.yml
 brand-mode: dark
 format: 
   revealjs:
+      self-contained: true
       embed-resources: true
       auto-play-media: true
       incremental: true
@@ -24,6 +25,34 @@ editor: visual
 ---
 
 {{< include sections/_section-01-hot-topics.qmd >}}
+
+# What Goes Unquestioned?
+
+> No one could imagine any alternative to the status quo, and politicians and citizens alike were resigned to maintaining the pretense of a functioning society.
+>
+> *Alexei Yurchack, Everything Was Forever, Until It Was No More: The Last Soviet Generation (2006)*
+
+## What Goes Unquestioned?
+
+{{< video https://www.youtube-nocookie.com/watch?v=KSS6wEb-fvA width="100%" height="85%" >}}
+
+## Capitalist Realism
+
+- Capitalism is the only viable political and economic system.
+
+- Contradictions, and crises in our economy can be solved only through capitalist solutions, i.e. taxes, regulation
+
+- The actions of individuals can be explained by their individual wants, needs, and talents.
+
+## Implicit Acceptance
+
+- There is an imbalance in power between workers and bosses.
+
+- Efficient markets lead to optimal allocation of resources.
+
+- Competition is an inevitable part of human society.
+
+- Inequality is inevitable.
 
 # Chatting Economics
 
