@@ -14,7 +14,7 @@ format:
       self-contained: true
       embed-resources: true
       auto-play-media: true
-      incremental: true
+      incremental: false
       slide-number: true
       fig-format: svg
   pptx: 
@@ -23,6 +23,8 @@ format:
       reference-doc: template.pptx
 editor: visual
 ---
+
+{{< include sections/_section-00-introduction.qmd >}}
 
 {{< include sections/_section-01-hot-topics.qmd >}}
 
