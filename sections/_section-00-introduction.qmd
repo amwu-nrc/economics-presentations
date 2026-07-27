@@ -1,1 +1,61 @@
-# Labour Market Economics
+# Introduction to Economics
+
+## What is Economics?
+- A modern economist will tell you that economics is "the study of resource allocation under scarcity"
+- This definition *deliberately* hides the political dimension of economics.
+- Political economy is about the relationship between political and economic systems.
+- The economics of capitalism is reinforced and reflective of political power.
+
+## Labour Market Economics
+
+::: notes
+Step through example in course notes
+:::
+
+## The Economic System in Australia
+- Australia's economy is a capitalist economy.
+- Production of commodities
+- Private ownership of the means of production
+- Production for profit
+
+::: notes
+In Australia, our economic system is called capitalism. The capitalist system is defined by:
+
+**commodity production**
+
+A commodity is something which satisfies human demand, and is not produced for personal consumption, but for **exchange**. Almost everything produced under capitalism is a commodity, and this includes the labour that we sell to the boss every day we go to work. 
+
+**private ownership of the means of production**
+
+The *means of production*, such as land, tools, capital equipment, and a company itself are mostly privately owned in a capitalist economy. But not everyone has the same opportunity of ownership. Most workers do not own the company, the capital equipment, or even the product that they produce at work. And they are not in control of company or management decisions, or how to do the work. 
+
+**production for profit**
+
+Production in a capitalist economy occurs because the capitalist (person or people who own the means of production) want to make profit. That is, they want to end up with more money than they start with. 
+
+**Prompt the following discussion:**
+Who in your workplace belongs to which class?
+
+:::
+
+## Production in Capitalism
+- Production occurs in the context of class conflict.
+- Both workers and capitalist want money.
+- Are the reasons the same?
+
+::: notes
+**Prompt the following discussion:**
+Why do you go to work?
+
+
+For workers, it is pretty simple. We want money to buy something - a holiday, a new TV, a house etc. These are commodities that meet our needs and our wants. Workers sell their labour (which is a commodity) in exchange for money, which we exchange for the commotities that fulfil our needs and wants. 
+
+The capitalist on the other hand wants to generate a profit. Profit means that they end up with more money than they started with. Imagine a capitalist who has $100 that they want to invest into a coffee shop. With their $100, they buy $50 worth of materials like milk and coffee beans, and $50 worth of equipment - a coffee machine. The capitalist hires a worker to make coffee, and promises to pay them a wage at the end of the day. At the end of the day there's $150 in the cash register. 
+
+1. Where did the extra money come from?
+2. What would be a fair amount to pay the barista for their work?
+3. What would be a fair amount for the capitlist to keep for themself?
+4. Given the conflict, how can we manage the distribution of the $50 between worker and capitalist?
+
+Ultimately, while the worker and the capitalist both want money - a shared interest, when we look at the motivations, we see that there is a conflict between the worker and the capitalist. And this conflict is built on the contradiction that it is workers who create value that is then stolen by the capitalist. The whole system is built on an exchange which is unfair. But what can you do about it? Without ownership of the inputs yourself, workers have to participate in the unequal exchange in order to be paid a wage to meet their needs.
+:::

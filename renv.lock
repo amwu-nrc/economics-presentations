@@ -1,6 +1,6 @@
 {
   "R": {
-    "Version": "4.5.3",
+    "Version": "4.5.0",
     "Repositories": [
       {
         "Name": "CRAN",
@@ -1472,8 +1472,7 @@
       "VignetteBuilder": "knitr",
       "NeedsCompilation": "no",
       "Author": "Toby Dylan Hocking [aut, cre] (ORCID: <https://orcid.org/0000-0002-3146-0865>)",
-      "Repository": "CRAN",
-      "Encoding": "UTF-8"
+      "Repository": "CRAN"
     },
     "dplyr": {
       "Package": "dplyr",
@@ -1765,8 +1764,7 @@
       "URL": "https://www.rforge.net/fastmatch",
       "BugReports": "https://github.com/s-u/fastmatch/issues/",
       "NeedsCompilation": "yes",
-      "Repository": "CRAN",
-      "Encoding": "UTF-8"
+      "Repository": "CRAN"
     },
     "fontawesome": {
       "Package": "fontawesome",
@@ -3013,8 +3011,7 @@
       "NeedsCompilation": "no",
       "Author": "Rich FitzJohn [aut, cre]",
       "Maintainer": "Rich FitzJohn <rich.fitzjohn@gmail.com>",
-      "Repository": "RSPM",
-      "Encoding": "UTF-8"
+      "Repository": "CRAN"
     },
     "igraph": {
       "Package": "igraph",
@@ -4861,11 +4858,11 @@
       "Author": "Hamish Gamble [aut, cre]",
       "Maintainer": "Hamish Gamble <hamish.gamble@amwu.org.au>",
       "RemoteType": "github",
+      "RemoteHost": "api.github.com",
       "RemoteUsername": "amwu-nrc",
       "RemoteRepo": "reportabs",
       "RemoteRef": "master",
       "RemoteSha": "7ffd71cb25a902ff0c7d741d6772e7937a938fa3",
-      "RemoteHost": "api.github.com",
       "Remotes": "github::runapp-aus/strayr"
     },
     "reprex": {
